@@ -1,0 +1,12 @@
+NAJPIERW
+- backport co się da z wersji CVS
+- kolory okien do bani
+- na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!]) (chyba, że już jest)
+- ikonki z resource'ów
+- w nazwie okna UIN rozmówcy
+
+POTEM
+- zapisywanie rozmówców z listy w formacie People
+- historia rozmów
+- doprowadzić wielorakie profile do porządku
+- włączyć źródła libgadu do projektu (domyślnie bez ssl)
