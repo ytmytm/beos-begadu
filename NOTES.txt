@@ -1,9 +1,15 @@
 NAJPIERW
 - backport co się da z wersji CVS
+	jest:
+		Msg.h
+		BGDeskBar.{ch}
+
 - kolory okien do bani
-- na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!]) (chyba, że już jest)
-- ikonki z resource'ów
+- na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!]) (chyba, że już jest jako ikonka)
+- ikonki z resource'ów (typ i nazwy)
 - w nazwie okna UIN rozmówcy
+- konwersja wszystkiego do/z cp1250
+- reformat stylu pisania kodu
 
 POTEM
 - zapisywanie rozmówców z listy w formacie People
