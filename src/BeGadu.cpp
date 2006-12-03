@@ -21,8 +21,9 @@
 #include "Debug.h"
 #include "Preferences.h"
 #include "ProfileWizard.h"
+#include "globals.h"
 
-BeGadu::BeGadu() : BApplication( "application/x-vnd.BeGadu" )
+BeGadu::BeGadu() : BApplication( APP_MIME )
 	{
 	/* we're checking configuration */
 	iFirstRun = false;
@@ -247,7 +248,7 @@ void BeGadu::AddDeskbarIcon()
 		{
 		BRoster roster;
 		entry_ref ref;
-		status_t status = roster.FindApp( "application/x-vnd.BeGadu", &ref );
+		status_t status = roster.FindApp( APP_MIME, &ref );
 		if( status != B_OK )
 			{
 			fprintf( stderr, "Can't find BeGadu running %s\n", strerror( status ) );

@@ -20,7 +20,6 @@
 class BBitmap;
 class BPopUpMenu;
 class BMessage;
-//class ProfileWizard;
 
 class _EXPORT BGDeskbar : public BView
 	{
@@ -42,7 +41,8 @@ class _EXPORT BGDeskbar : public BView
 		BBitmap	*GetBitmap( const char *name );
 		
 	private:
-		BPopUpMenu		*	iMenu;
+		BPopUpMenu		*	iMenuProfileSelected;
+		BPopUpMenu		*	iMenuProfileNotSelected;
 		BBitmap			*	iIcon;
 		BBitmap			*	iIconAvail;
 		BBitmap			*	iIconBusy;
@@ -54,7 +54,9 @@ class _EXPORT BGDeskbar : public BView
 		BBitmap			*	iIconNotAvailDescr;
 		BBitmap			*	iIconNewMessage;
 		BBitmap			*	iIconQuit;
+		BBitmap			*	iIconSelect;
 		time_t				iMesgAnimate;
+		bool				iProfileSelected;
 		BResources			iResources;
 	};
 

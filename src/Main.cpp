@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "About.h"
 #include "GaduListItem.h"
 #include "GaduMenuItem.h"
 #include "GfxStuff.h"
@@ -34,14 +35,10 @@
 #include "Network.h"
 #include "Preferences.h"
 #include "Person.h"
-
-#define WERSJA VERSION
-#define MAINWINDOW_RECT BRect(50,50,300,350)
-#define MAINWINDOW_NAME	"BeGadu " WERSJA
-
+#include "globals.h"
 
 MainWindow::MainWindow( BString* aProfile )
- 	: BWindow( MAINWINDOW_RECT, MAINWINDOW_NAME, B_TITLED_WINDOW, 
+ 	: BWindow( BRect(50,50,300,350), APP_NAME " " VERSION, B_TITLED_WINDOW, 
  			   B_NOT_ZOOMABLE | B_ASYNCHRONOUS_CONTROLS )
 	{
 	fprintf( stderr, "MainWindow::MainWindow( %s )\n", aProfile->String() );
@@ -51,7 +48,7 @@ MainWindow::MainWindow( BString* aProfile )
 	BRoster roster;
 	entry_ref ref;
 	BFile resfile;
-	roster.FindApp( "application/x-vnd.BeGadu", &ref );
+	roster.FindApp( APP_MIME, &ref );
 	resfile.SetTo( &ref, B_READ_ONLY );
 	iResources.SetTo( &resfile );
 	LoadIcons();
@@ -221,9 +218,9 @@ void MainWindow::MessageReceived( BMessage* aMessage )
 		case BEGG_ABOUT:
 			{
 			fprintf( stderr, "MainWindow::MessageReceived( BEGG_ABOUT )\n" );
-//			AboutWindow *about;
-//			about = new AboutWindow();
-//			about->Show();
+			AboutWindow *about;
+			about = new AboutWindow();
+			about->Show();
 			break;
 			}
 		

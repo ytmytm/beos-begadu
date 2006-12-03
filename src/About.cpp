@@ -19,6 +19,7 @@
 #include <string.h>
 #include "About.h"
 #include "Msg.h"
+#include "globals.h"
 
 #define ABOUTWINDOW_RECT BRect(100,100,500,400)
 #define ABOUTWINDOW_NAME "About BeGadu"
@@ -37,14 +38,14 @@ void AboutView::Draw( BRect aRect )
 	font.SetSize( 18.0 );
 	SetFont( &font );
 	SetDrawingMode( B_OP_OVER );
-	BString title( "BeGadu " VERSION );
+	BString title( APP_NAME " " VERSION );
 	MovePenTo(  ( ( ABOUTWINDOW_RECT.right - ABOUTWINDOW_RECT.left) /2 ) - font.StringWidth( title.String() ) /2 , 20 );
 	SetHighColor( 255, 255, 255 );
-	DrawString( "BeGadu " VERSION );
+	DrawString( APP_NAME " " VERSION );
 	}
 
 AboutWindow::AboutWindow() : BWindow( ABOUTWINDOW_RECT,
-									  ABOUTWINDOW_NAME,
+									  "About",
 									  B_TITLED_WINDOW,
 									  B_NOT_RESIZABLE |
 									  B_NOT_ZOOMABLE |
