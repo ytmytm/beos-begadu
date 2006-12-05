@@ -33,7 +33,61 @@
 class Person
 	{
 	public:
-							Person();
+		Person();
+		~Person();
+		
+		void SetName( const char* aName );
+		const char* GetName() const;
+		
+		void SetSurname( const char* aSurname );
+		const char* GetSurname() const;
+		
+		void SetNick( const char* aNick );
+		const char* GetNick() const;
+		
+		void SetDisplay( const char* aDisplay );
+		const char* GetDisplay() const;
+		
+		void SetMobile( const char* aMobile );
+		const char* GetMobile() const;
+		
+		void SetEmail( const char* aEmail );
+		const char* GetEmail() const;
+		
+		void SetUIN( uin_t aUIN );
+		uin_t GetUIN() const;
+		
+		void SetStatus( int aStatus );
+		int GetStatus() const;
+		
+		void SetDescription( const char* aDescription );
+		const char* GetDescription() const;
+		
+		void SetIP( struct in_addr aIP );
+		struct in_addr GetIP() const;
+		
+		void SetPort( unsigned short aPort );
+		unsigned short GetPort() const;
+		
+		void SetProtocol( int aProtocol );
+		int GetProtocol() const;
+		
+		void SetLastSeen( time_t aLastSeen );
+		time_t GetLastSeen() const;
+		
+		void SetLastDescription( const char* aDescription );
+		const char* GetLastDescription() const;
+		
+		void SetLastIP( struct in_addr aIP );
+		struct in_addr GetLastIP() const;
+		
+		void SetLastPort( unsigned short aPort );
+		unsigned short GetLastPort() const;
+		
+		void SetImageSize( int aImageSize );
+		int GetImageSize() const;
+	
+	private:		
 		BString			*	iName;					/* Imię */
 		BString			*	iSurname;				/* Nazwisko */
 		BString			*	iNick;					/* Pseudonim */
@@ -47,7 +101,7 @@ class Person
 		unsigned short		iPort;					/* Port osoby */
 		int					iProtocol;				/* Wersja protokołu */
 		time_t				iLastSeen;				/* Jeśli jest niedost./ukryty, to od kiedy */
-		BString			*	iLastDescr;				/* J.w. ostatni opis */
+		BString			*	iLastDescription;		/* J.w. ostatni opis */
 		struct in_addr		iLastIP;				/* J.w. ostatni IP */
 		unsigned short		iLastPort;				/* J.w. ostatni port */
 		int 				iImgSize;				/* Maksymalny rozmiar obrazków */
@@ -68,17 +122,18 @@ class List : public BList
 class Userlist
 	{
 	public:
-						Userlist();						 /* Konstruktor */
+		Userlist();
+		~Userlist();
 		int				Read( BString* aName );			 /* Ładuje userliste z pliku */
 		int				Write( BString* aName );			 /* Zapisuje ją do pliku */
 		void			ClearStatus( Person* aPerson );		 /* Czyści status danej osobie */
 		void			Add( uin_t aNumber,
-							 BString* aName,
-							 BString* aSurname,
-							 BString* aNick,
-							 BString* aDisplay,
-							 BString* aMobile,
-							 BString* aEmail ); 
+							 const char* aName,
+							 const char* aSurname,
+							 const char* aNick,
+							 const char* aDisplay,
+							 const char* aMobile,
+							 const char* aEmail ); 
 		void			Remove( Person* aPerson );			 /* Usuwa osobę */
 		void			Replace( Person* aPerson );			 /* Podmienia osobę */
 		void			Import( struct gg_session* aSession, List* aList );
@@ -104,32 +159,72 @@ class Userlist
 class Profile
 	{
 	public:
-								Profile();
-		void					Load( BString* aProfile );
-		void					Save();
-		void					SetUIN( uin_t aNumber );
-		void					SetPass( BString* aPassword );
-		void					SetName( BString* aName );
-		void 					SetRect( BRect aRect );
-		void					SetDesc( BString* aDescription );
-		Userlist			*	GetUserlist() const;
-		BString				*	ProfileName() const;
-		int						AutoStatus();
+		Profile();
+		~Profile();
 		
-		Userlist			*	iUserlist;
-		BRect					iRect;
-		uin_t					iNumber;
-		BString				*	iPassword;
-		int						iAutoStatus;
-		BString				*	iName;
-		BString				*	iSurname;
-		BString				*	iNick;
-		BString				*	iProfileName;
-		BString				*	iMobile;
-		BString				*	iEmail;
-		BString				*	iDescription;
-		bool					iNeedImport;
-	};
+		int	Load( BString* aProfile );
+		void Save();
+		
+		void SetUIN( uin_t aUIN );
+		uin_t GetUIN() const;
+		
+		void SetName( const char* aName );
+		const char* GetName() const;
+		
+		void SetMobile( const char* aMobile );
+		const char* GetMobile() const;
+		
+		void SetEmail( const char* aEmail );
+		const char* GetEmail() const;
+		
+		void SetDescription( const char* aDescription );
+		const char* GetDescription() const;
+		
+		void SetPassword( const char* aPassword );
+		const char* GetPassword() const;
+		
+		void SetSurname( const char* aSurname );
+		const char* GetSurname() const;
 
+		void SetNick( const char* aNick );
+		const char* GetNick() const;
+		
+		void SetProfileName( const char* aProfileName );
+		const char* GetProfileName() const;
+		
+		void SetProfilePassword( const char* aPassword );
+		const char* GetProfilePassword() const;
+		
+		Userlist* GetUserlist() const;
+
+		void SetRect( BRect aRect );
+		BRect GetRect() const;
+		
+		void SetAutoStatus( int aAutoStatus );
+		int GetAutoStatus() const;
+		
+		void SetNeedImport( bool aNeedImport );
+		bool GetNeedImport() const;
+		
+		void SetRememberPassword( bool aRememberPassword );
+		bool GetRememberPassword() const;
+
+	private:
+		BString	* iName;
+		BString	* iMobile;
+		BString	* iEmail;
+		BString	* iDescription;
+		BString * iPassword;
+		BString	* iSurname;
+		BString	* iNick;
+		BString	* iProfileName;
+		BString	* iProfilePassword;
+		Userlist * iUserlist;
+		BRect iRect;
+		uin_t iUIN;
+		int	iAutoStatus;
+		bool iNeedImport;
+		bool iRememberPassword;
+	};
 
 #endif /* __BEGADU_OSOBA_H__ */

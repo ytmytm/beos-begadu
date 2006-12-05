@@ -72,10 +72,11 @@ Preferences::Preferences( Profile* aProfile, MainWindow* aWindow, BRect aRect, B
     if( iNumberControl->LockLooper() )
     	{
 		BString a;
-		a << ( int32 ) iProfile->iNumber;
+//		a << ( int32 ) iProfile->iNumber;
+		a << (int32) iProfile->GetUIN();
         iNumberControl->SetText( a.String() );
-        iPasswordControl->SetText( iProfile->iPassword->String() );
-		fprintf( stderr, "numer: %s\nhaslo: %s\n", a.String(), iProfile->iPassword->String() );
+        iPasswordControl->SetText( iProfile->GetPassword() );
+		fprintf( stderr, "numer: %s\nhaslo: %s\n", a.String(), iProfile->GetPassword() );
         iNumberControl->UnlockLooper();
     	}    
 	}
@@ -95,18 +96,18 @@ void Preferences::MessageReceived( BMessage* aMessage )
 			{
 			if( iNumberControl->LockLooper())
 				{
-				iProfile->iNumber = atoi( iNumberControl->Text() );
+				iProfile->SetUIN(atoi( iNumberControl->Text() ));
 				iNumberControl->UnlockLooper();
 				}
 			if( iPasswordControl->LockLooper())
 				{
-				iProfile->iPassword->SetTo( iPasswordControl->Text() );
+				iProfile->SetPassword( iPasswordControl->Text() );
 				iPasswordControl->UnlockLooper();
 				}
 			BMessenger( this ).SendMessage( B_QUIT_REQUESTED );
 			break;
 			}
-			
+
 		default:
 			BWindow::MessageReceived( aMessage );
 		}

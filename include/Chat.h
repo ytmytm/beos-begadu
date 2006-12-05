@@ -28,11 +28,11 @@ class ChatWindow : public BWindow
 	{
 	public:
 		ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho );
-		virtual void MessageReceived( BMessage *aMessage );
-		virtual bool QuitRequested();
-		virtual void FrameResized( float, float );
-		virtual void Show();
-		virtual void WindowActivated( bool aActivated );
+		void MessageReceived( BMessage *aMessage );
+		bool QuitRequested();
+		void FrameResized( float, float );
+		void Show();
+		void WindowActivated( bool aActivated );
 		
 		Network			*	iNetwork;
 		MainWindow		*	iWindow;

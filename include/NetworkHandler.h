@@ -27,6 +27,7 @@ class NetworkHandler
 		void HandleEvent( struct gg_event *event );
 		void HandleEventConnected( struct gg_event *event );
 		void HandleEventConnFailed( struct gg_event *event );
+		void HandleEventDisconnected( struct gg_event *event );
 		void HandleEventMsg( struct gg_event *event );
 		void HandleEventUserlist( struct gg_event *event );
 		void HandleEventNotify( struct gg_event *event );

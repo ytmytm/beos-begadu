@@ -1,11 +1,15 @@
+#include <Alert.h>
+#include <Application.h>
+#include <InterfaceKit.h>
+#include <OS.h>
+#include <Path.h>
+#include <Screen.h>
+#include <String.h>
+#include <Roster.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <InterfaceKit.h>
-#include <Screen.h>
-#include <Application.h>
-#include <Alert.h>
-#include <String.h>
 #include <libgadu.h>
 
 #include "Main.h"
@@ -13,45 +17,63 @@
 #include "Person.h"
 #include "ProfileWizard.h"
 #include "GfxStuff.h"
+#include "globals.h"
 
-#define PROFILWIZARD_RECT BRect(0,0,350,300)
-#define PROFILWIZARD_NAME "Utwórz profil..."
+#define PROFILEWIZARD_RECT BRect(0,0,350,280)
+#define PROFILEWIZARD_NAME "Profile Wizard"
 
 ProfileWizard::ProfileWizard() 
-	: BWindow( PROFILWIZARD_RECT, PROFILWIZARD_NAME, B_TITLED_WINDOW,
+	: BWindow( PROFILEWIZARD_RECT, PROFILEWIZARD_NAME, B_TITLED_WINDOW,
 			   B_NOT_ZOOMABLE | B_NOT_MOVABLE | B_NOT_RESIZABLE )
 	{
+#ifdef ZETA
+	app_info appinfo;
+	be_app->GetAppInfo( &appinfo );
+	BPath localization;
+	BEntry entryloc( &appinfo.ref, true );
+	entryloc.GetPath( &localization );
+	localization.GetParent( &localization );
+	localization.Append( "Language/Dictionaries/BeGadu" );
+	BString localization_string;
+	if( localization.InitCheck() != B_OK )
+		localization_string.SetTo( "Language/Dictionaries/BeGadu" );
+	else
+		localization_string.SetTo( localization.Path() );
+	be_locale.LoadLanguageFile( localization_string.String() );
+#endif
+
+	SetTitle( _T( PROFILEWIZARD_NAME ) );
 	iBreak = false;
 	iProfile = new Profile();
 	BRect r = Bounds();
+
 	BRect button = Bounds();
 	button.top = button.bottom - 30;
 	button.bottom = button.top + 25;
-	button.left = button.left + 5;
+	button.left = button.left + 10;
 	button.right = button.left + 60;
 
 	iPage1 = new BView( r, "iPage1", B_FOLLOW_ALL, B_WILL_DRAW );
 	iPage2 = new BView( r, "iPage2", B_FOLLOW_ALL, B_WILL_DRAW );
 	iPage3 = new BView( r, "iPage3", B_FOLLOW_ALL, B_WILL_DRAW );
 	iPage4 = new BView( r, "iPage4", B_FOLLOW_ALL, B_WILL_DRAW );
-	iPage1->SetViewColor( 100, 100, 100 );
-	iPage2->SetViewColor( 100, 100, 100 );
-	iPage3->SetViewColor( 100, 100, 100 );
-	iPage4->SetViewColor( 100, 100, 100 );
+	iPage1->SetViewColor( 255, 255, 255 );
+	iPage2->SetViewColor( 255, 255, 255 );
+	iPage3->SetViewColor( 255, 255, 255 );
+	iPage4->SetViewColor( 255, 255, 255 );
 	
 	r = iPage1->Bounds();
 	r.left = r.left + 10;
 	r.right = r.right - 10;
 	r.top = r.top + 10;
-	r.bottom = r.bottom - 90;
+	r.bottom = r.bottom - 40;
 	iPBox1 = new BBox( r, "iPBox1" );
 	iPBox2 = new BBox( r, "iPBox2" );
 	iPBox3 = new BBox( r, "iPBox3" );
 	iPBox4 = new BBox( r, "iPBox4" );
-	iPBox2->SetViewColor( 120, 120, 120 );
+	iPBox2->SetViewColor( 255, 255, 255 );
 	
 	BFont *font = new BFont( be_plain_font );
-	font->SetEncoding( B_ISO_8859_2 );
 	font->SetSize( 15.0 );
 
 	r = iPBox1->Bounds();
@@ -64,32 +86,31 @@ ProfileWizard::ProfileWizard()
 	tv->MakeSelectable( false );
 	tv->SetStylable( true );
 	font = new BFont( be_bold_font );
-	font->SetEncoding( B_ISO_8859_2 );
 	font->SetSize( 18.0 );
-	rgb_color white = { 255, 255, 255 };
-	tv->SetFontAndColor( font, B_FONT_ALL, &white );
-	tv->Insert( "Witaj w kreatorze profili\n" );
-	font->SetFace( B_REGULAR_FACE );
+	rgb_color color = { 0, 0, 0 };
+	tv->SetFontAndColor( font, B_FONT_ALL, &color );
+	tv->Insert( _T( "Welcome in Profile Wizard\n" ) );
+	font = new BFont( be_plain_font );
 	font->SetSize( 15.0 );
 	tv->SetFontAndColor( font );
-	tv->Insert( "\n\nTen kreator pomoże Ci skonfigurować swoje istniejące konto "
-				"na serwerze Gadu-Gadu, lub założyć nowe.\n\n"
-				"Aby kontynuować, wciśnij " );
+	tv->Insert( _T( "\n\nThis wizard helps You configure your existing account " ) );
+	tv->Insert( _T( "on GaduGadu server or let You create a new one.\n\n" ) );
+	tv->Insert( _T( "To continue, press " ) );
 	font->SetFace( B_BOLD_FACE );
 	tv->SetFontAndColor( font );
-	tv->Insert( "Dalej." );
-	tv->SetViewColor( 120, 120, 120 );
+	tv->Insert( _T( "Next." ) );
+	tv->SetViewColor( 255, 255, 255 );
 	iPBox1->AddChild( tv );
 	iPage1->AddChild( iPBox1 );
 	r = Bounds();
-	iCancel1 = new BButton( button, "iCancel1", "Cancel", new BMessage( GO_CANCEL ) );
+	iCancel1 = new BButton( button, "iCancel1", _T( "Cancel" ), new BMessage( GO_CANCEL ) );
 	iPage1->AddChild( iCancel1 );
-	button.OffsetBy( 200, 0 );
-	iBack1 = new BButton( button, "iBack1", "Back", new BMessage( GO_BACK1 ) );
+	button.OffsetBy( 195, 0 );
+	iBack1 = new BButton( button, "iBack1", _T( "Back" ), new BMessage( GO_BACK1 ) );
 	iBack1->SetEnabled( false );
 	iPage1->AddChild( iBack1 );
-	button.OffsetBy( 75, 0 );
-	iNext1 = new BButton( button, "iNext1", "Next", new BMessage( GO_NEXT1 ) );
+	button.OffsetBy( 70, 0 );
+	iNext1 = new BButton( button, "iNext1", _T( "Next" ), new BMessage( GO_NEXT1 ) );
 	iNext1->MakeDefault( true );
 	iPage1->AddChild( iNext1 );
 	AddChild( iPage1 );
@@ -103,20 +124,20 @@ ProfileWizard::ProfileWizard()
 //	font->SetEncoding(B_ISO_8859_2);
 	font->SetSize( 18.0 );
 	sv->SetFont( font );
-	sv->SetText( "Co chcesz zrobić ?" );
+	sv->SetText( _T( "What you want to do ?" ) );
 	sv->SetHighColor( 255, 255, 255 );
 	iPBox2->AddChild( sv );
+	font = new BFont( be_plain_font );
 	font->SetSize( 15.0 );
-	font->SetFace( B_REGULAR_FACE );
 	iHave = new BRadioButton( BRect( r.left + 10, r.top + 60, r.right - 10, r.top + 80 ),
 							"iHave",
-							"Skonfigurować istniejące konto", new BMessage() );
+							_T( "Configure an existing account" ), new BMessage() );
 	iHave->SetValue( 1 );
 	iHave->SetFont( font );
 	iHave->SetHighColor( 255, 255, 255 );
 	iNew = new BRadioButton( BRect( r.left + 10, r.top + 90, r.right - 10, r.top + 110 ),
 							"iNew",
-							"Założyć nowe konto (obecnie nie zaimplementowane)", new BMessage() );
+							_T( "Create a new one (not implemented)" ), new BMessage() );
 	iNew->SetValue( 0 );
 	iNew->SetFont( font );
 	iNew->SetEnabled( false );
@@ -126,15 +147,15 @@ ProfileWizard::ProfileWizard()
 	button = Bounds();
 	button.top = button.bottom - 30;
 	button.bottom = button.top + 25;
-	button.left = button.left + 5;
+	button.left = button.left + 10;
 	button.right = button.left + 60;
-	iCancel2 = new BButton( button, "iCancel2", "Anuluj", new BMessage( GO_CANCEL ) );
+	iCancel2 = new BButton( button, "iCancel2", _T( "Cancel" ), new BMessage( GO_CANCEL ) );
 	iPage2->AddChild( iCancel2 );
-	button.OffsetBy( 200, 0 );
-	iBack2 = new BButton( button, "iBack2", "Wróć", new BMessage( GO_BACK2 ) );
+	button.OffsetBy( 195, 0 );
+	iBack2 = new BButton( button, "iBack2", _T( "Back" ), new BMessage( GO_BACK2 ) );
 	iPage2->AddChild( iBack2 );
-	button.OffsetBy( 75, 0 );
-	iNext2 = new BButton( button, "iNext2", "Dalej", new BMessage( GO_NEXT2 ) );
+	button.OffsetBy( 70, 0 );
+	iNext2 = new BButton( button, "iNext2", _T( "Next" ), new BMessage( GO_NEXT2 ) );
 	iPage2->AddChild( iNext2 );
 	iPage2->AddChild( iPBox2 );
 	AddChild( iPage2 );
@@ -146,35 +167,38 @@ ProfileWizard::ProfileWizard()
 	r.right = r.left + 220;
 	r.bottom = r.top + 25;
 	// nazwa profilu
-	iName = new BTextControl( r, "iName", "Nazwa profilu: ", "Nowy", NULL );
+	iName = new BTextControl( r, "iName", _T( "Profile name:" ), _T( "New" ), NULL );
 	iName->SetFont( font );
 	iName->SetHighColor( 0, 0, 0 );
+	iName->SetAlignment( B_ALIGN_RIGHT, B_ALIGN_LEFT );
 	r.top = r.top + 30;
 	r.bottom = r.top + 25;
-	iNumber = new BTextControl( r, "iNumber", "Numer: ", "0", NULL );
+	iNumber = new BTextControl( r, "iNumber", _T( "Number:" ), "0", NULL );
 	iNumber->SetFont( font );
 	iNumber->SetHighColor( 0, 0, 0 );
+	iNumber->SetAlignment( B_ALIGN_RIGHT, B_ALIGN_LEFT );
 	r.top = r.top + 30;
 	r.bottom = r.top + 25;
-	iPassword = new BTextControl( r, "iPassword", "Haslo ", "", NULL );
+	iPassword = new BTextControl( r, "iPassword", _T( "Password:" ), "", NULL );
 	iPassword->TextView()->HideTyping( true );
 	iPassword->SetFont( font );
 	iPassword->SetHighColor( 0, 0, 0 );
+	iPassword->SetAlignment( B_ALIGN_RIGHT, B_ALIGN_LEFT );
 	iPBox3->AddChild( iName );
 	iPBox3->AddChild( iNumber );
 	iPBox3->AddChild( iPassword );
 	button = Bounds();
 	button.top = button.bottom - 30;
 	button.bottom = button.top + 25;
-	button.left = button.left + 5;
+	button.left = button.left + 10;
 	button.right = button.left + 60;
-	iCancel3 = new BButton( button, "iCancel3", "Anuluj", new BMessage( GO_CANCEL ) );
+	iCancel3 = new BButton( button, "iCancel3", _T( "Cancel" ), new BMessage( GO_CANCEL ) );
 	iPage3->AddChild( iCancel3 );
-	button.OffsetBy( 200, 0 );
-	iBack3 = new BButton( button, "iBack3", "Wróć", new BMessage( GO_BACK3 ) );
+	button.OffsetBy( 195, 0 );
+	iBack3 = new BButton( button, "iBack3", _T( "Back" ), new BMessage( GO_BACK3 ) );
 	iPage3->AddChild( iBack3 );
-	button.OffsetBy( 75, 0 );
-	iNext3 = new BButton( button, "iNext3", "Zakoncz", new BMessage( GO_NEXT3 ) );
+	button.OffsetBy( 70, 0 );
+	iNext3 = new BButton( button, "iNext3", _T( "Finish" ), new BMessage( GO_NEXT3 ) );
 	iPage3->AddChild( iNext3 );
 	iPage3->AddChild( iPBox3 );
 	AddChild( iPage3 );
@@ -182,15 +206,15 @@ ProfileWizard::ProfileWizard()
 	button = Bounds();
 	button.top = button.bottom - 30;
 	button.bottom = button.top + 25;
-	button.left = button.left + 5;
+	button.left = button.left + 10;
 	button.right = button.left + 60;
-	iCancel4 = new BButton( button, "iCancel4", "Anuluj", new BMessage( GO_CANCEL ) );
+	iCancel4 = new BButton( button, "iCancel4", _T( "Cancel" ), new BMessage( GO_CANCEL ) );
 	iPage4->AddChild( iCancel4 );
-	button.OffsetBy( 200, 0 );
-	iBack4 = new BButton( button, "iBack4", "Wróć", new BMessage( GO_BACK4 ) );
+	button.OffsetBy( 195, 0 );
+	iBack4 = new BButton( button, "iBack4", _T( "Back" ), new BMessage( GO_BACK4 ) );
 	iPage4->AddChild( iBack4 );
-	button.OffsetBy( 75, 0 );
-	iNext4 = new BButton( button, "iNext4", "Zakończ", new BMessage( GO_NEXT4 ) );
+	button.OffsetBy( 70, 0 );
+	iNext4 = new BButton( button, "iNext4", _T( "Finish" ), new BMessage( GO_NEXT4 ) );
 	iPage4->AddChild( iNext4 );
 	iPage4->AddChild( iPBox4 );
 	AddChild( iPage4 );
@@ -200,46 +224,14 @@ ProfileWizard::ProfileWizard()
 	iNext1->MakeDefault( true );
 	}
 
-ProfileWizard::~ProfileWizard()
-	{
-/*
-	delete iNext1;
-	delete iNext2;
-	delete iNext3;
-	delete iNext4;
-	delete iBack1;
-	delete iBack2;
-	delete iBack3;
-	delete iBack4;
-	delete iCancel1;
-	delete iCancel2;
-	delete iCancel3;
-	delete iCancel4;
-	delete iPage1;
-	delete iPage2;
-	delete iPage3;
-	delete iPage4;
-	delete iPBox1;
-	delete iPBox2;
-	delete iPBox3;
-	delete iPBox4;
-	delete iName;
-	delete iPassword;
-	delete iNumber;
-*/
-	}
-
 void ProfileWizard::MessageReceived( BMessage* aMessage )
 	{
 	switch( aMessage->what )
 		{
 		case GO_CANCEL:
 			{
-			BAlert* alert = new BAlert( "Wizard",
-				"Przykro mi ale musisz miec jakis profil, sprobuj jeszcze raz :P",
-				"Ehh :/" );
-			alert->Go();
-			delete alert;
+			BMessenger( be_app ).SendMessage( PROFILE_SELECT );
+			BMessenger( this ).SendMessage( B_QUIT_REQUESTED );
 			break;
 			}
 			
@@ -275,7 +267,7 @@ void ProfileWizard::MessageReceived( BMessage* aMessage )
 			{
 			if( iName->LockLooper() )
 				{
-				iProfile->ProfileName()->SetTo( iName->Text() );
+				iProfile->SetProfileName( iName->Text() );
 				iName->UnlockLooper();
 				}
 			if( iNumber->LockLooper() )
@@ -285,12 +277,12 @@ void ProfileWizard::MessageReceived( BMessage* aMessage )
 				}
 			if( iPassword->LockLooper() )
 				{
-				iProfile->iPassword->SetTo( iPassword->Text() );
+				iProfile->SetPassword( iPassword->Text() );
 				iPassword->UnlockLooper();
 				}
 			iProfile->Save();
 			BMessage *mesg = new BMessage( PROFILE_CREATED );
-			mesg->AddString( "ProfileName", *iProfile->ProfileName() );
+			mesg->AddString( "ProfileName", iProfile->GetProfileName() );
 			BMessenger( be_app ).SendMessage( mesg );
 			delete mesg;
 			if( Lock() )
@@ -331,8 +323,8 @@ void ProfileWizard::Show()
 	display_mode mode;
 	screen->GetMode( &mode );
 	// teraz centrujemy okienko
-	int32 szerokosc = ( int32 )( PROFILWIZARD_RECT.right - PROFILWIZARD_RECT.left );
-	int32 wysokosc = ( int32 )( PROFILWIZARD_RECT.bottom - PROFILWIZARD_RECT.top ); 
+	int32 szerokosc = ( int32 )( PROFILEWIZARD_RECT.right - PROFILEWIZARD_RECT.left );
+	int32 wysokosc = ( int32 )( PROFILEWIZARD_RECT.bottom - PROFILEWIZARD_RECT.top ); 
 	// obliczamy srodek ekranu /2  - 1/2 szerokosci okna
 	int32 x_wind = mode.timing.h_display/2 - ( szerokosc / 2 );
 	// obliczamy srodek ekranu /2 - 1/2 wysokosci okna

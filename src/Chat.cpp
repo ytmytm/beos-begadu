@@ -4,20 +4,33 @@
 	Homepage: http://gadu.beos.pl
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <OS.h>
+#include <Application.h>
+#include <Path.h>
 #include <TextControl.h>
 #include <ScrollView.h>
 #include <TextView.h>
 #include <Screen.h>
 #include <String.h>
+#include <Roster.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "Msg.h"
 #include "Chat.h"
 #include "Network.h"
 #include "Main.h"
 #include "Person.h"
+#include "globals.h"
+
 #include <libgadu.h>
+
+//#ifdef ZETA
+//#include <locale/Locale.h>
+//#else
+//#define _T(str) (str)
+//#endif
 
 #define CHATWIN_RECT BRect(100,100,500,400)
 #define CHATWIN_NAME ""
@@ -26,6 +39,7 @@ ChatWindow::ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho )
 	: BWindow( CHATWIN_RECT, CHATWIN_NAME,
 			   B_FLOATING_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_NOT_ZOOMABLE )
 	{
+
 	iNetwork = aNetwork;
 	iWindow	= aWindow;
 	iWho = aWho;
@@ -41,16 +55,16 @@ ChatWindow::ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho )
 	for( int i = 0; i < iWindow->GetProfile()->GetUserlist()->GetList()->CountItems(); i++ )
 		{
 		person = ( Person* ) iWindow->GetProfile()->GetUserlist()->GetList()->ItemAt( i );
-		if( aWho == person->iUIN )
+		if( aWho == person->GetUIN() )
 			{
-			pe = person->iDisplay;
+			pe = new BString( person->GetDisplay() );
 			break;
 			}
 		}
 	if( !pe )
 		{
 		pe = new BString();
-		pe->SetTo( "[Nieznajomy]" );
+		pe->SetTo( _T("[Stranger]") );
 		}
 
 	title.Append( pe->String() );
@@ -109,10 +123,10 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 			for( int i = 0; i < iWindow->GetProfile()->GetUserlist()->GetList()->CountItems(); i++ )
 				{
 				person = ( Person* ) iWindow->GetProfile()->GetUserlist()->GetList()->ItemAt( i );
-				if( iWho == person->iUIN )
+				if( iWho == person->GetUIN() )
 					{
 					str = new BString();
-					str->SetTo( person->iDisplay->String() );
+					str->SetTo( person->GetDisplay() );
 					break;
 					}
 				}
@@ -132,7 +146,6 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 			str2 = new BString();
 			str2->SetTo( string );
 			free( string );
-//			str2 << "[" << (int32)now->tm_hour << ":" << now->tm_min << "] ";
 			iChat->SetFontAndColor( iChat->TextLength(), iChat->TextLength() + str2->Length(), font, B_FONT_ALL, &yellow );
 			iChat->Insert( iChat->TextLength(), str2->String(), str2->Length() );
 			str->Append( ": " );
@@ -189,7 +202,7 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 				iChat->SetFontAndColor( iChat->TextLength(), iChat->TextLength() + str2.Length(), font, B_FONT_ALL, &yellow );
 				iChat->Insert( iChat->TextLength(), str2.String(), str2.Length() );
 
-				str.SetTo( iWindow->GetProfile()->iProfileName->String() );
+				str.SetTo( iWindow->GetProfile()->GetProfileName() );
 				str.Append( ": " );
 				iChat->SetFontAndColor( iChat->TextLength(), iChat->TextLength() + str.Length(), font, B_FONT_ALL, &green );
 				iChat->Insert( iChat->TextLength(), str.String(), str.Length() );
@@ -199,11 +212,6 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 				iChat->SetFontAndColor( iChat->TextLength(), iChat->TextLength() + str2.Length(), font, B_FONT_ALL, &white );
 				iChat->Insert( iChat->TextLength(), str2.String(), str2.Length() );
 
-//				string = (char*)calloc(strlen(" [00:00]\n%s\n") + 1 + fWindow->fProfil->fNazwaProfilu->Length() + strlen(fPowiedzControl->Text()), 1);
-//				sprintf(string, "%s [%02d:%02d]\n%s\n", fWindow->fProfil->fNazwaProfilu->String(), teraz->tm_hour, teraz->tm_min, fPowiedzControl->Text());
-//				fRozmowa->Insert(fRozmowa->TextLength(), string, strlen(string));
-//				free(string);
-				
 				/* scroll down */
 				BScrollBar * scrollBar = iScrollView->ScrollBar( B_VERTICAL );
 				if( scrollBar->LockLooper() )

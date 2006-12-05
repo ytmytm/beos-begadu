@@ -56,9 +56,9 @@ MainWindow::MainWindow( BString* aProfile )
 	iNetwork = new Network( iProfile, iProfile->GetUserlist()->GetList());
 	iNetwork->GotWindow( this );
 	iListItems = new List( 512 );
-	if( iProfile->iRect.IsValid() )
+	if( iProfile->GetRect().IsValid() )
 		{
-		MoveTo( iProfile->iRect.left, iProfile->iRect.top );
+		MoveTo( iProfile->GetRect().left, iProfile->GetRect().top );
 		}
 	/* setting menu */
 	BRect r = Bounds();
@@ -161,17 +161,17 @@ MainWindow::MainWindow( BString* aProfile )
 		BMessenger( this ).SendMessage( UPDATE_LIST );
 		}
 
-	fprintf( stderr,"Profile %s loaded.\n", iProfile->ProfileName()->String() );
+	fprintf( stderr,"Profile %s loaded.\n", iProfile->GetProfileName() );
 
-	if( iProfile->AutoStatus() != GG_STATUS_NOT_AVAIL )
+	if( iProfile->GetAutoStatus() != GG_STATUS_NOT_AVAIL )
 		{
 		if( iNetwork->Session() )
 			{
-			gg_change_status( iNetwork->Session(), iProfile->AutoStatus() );
+			gg_change_status( iNetwork->Session(), iProfile->GetAutoStatus() );
 			}
 		else
 			{
-			iNetwork->Login( iProfile->AutoStatus() );
+			iNetwork->Login( iProfile->GetAutoStatus() );
 			}
 		}
 	}
@@ -254,7 +254,8 @@ void MainWindow::MessageReceived( BMessage* aMessage )
 			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ )
 				{
 				person = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
-				if( !person->iDisplay->Compare( who->iName->String() ) )
+				if( !who->iName->Compare(person->GetDisplay()) )
+//				if( !person->iDisplay->Compare( who->iName->String() ) )
 					{
 					break;
 					}
@@ -274,18 +275,19 @@ void MainWindow::MessageReceived( BMessage* aMessage )
 			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ )
 				{
 				person = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
-				if( !person->iDisplay->Compare( who->iName->String() ) )
+				if( !who->iName->Compare( person->GetDisplay() ) )
+//				if( !person->iDisplay->Compare( who->iName->String() ) )
 					{
 					break;
 					}
 				}
-			if( person->iUIN == iProfile->iNumber )
+			if( person->GetUIN() == iProfile->GetUIN() )
 				{
 				break;
 				}
 			BMessage *message;
 			message = new BMessage( OPEN_MESSAGE );
-			message->AddInt32( "who", person->iUIN );
+			message->AddInt32( "who", person->GetUIN() );
 			BMessenger( iNetwork ).SendMessage( message );		
 			delete message;
 			break;
@@ -420,9 +422,9 @@ void MainWindow::MessageReceived( BMessage* aMessage )
 				{
 				p = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
 				
-				if( p->iUIN == iProfile->iNumber )
+				if( p->GetUIN() == iProfile->GetUIN() )
 					{
-					g = new GaduListItem( p->iDisplay, iNetwork->GetStatus(), iProfile->iDescription, &iResources );
+					g = new GaduListItem( p->GetDisplay(), iNetwork->GetStatus(), iProfile->GetDescription(), &iResources );
 					if( iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL || iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL_DESCR ||
 						iNetwork->GetStatus() == GG_STATUS_INVISIBLE || iNetwork->GetStatus() == GG_STATUS_INVISIBLE_DESCR )
 						{
@@ -439,14 +441,14 @@ void MainWindow::MessageReceived( BMessage* aMessage )
 						{
 						BString *empty = new BString();
 						empty->SetTo( "" );
-						g = new GaduListItem( p->iDisplay, p->iStatus, empty, &iResources );
+						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), empty->String(), &iResources );
 						}
 					else
 						{
-						g = new GaduListItem( p->iDisplay, p->iStatus, p->iDescription, &iResources );
+						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), p->GetDescription(), &iResources );
 						}
 
-					if( p->iStatus == GG_STATUS_NOT_AVAIL || p->iStatus == GG_STATUS_NOT_AVAIL_DESCR )
+					if( p->GetStatus() == GG_STATUS_NOT_AVAIL || p->GetStatus() == GG_STATUS_NOT_AVAIL_DESCR )
 						{
 						listNotAvail->AddItem( g );
 						}
@@ -547,7 +549,7 @@ void MainWindow::SetProfile( BString* aProfile )
 	{
 	fprintf( stderr, "MainWindow::SetProfil()\n" );
 	iProfile->Load( aProfile );
-	SetTitle( iProfile->ProfileName()->String() );
+	SetTitle( iProfile->GetProfileName() );
 	if( iProfile->GetUserlist()->IsValid() )
 		{
 		iListItems = iProfile->GetUserlist()->GetList();

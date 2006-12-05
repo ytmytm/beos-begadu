@@ -39,7 +39,6 @@ class ProfileWizard : public BWindow
 	{
 	public:
 		ProfileWizard();
-		~ProfileWizard();
 		virtual void MessageReceived( BMessage* aMessage );
 		virtual void Show();
 		bool iBreak;

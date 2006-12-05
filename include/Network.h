@@ -41,6 +41,7 @@ class Network : public BLooper
 		/* funkcje wywoływane z interfejsu */
 		void Login();
 		void Login( int aStatus );
+		void Login( int aStatus, BString *aDescription );
 		void Logout();
 		void AddPerson( uin_t aWho );
 		void RemovePerson( uin_t aWho );
@@ -48,12 +49,15 @@ class Network : public BLooper
 		void SendMsg( uin_t aWho, const char* aMessage );
 		struct gg_session* Session() const;
 		void SetStatus( int aStatus );
+		void SetDescription( BString *aDescription );
+
 
 		struct gg_session 	*	iSession;
 		struct gg_login_params	iLoginParam;
 		struct gg_event		*	iEvent;
 		MainWindow			*	iWindow;
 		int						iStatus;
+		BString				*	iDescription;
 
 	private:
 		/* klasy globalne */

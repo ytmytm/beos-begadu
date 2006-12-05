@@ -5,6 +5,7 @@
 */
 
 #include <OS.h>
+#include <Application.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -14,6 +15,7 @@
 #include <OutlineListView.h>
 #include <String.h>
 #include <Roster.h>
+#include <Path.h>
 
 #include "Main.h"
 #include "Msg.h"
@@ -132,7 +134,7 @@ void NetworkHandler::HandleEvent( struct gg_event *event )
 			break;
 			}
 			
-		case GG_STATE_CONNECTED:
+//		case GG_STATE_CONNECTED:
 		case GG_EVENT_CONN_SUCCESS:
 			{
 			HandleEventConnected( event );
@@ -142,6 +144,12 @@ void NetworkHandler::HandleEvent( struct gg_event *event )
 		case GG_EVENT_CONN_FAILED:
 			{
 			HandleEventConnFailed( event );
+			break;
+			}
+		
+		case GG_EVENT_DISCONNECT:
+			{
+			HandleEventDisconnected( event );
 			break;
 			}
 			
@@ -190,11 +198,11 @@ void NetworkHandler::HandleEventConnected( struct gg_event *event )
 	fprintf( stderr, "NetworkHandler::HandleEventConnected()\n" );
 	fprintf( stderr, "NetworkHandler=> Checking userlist... " );
 	if( iNetwork->iWindow->GetProfile()->GetUserlist()->IsValid() == false ||
-		iNetwork->iWindow->GetProfile()->iNeedImport == true )
+		iNetwork->iWindow->GetProfile()->GetNeedImport() == true )
 		{
 		fprintf( stderr, "need import.\n");
 		iNetwork->iWindow->GetProfile()->GetUserlist()->Import( iNetwork->Session(), iNetwork->iWindow->GetProfile()->GetUserlist()->GetList() );
-		iNetwork->iWindow->GetProfile()->iNeedImport = false;
+		iNetwork->iWindow->GetProfile()->SetNeedImport( false );
 		}
 	else
 		{
@@ -212,8 +220,15 @@ void NetworkHandler::HandleEventConnFailed( struct gg_event *event )
 	{
 	fprintf( stderr, "NetworkHandler::HandleEventConnFailed()\n" );
 	iNetwork->Logout();
-	// BMessenger( iNetwork ).SendMessage( DEL_HANDLER );
+	BMessenger( iNetwork->iWindow ).SendMessage( SET_NOT_AVAIL );
+
 	}
+
+void NetworkHandler::HandleEventDisconnected( struct gg_event *event )
+	{
+	printf( "NetworkHandler::HandleEventDisconnected()\n" );
+	BMessenger( iNetwork->iWindow ).SendMessage( SET_NOT_AVAIL );
+ 	}
 
 void NetworkHandler::HandleEventMsg( struct gg_event *event )
 	{
@@ -221,7 +236,7 @@ void NetworkHandler::HandleEventMsg( struct gg_event *event )
 	BMessage *wiadomosc = new BMessage( GOT_MESSAGE );
 	wiadomosc->AddInt32( "who", iNetwork->iEvent->event.msg.sender );
 	wiadomosc->AddString( "msg", ( char* ) iNetwork->iEvent->event.msg.message );
-//	fprintf( stderr, "Od: %d\nWiadomosc: %s\n", iNetwork->iEvent->event.msg.sender, (char*)iNetwork->iEvent->event.msg.message );
+	fprintf( stderr, "Od: %d\nWiadomosc: %s\n", iNetwork->iEvent->event.msg.sender, (char*)iNetwork->iEvent->event.msg.message );
 	BMessenger( iNetwork ).SendMessage( wiadomosc );
 	}
 
@@ -241,7 +256,7 @@ void NetworkHandler::HandleEventUserlist( struct gg_event *event )
 					{
 					o = ( Person* ) list->ItemAt( i );
 					if( iNetwork->Session() )
-						gg_remove_notify( iNetwork->Session(), o->iUIN );
+						gg_remove_notify( iNetwork->Session(), o->GetUIN() );
 					}
 				}
 			GaduListItem *g = NULL;
@@ -294,10 +309,10 @@ void NetworkHandler::HandleEventNotify( struct gg_event *event )
  		for( int i = 0; i < list->CountItems(); i++ )
  			{
  			o = ( Person* ) list->ItemAt( i );
- 			if( o->iUIN == n->uin )
+ 			if( o->GetUIN() == n->uin )
  				break;
  			}
- 		o->iStatus = n->status;
+ 		o->SetStatus( n->status );
 		}
 	if( iNetwork->iWindow->ListView()->LockLooper() )
 		{
@@ -320,11 +335,11 @@ void NetworkHandler::HandleEventNotify60( struct gg_event *event )
  		for( int a = 0; a < list->CountItems(); a++ )
  			{
  			o = ( Person* ) list->ItemAt( a );
- 			if( o->iUIN == iNetwork->iEvent->event.notify60[ i ].uin )
+ 			if( o->GetUIN() == iNetwork->iEvent->event.notify60[ i ].uin )
  				break;
  			}
- 		o->iStatus = iNetwork->iEvent->event.notify60[ i ].status;
- 		o->iDescription->SetTo( iNetwork->iEvent->event.notify60[ i ].descr );
+ 		o->SetStatus( iNetwork->iEvent->event.notify60[ i ].status );
+ 		o->SetDescription( iNetwork->iEvent->event.notify60[ i ].descr );
 		}
 	if( iNetwork->iWindow->ListView()->LockLooper() )
 		{
@@ -345,11 +360,11 @@ void NetworkHandler::HandleEventStatus( struct gg_event *event )
  	for( int i = 0; i < list->CountItems(); i++ )
 	 	{
  		o = ( Person* ) list->ItemAt( i );
- 		if( o->iUIN == iNetwork->iEvent->event.status.uin )
+ 		if( o->GetUIN() == iNetwork->iEvent->event.status.uin )
 			return;
  		}
- 	o->iStatus = iNetwork->iEvent->event.status.status;
- 	o->iDescription->SetTo( iNetwork->iEvent->event.status.descr );
+ 	o->SetStatus( iNetwork->iEvent->event.status.status );
+ 	o->SetDescription( iNetwork->iEvent->event.status.descr );
 	if( iNetwork->iWindow->ListView()->LockLooper())
 		{
 		iNetwork->iWindow->ListView()->MakeEmpty();
@@ -372,11 +387,11 @@ void NetworkHandler::HandleEventStatus60( struct gg_event *event )
  	for( int i = 0; i < list->CountItems(); i++ )
 	 	{
  		o = ( Person* ) list->ItemAt( i );
- 		if( o->iUIN == iNetwork->iEvent->event.status60.uin )
+ 		if( o->GetUIN() == iNetwork->iEvent->event.status60.uin )
  			return;
  		}
- 	o->iStatus = iNetwork->iEvent->event.status60.status;
- 	o->iDescription->SetTo( iNetwork->iEvent->event.status60.descr );
+ 	o->SetStatus( iNetwork->iEvent->event.status60.status );
+ 	o->SetDescription( iNetwork->iEvent->event.status60.descr );
 
 	if( iNetwork->iWindow->ListView()->LockLooper() )
 		{

@@ -27,7 +27,7 @@ class BString;
 class GaduListItem : public BListItem
 	{
 	public:
-		GaduListItem( BString* aPerson, int aStatus, BString* aDescription, BResources* aRes );
+		GaduListItem( const char* aPerson, int aStatus, const char* aDescription, BResources* aRes );
 		~GaduListItem();
 		void SetIcon( int status );
 		virtual void DrawItem( BView* aOwner, BRect aFrame, bool aComplete = false );

@@ -20,6 +20,12 @@ extern "C" {
 #include "strlcpy.h"
 }
 
+//#ifdef DEBUG
+#define DEBUG_TRACE(str) fprintf(stderr, str)
+//#else
+//#define DEBUG_TRACE(str)
+//#endif
+
 #ifndef PATH_MAX
 #  define PATH_MAX _POSIX_PATH_MAX
 #endif
@@ -33,7 +39,187 @@ Person::Person()
 	iMobile = new BString( "" );
 	iEmail = new BString( "" );
 	iDescription = new BString( "" );
-	iLastDescr = new BString( "" );
+	iLastDescription = new BString( "" );
+	}
+
+Person::~Person()
+	{
+	delete iName;
+	delete iSurname;
+	delete iNick;
+	delete iDisplay;
+	delete iMobile;
+	delete iEmail;
+	delete iDescription;
+	delete iLastDescription;
+	}
+
+void Person::SetName( const char* aName )
+	{
+	if( aName != NULL )
+		iName->SetTo( aName );
+	}
+
+const char* Person::GetName() const
+	{
+	return iName->String();
+	}
+
+void Person::SetSurname( const char* aSurname )
+	{
+	if( aSurname != NULL )
+		iSurname->SetTo( aSurname );
+	}
+
+const char* Person::GetSurname() const
+	{
+	return iSurname->String();
+	}
+
+void Person::SetNick( const char* aNick )
+	{
+	if( aNick != NULL )
+		iNick->SetTo( aNick );
+	}
+
+const char* Person::GetNick() const
+	{
+	return iNick->String();
+	}
+
+void Person::SetDisplay( const char* aDisplay )
+	{
+	if( aDisplay != NULL )
+		iDisplay->SetTo( aDisplay );
+	}
+
+const char* Person::GetDisplay() const
+	{
+	return iDisplay->String();
+	}
+
+void Person::SetMobile( const char* aMobile )
+	{
+	if( aMobile != NULL )
+		iMobile->SetTo( aMobile );
+	}
+
+const char* Person::GetMobile() const
+	{
+	return iMobile->String();
+	}
+
+void Person::SetEmail( const char* aEmail )
+	{
+	if( aEmail != NULL )
+		iEmail->SetTo( aEmail );
+	}
+
+const char* Person::GetEmail() const
+	{
+	return iEmail->String();
+	}
+
+void Person::SetUIN( uin_t aUIN )
+	{
+	iUIN = aUIN;
+	}
+
+uin_t Person::GetUIN() const
+	{
+	return iUIN;
+	}
+
+void Person::SetStatus( int aStatus )
+	{
+	iStatus = aStatus;
+	}
+
+int Person::GetStatus() const
+	{
+	return iStatus;
+	}
+
+void Person::SetDescription( const char* aDescription )
+	{
+	if( aDescription != NULL )
+		iDescription->SetTo( aDescription );
+	}
+
+const char* Person::GetDescription() const
+	{
+	return iDescription->String();
+	}
+
+void Person::SetIP( struct in_addr aIP )
+	{
+	iIP = aIP;
+	}
+
+struct in_addr Person::GetIP() const
+	{
+	return iIP;
+	}
+
+void Person::SetPort( unsigned short aPort )
+	{
+	iPort = aPort;
+	}
+
+unsigned short Person::GetPort() const
+	{
+	return iPort;
+	}
+
+void Person::SetProtocol( int aProtocol )
+	{
+	iProtocol = aProtocol;
+	}
+
+int Person::GetProtocol() const
+	{
+	return iProtocol;
+	}
+
+void Person::SetLastSeen( time_t aLastSeen )
+	{
+	iLastSeen = aLastSeen;
+	}
+
+time_t Person::GetLastSeen() const
+	{
+	return iLastSeen;
+	}
+
+void Person::SetLastDescription( const char* aDescription )
+	{
+	if( aDescription != NULL )
+		iLastDescription->SetTo( aDescription );
+	}
+
+const char* Person::GetLastDescription() const
+	{
+	return iLastDescription->String();
+	}
+
+void Person::SetLastIP( struct in_addr aIP )
+	{
+	iLastIP = aIP;
+	}
+
+struct in_addr Person::GetLastIP() const
+	{
+	return iLastIP;
+	}
+
+void Person::SetLastPort( unsigned short aPort )
+	{
+	iLastPort = aPort;
+	}
+
+unsigned short Person::GetLastPort() const
+	{
+	return iLastPort;
 	}
 
 Profile::Profile()
@@ -42,41 +228,148 @@ Profile::Profile()
 	iRect.top = 50;
 	iRect.right = 300;
 	iRect.bottom = 350;
-	iName = new BString();
-	iName->SetTo( "" );
-	iSurname = new BString();
-	iSurname->SetTo( "" );
-	iNick = new BString();
-	iNick->SetTo( "" );
-	iMobile = new BString();
-	iMobile->SetTo( "" );
-	iEmail = new BString();
-	iEmail->SetTo( "" );
-	iProfileName = new BString();
-	iProfileName->SetTo( "Nowy" );
-	iNumber = 0;
-	iPassword = new BString();
-	iPassword->SetTo( "" );
+	iName = new BString( "" );
+	iSurname = new BString( "" );
+	iNick = new BString( "" );
+	iMobile = new BString( "" );
+	iEmail = new BString( "" );
+	iProfileName = new BString( "Nowy" );
+	iUIN = 0;
+	iPassword = new BString( "" );
+	iProfilePassword = new BString( "" );
 	iUserlist = new Userlist();
 	iAutoStatus = GG_STATUS_AVAIL;
 	iNeedImport = true;
-	iDescription = new BString();
-	iDescription->SetTo( "" );
+	iDescription = new BString( "" );
+	iRememberPassword = true;
 	}
 
-void Profile::SetUIN( uin_t aNumber )
+Profile::~Profile()
 	{
-	iNumber = aNumber;
+	delete iUserlist;
+	delete iPassword;
+	delete iProfilePassword;
+	delete iName;
+	delete iSurname;
+	delete iNick;
+	delete iProfileName;
+	delete iMobile;
+	delete iEmail;
+	delete iDescription;
 	}
 
-void Profile::SetPass( BString* aPassword )
+void Profile::SetUIN( uin_t aUIN )
 	{
-	iPassword = aPassword;
+	iUIN = aUIN;
 	}
 
-void Profile::SetName( BString* aProfileName )
+uin_t Profile::GetUIN() const
 	{
-	iProfileName = aProfileName;
+	return iUIN;
+	}
+
+void Profile::SetName( const char* aName )
+	{
+	if( aName != NULL )
+		iName->SetTo( aName );
+	}
+
+const char* Profile::GetName() const
+	{
+	return iName->String();
+	}
+
+void Profile::SetMobile( const char* aMobile )
+	{
+	if( aMobile != NULL )
+		iMobile->SetTo( aMobile );
+	}
+
+const char* Profile::GetMobile() const
+	{
+	return iMobile->String();
+	}
+
+void Profile::SetEmail( const char* aEmail )
+	{
+	if( aEmail != NULL )
+		iEmail->SetTo( aEmail );
+	}
+
+const char* Profile::GetEmail() const
+	{
+	return iEmail->String();
+	}
+
+void Profile::SetDescription( const char* aDescription )
+	{
+	if( aDescription != NULL )
+		iDescription->SetTo( aDescription );
+	}
+
+const char* Profile::GetDescription() const
+	{
+	return iDescription->String();
+	}
+
+void Profile::SetPassword( const char* aPassword )
+	{
+	if( aPassword != NULL )
+		iPassword->SetTo( aPassword );
+	}
+
+const char* Profile::GetPassword() const
+	{
+	return iPassword->String();
+	}
+
+void Profile::SetSurname( const char* aSurname )
+	{
+	if( aSurname != NULL )
+		iSurname->SetTo( aSurname );
+	}
+
+const char* Profile::GetSurname() const
+	{
+	return iSurname->String();
+	}
+
+void Profile::SetNick( const char* aNick )
+	{
+	if( aNick != NULL )
+		iNick->SetTo( aNick );
+	}
+
+const char* Profile::GetNick() const
+	{
+	return iNick->String();
+	}
+
+void Profile::SetProfileName( const char* aProfileName )
+	{
+	if( aProfileName != NULL )
+		iProfileName->SetTo( aProfileName );
+	}
+
+const char* Profile::GetProfileName() const
+	{
+	return iProfileName->String();
+	}
+
+void Profile::SetProfilePassword( const char* aPassword )
+	{
+	if( aPassword != NULL )
+		iProfilePassword->SetTo( aPassword );
+	}
+
+const char* Profile::GetProfilePassword() const
+	{
+	return iProfilePassword->String();
+	}
+
+Userlist* Profile::GetUserlist() const
+	{
+	return iUserlist;
 	}
 
 void Profile::SetRect( BRect aRect )
@@ -84,19 +377,66 @@ void Profile::SetRect( BRect aRect )
 	iRect = aRect;
 	}
 
-void Profile::SetDesc( BString* aDescription )
+BRect Profile::GetRect() const
 	{
-	iDescription = aDescription;
+	return iRect;
 	}
 
-void Profile::Load( BString* aProfile )
+void Profile::SetAutoStatus( int aAutoStatus )
 	{
-	fprintf( stderr, "Profile::Load(%s)\n", aProfile->String() );
+	iAutoStatus = aAutoStatus;
+	}
+
+int Profile::GetAutoStatus() const
+	{
+	return iAutoStatus;
+	}
+
+void Profile::SetNeedImport( bool aNeedImport )
+	{
+	iNeedImport = aNeedImport;
+	}
+
+bool Profile::GetNeedImport() const
+	{
+	return iNeedImport;
+	}
+
+void Profile::SetRememberPassword( bool aRememberPassword )
+	{
+	iRememberPassword = aRememberPassword;
+	}
+
+bool Profile::GetRememberPassword() const
+	{
+	return iRememberPassword;
+	}
+
+int Profile::Load( BString* aProfile )
+	{
+	DEBUG_TRACE( "Profile::Load()\n" );
 	BPath path;
 	BMessage *cfgmesg = new BMessage();
 	find_directory( B_USER_SETTINGS_DIRECTORY, &path );
 	path.Append( "BeGadu/Profiles" );
+	BDirectory * bg_conf = new BDirectory( path.Path() );
+	BEntry entry;
+	if( bg_conf->FindEntry( aProfile->String(), &entry ) != B_OK )
+		{
+		return -1;
+		}
+	if( !entry.IsDirectory() )
+		{
+		return -2;
+		}
+
 	path.Append( aProfile->String() );
+	bg_conf->SetTo( path.Path() );
+	if( bg_conf->FindEntry( "Profile", &entry ) != B_OK )
+		{
+		return -3;
+		}
+		
 	path.Append( "Profile" );
 	BFile file( path.Path(), B_READ_ONLY );
 	if( file.InitCheck() == B_OK )
@@ -106,14 +446,18 @@ void Profile::Load( BString* aProfile )
 		}
 	if( cfgmesg->FindRect( "iRect", &iRect ) != B_OK )
 		iRect =  BRect(50,50,300,350);
-	if( cfgmesg->FindInt32( "iNumber", ( int32* ) &iNumber ) != B_OK )
-		iNumber = 0;
+	if( cfgmesg->FindInt32( "iUIN", ( int32* ) &iUIN ) != B_OK )
+		iUIN = 0;
 	if( cfgmesg->FindString( "iPassword", iPassword ) != B_OK )
 		iPassword->SetTo( "" );
+	if( cfgmesg->FindBool( "iRememberPassword", iRememberPassword ) != B_OK )
+		iRememberPassword = true;
 	if( cfgmesg->FindInt32( "iAutoStatus", ( int32* ) &iAutoStatus ) != B_OK )
 		iAutoStatus = GG_STATUS_AVAIL;
 	if( cfgmesg->FindString( "iName", iName) != B_OK )
 		iName->SetTo( "" );
+	if( cfgmesg->FindString( "iProfilePassword", iProfilePassword ) != B_OK )
+		iProfilePassword->SetTo( "" );
 	if( cfgmesg->FindString( "iSurname", iSurname ) != B_OK )
 		iSurname->SetTo( "" );
 	if( cfgmesg->FindString( "iNick", iNick ) != B_OK )
@@ -129,17 +473,20 @@ void Profile::Load( BString* aProfile )
 	delete cfgmesg;
 	fprintf(stderr, "Loading %s profile...\n", path.Path());
 	iUserlist->Read( iProfileName );
+	return 0;
 	}
 
 void Profile::Save()
 	{
-	fprintf( stderr, "Profile::Save()\n" );
+	DEBUG_TRACE( "Profile::Save()\n" );
 	BMessage *cfgmesg = new BMessage();
 	cfgmesg->AddRect( "iRect", iRect );
-	cfgmesg->AddInt32( "iNumber", iNumber);
+	cfgmesg->AddInt32( "iUIN", iUIN );
 	cfgmesg->AddString( "iPassword", *iPassword );
+	cfgmesg->AddBool( "iRememberPassword", iRememberPassword );
 	cfgmesg->AddInt32( "iAutoStatus", iAutoStatus );
 	cfgmesg->AddString( "iName", *iName );
+	cfgmesg->AddString( "iProfilePassword", *iProfilePassword );
 	cfgmesg->AddString( "iSurname", *iSurname );
 	cfgmesg->AddString( "iNick", *iNick );
 	cfgmesg->AddString( "iProfileName", *iProfileName );
@@ -167,29 +514,20 @@ void Profile::Save()
 		file.Unset();
 		}
 	delete cfgmesg;
+	fprintf(stderr, "Saving %s profile...\n", path.Path());
 	iUserlist->Write( iProfileName );
 	}
 
-Userlist* Profile::GetUserlist() const
-	{
-	return iUserlist;
-	}
-
-BString* Profile::ProfileName() const
-	{
-	return iProfileName;
-	}
-		
-int Profile::AutoStatus()
-	{
-	return iAutoStatus;
-	}
-	
 Userlist::Userlist()
 	{
 	/* i think that nobody have >512 people in the list :P */
 	iIsValid = false;
 	iList = new List( 512 );
+	}
+
+Userlist::~Userlist()
+	{
+	delete iList;
 	}
 
 /* Wczytuje userliste z pliku w formacie eksportu z servera */
@@ -207,7 +545,6 @@ int Userlist::Read( BString* aName )
 	if( !( plik = fopen( path.Path(), "r" ) ) )
 		return -1;
 	Person *person = NULL;
-
 	while( buf = ReadLine( plik ) )
 		{
 		person = new Person();
@@ -227,21 +564,22 @@ int Userlist::Read( BString* aName )
 			}
 		uin = entry[ 6 ];
 		
-		if( ( strcmp( uin, "" ) && !( person->iUIN = atoi( uin ) ) ) )
+		if( strcmp( uin, "" ) == 0 )
 			{
 			array_free( entry );
 			xfree( buf );
 			continue;
 			}
-		person->iName->SetTo( entry[ 0 ] );
-		person->iSurname->SetTo( entry[ 1 ] );
-		person->iNick->SetTo( entry[ 2 ] );
-		person->iDisplay->SetTo( entry[ 3 ] );
-		person->iMobile->SetTo( entry[ 4 ] );
-		person->iStatus = GG_STATUS_NOT_AVAIL;
+		person->SetUIN( atoi( uin ) );
+		person->SetName( entry[ 0 ] );
+		person->SetSurname( entry[ 1 ] );
+		person->SetNick( entry[ 2 ] );
+		person->SetDisplay( entry[ 3 ] );
+		person->SetMobile( entry[ 4 ] );
+		person->SetStatus( GG_STATUS_NOT_AVAIL );
 		/* mamy mejla ? */
 		if( count > 7 )
-			person->iEmail->SetTo( entry[ 7 ] );
+			person->SetEmail( entry[ 7 ] );
 		for( i = 0; i < count; i++ )
 			xfree( entry[ i ] );
 		iList->AddItem( person );
@@ -294,15 +632,15 @@ void Userlist::ClearStatus( Person* aPerson )
 	for( int i = 0; i < iList->CountItems(); i++ )
 		{
 		o = ( Person* ) iList->ItemAt( i );
-		if( !aPerson->iUIN || aPerson->iUIN == o->iUIN )
+		if( !aPerson->GetUIN() || aPerson->GetUIN() == o->GetUIN() )
 			{
-			o->iStatus = GG_STATUS_NOT_AVAIL;
-			memset( &o->iIP, 0, sizeof( struct in_addr ) );
-			memset( &o->iLastIP, 0, sizeof( struct in_addr ) );
-			o->iPort = 0;
-			o->iLastPort = 0;
-			o->iDescription->SetTo( "" );
-			o->iLastDescr->SetTo( "" );
+			o->SetStatus( GG_STATUS_NOT_AVAIL );
+			memset( &o->GetIP(), 0, sizeof( struct in_addr ) );
+			memset( &o->GetLastIP(), 0, sizeof( struct in_addr ) );
+			o->SetPort( 0 );
+			o->SetLastPort( 0 );
+			o->SetDescription( "" );
+			o->SetLastDescription( "" );
 			break;
 			}
 		}				
@@ -311,22 +649,22 @@ void Userlist::ClearStatus( Person* aPerson )
 /* Dodaje osobę o numerze i ustawia jej nazwę wyświetlania */
 /* Kod w większości ze źródeł ekg/userlist.[c,h] */
 void Userlist::Add( uin_t aUin, 
-					BString* aName,
-					BString* aSurname,
-					BString* aNick,
-					BString* aDisplay,
-					BString* aMobile,
-					BString* aEmail )
+					const char* aName,
+					const char* aSurname,
+					const char* aNick,
+					const char* aDisplay,
+					const char* aMobile,
+					const char* aEmail )
 	{
 	Person *o = new Person();
-	o->iUIN = aUin;
-	o->iName = aName;
-	o->iSurname = aSurname;
-	o->iNick = aNick;
-	o->iDisplay = aDisplay;
-	o->iMobile = aMobile;
-	o->iStatus = GG_STATUS_NOT_AVAIL;
-	o->iEmail = aEmail;
+	o->SetUIN( aUin );
+	o->SetName( aName );
+	o->SetSurname( aSurname );
+	o->SetNick( aNick );
+	o->SetDisplay( aDisplay );
+	o->SetMobile( aMobile );
+	o->SetStatus( GG_STATUS_NOT_AVAIL );
+	o->SetEmail( aEmail );
 	iList->AddItem( o );
 	}
 
@@ -339,7 +677,7 @@ void Userlist::Remove( Person* aPerson )
 	for( int i = 0; i < iList->CountItems(); i++ )
 		{
 		o = ( Person* ) iList->ItemAt( i );
-		if( o->iUIN == aPerson->iUIN )
+		if( o->GetUIN() == aPerson->GetUIN() )
 			{
 			iList->RemoveItem( o );
 			break;
@@ -365,7 +703,7 @@ void Userlist::Send( struct gg_session* aSession )
 	for( int i = 0; i < iList->CountItems(); i++ )
 		{
 		o = ( Person* ) iList->ItemAt( i );		
-		numbers[ i ] = o->iUIN;
+		numbers[ i ] = o->GetUIN();
 		}
 	gg_notify( aSession, numbers, count );
 	}
@@ -378,7 +716,7 @@ Person*	Userlist::Find( uin_t aUIN )
 	for( int i = 0; i < iList->CountItems(); i++ )
 		{
 		o = ( Person* ) iList->ItemAt( i );
-		if( aUIN && o->iUIN == aUIN )
+		if( aUIN && ( o->GetUIN() == aUIN ) )
 			return o;
 		}
 	return NULL;
@@ -392,7 +730,7 @@ Person* Userlist::FindMobile( const char* aMobile )
 	for( int i = 0; i < iList->CountItems(); i++ )
 		{
 		o = ( Person* ) iList->ItemAt( i );
-		if( aMobile && o->iMobile && !strcasecmp( o->iMobile->String(), aMobile ) )
+		if( aMobile && o->GetMobile() && !strcasecmp( o->GetMobile(), aMobile ) )
 			return o;
 		}
 	return NULL;
@@ -408,14 +746,14 @@ char* Userlist::Dump()
 		{
 		o = ( Person* ) iList->ItemAt( i );
 		line = saprintf( "%s;%s;%s;%s;%s;%s;%s;%s%s\r\n",
-						 o->iName->String(),
-						 o->iSurname->String(),
-						 o->iNick->String(),
-						 o->iDisplay->String(),
-						 o->iMobile->String(),
+						 o->GetName(),
+						 o->GetSurname(),
+						 o->GetNick(),
+						 o->GetDisplay(),
+						 o->GetMobile(),
 						 strdup( "" ),
-						 itoa( o->iUIN ),
-						 o->iEmail->String(),
+						 itoa( o->GetUIN() ),
+						 o->GetEmail(),
 						 strdup( "" ) );
 		string_append( s, line );
 		xfree( line );
@@ -438,7 +776,7 @@ void Userlist::Clear()
 /* Kod w większości ze źródeł ekg/userlist.[c,h] */
 int* Userlist::Set( const char* aContacts )
 	{
-	fprintf( stderr, "Userlist::Set() started\n" );
+	DEBUG_TRACE( "Userlist::Set()\n" );
 	char *buf, *cont, *contsave;
 	char **entry, *uin;
 	Clear();
@@ -458,16 +796,22 @@ int* Userlist::Set( const char* aContacts )
 			array_free( entry );
 			continue;
 			}
-		o->iUIN = atoi( entry[ 6 ] );
-		o->iName->SetTo( entry[ 0 ] );
-		o->iSurname->SetTo( entry[ 1 ]);
-		o->iNick->SetTo( entry[ 2 ] );
-		o->iDisplay->SetTo( entry[ 3 ] );
-		o->iMobile->SetTo( entry[ 4 ] );
-		o->iStatus = GG_STATUS_NOT_AVAIL;
+		o->SetUIN( atoi( entry[ 6 ] ) );
+		o->SetName( entry[ 0 ] );
+		o->SetSurname( entry[ 1 ]);
+		o->SetNick( entry[ 2 ] );
+		o->SetDisplay( entry[ 3 ] );
+		o->SetMobile( entry[ 4 ] );
+		o->SetStatus( GG_STATUS_NOT_AVAIL );
 		if( count > 7 )
-			o->iEmail->SetTo( entry[ 7 ] );
-		Add( o->iUIN, o->iName, o->iSurname, o->iNick, o->iDisplay, o->iMobile, o->iEmail );
+			o->SetEmail( entry[ 7 ] );
+		Add( o->GetUIN(),
+			 o->GetName(),
+			 o->GetSurname(),
+			 o->GetNick(),
+			 o->GetDisplay(),
+			 o->GetMobile(),
+			 o->GetEmail() );
 		array_free( entry );
 		delete o;
 		}
@@ -539,7 +883,6 @@ void Userlist::Import(struct gg_session* aSession, List* aList )
 			delete person;
 			}
 		}
-	fprintf( stderr, "import exit\n" );
 	}
 
 void Userlist::Export( struct gg_session* aSession, List* aList )

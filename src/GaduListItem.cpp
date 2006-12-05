@@ -17,14 +17,14 @@ extern "C" {
 #include "libgadu.h"
 }
 
-GaduListItem::GaduListItem( BString *aPerson, int aStatus, BString *aDescription, BResources *aRes ) : BListItem()
+GaduListItem::GaduListItem( const char *aPerson, int aStatus, const char *aDescription, BResources *aRes ) : BListItem()
 	{
 	iResources = aRes;
 	iStatus = aStatus;
 	iIcon = NULL;
 	SetIcon( iStatus );
-	iName = aPerson;
-	iDescription = aDescription;
+	iName = new BString( aPerson );
+	iDescription = new BString( aDescription );
 	iNameFont = new BFont( be_plain_font );
 	iNameFont->SetSize( 15.0 );
 	iDescriptionFont = new BFont( be_plain_font );
