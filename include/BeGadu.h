@@ -18,6 +18,7 @@
 /* Forward classes */
 class DebugWindow;
 class MainWindow;
+class ProfileSelector;
 
 class BeGadu : public BApplication
 	{
@@ -35,11 +36,14 @@ class BeGadu : public BApplication
 		BString* LastProfile();
 
 	private:
+		BMessenger			iMessenger;
 		MainWindow  	*	iWindow;
 		DebugWindow 	*	iDebugWindow;
+		ProfileSelector	*	iProfileSelector;
 		bool				iFirstRun;
 		bool				iHideAtStart;
 		BString			*	iLastProfile;
+		bool				iReadyToRun;
 };
 
 #endif /* __BEGADU_H__ */

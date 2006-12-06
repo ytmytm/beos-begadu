@@ -21,18 +21,51 @@
 #include "Debug.h"
 #include "Preferences.h"
 #include "ProfileWizard.h"
+//#include "ProfileSelector.h"
+
 #include "globals.h"
+
+//#ifdef ZETA
+//#include <locale/Locale.h>
+//#else
+//#define _T(str) (str)
+//#endif
+
+//#ifdef DEBUG
+#define DEBUG_TRACE(str) fprintf(stderr, str)
+//#else
+//#define DEBUG_TRACE(str)
+//#endif
 
 BeGadu::BeGadu() : BApplication( APP_MIME )
 	{
 	/* we're checking configuration */
 	iFirstRun = false;
 	iHideAtStart = false;
-	iLastProfile = new BString();
-	iLastProfile->SetTo( "" );
+	iLastProfile = new BString( "" );
+	iWindow = NULL;
+//	iProfileSelector = NULL;
+	iReadyToRun = false;
 	BPath path;
 	BEntry entry;
 	status_t error;
+	
+#ifdef ZETA
+	app_info appinfo;
+	GetAppInfo( &appinfo );
+	BPath localization;
+	BEntry entryloc( &appinfo.ref, true );
+	entryloc.GetPath( &localization );
+	localization.GetParent( &localization );
+	localization.Append( "Language/Dictionaries/BeGadu" );
+	BString localization_string;
+	if( localization.InitCheck() != B_OK )
+		localization_string.SetTo( "Language/Dictionaries/BeGadu" );
+	else
+		localization_string.SetTo( localization.Path() );
+	be_locale.LoadLanguageFile( localization_string.String() );
+#endif
+	
 	find_directory( B_USER_SETTINGS_DIRECTORY, &path );
 	BDirectory * bg_conf = new BDirectory( path.Path() );
 	
@@ -67,7 +100,7 @@ BeGadu::BeGadu() : BApplication( APP_MIME )
 	find_directory( B_USER_SETTINGS_DIRECTORY, &path );
 	path.Append( "BeGadu/Config" );
 	BFile file( path.Path(), B_READ_ONLY );
-	fprintf( stderr, "Loading configuration from %s\n", path.Path() );
+	fprintf( stderr, _T("Loading configuration from %s\n"), path.Path() );
 	BMessage *cfgmesg = new BMessage();
 	if( file.InitCheck() == B_OK )
 		{
@@ -88,12 +121,12 @@ BeGadu::BeGadu() : BApplication( APP_MIME )
 	
 	if( iFirstRun )
 		{
-		fprintf( stderr, "First run, starting Profile Wizard...\n" );
+		fprintf( stderr, _T("First run, starting Profile Wizard...\n") );
 		BMessenger( this ).SendMessage( new BMessage( OPEN_PROFILE_WIZARD ) );
 		}
 	else
 		{
-		fprintf( stderr, "Configuration ok.\n" );
+		fprintf( stderr, _T("Configuration OK.\n") );
 		BMessenger( this ).SendMessage( new BMessage( CONFIG_OK ) );
 		}
 	}
@@ -113,12 +146,12 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 		
 		case ADD_MESSENGER:
 			{
-			fprintf( stderr, "BeGadu::MessageReceived( ADD_MESSENGER )\n" );
-			BMessenger messenger;
-			aMessage->FindMessenger( "messenger", &messenger );
+			DEBUG_TRACE( "BeGadu::MessageReceived( ADD_MESSENGER )\n" );
+			aMessage->FindMessenger( "messenger", &iMessenger );
 			if( iWindow )
 				{
-				iWindow->SetMessenger( messenger );
+				iWindow->SetMessenger( iMessenger );
+				BMessenger( iMessenger ).SendMessage( PROFILE_SELECTED );
 				}
 			break;
 			}
@@ -130,6 +163,8 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 		case SET_DESCRIPTION:
 		case BEGG_ABOUT:
 		case SHOW_MAIN_WINDOW:
+		case CHANGE_DESCRIPTION:
+		case PREFERENCES_SWITCH:
 			{
 			if( iWindow )
 				{
@@ -140,6 +175,20 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 		
 		case OPEN_PROFILE_WIZARD:
 			{
+			DEBUG_TRACE( "BeGadu::MessageReceived( OPEN_PROFILE_WIZARD )\n" );
+//			if( iProfileSelector )
+//				{
+//				iProfileSelector = NULL;
+//				}
+			if( iWindow )
+				{
+				BMessenger( iWindow ).SendMessage( new BMessage( CLOSE_MAIN_WINDOW ) );
+				if( iWindow->Lock() )
+					{
+					iWindow->Quit();
+					}
+				iWindow = NULL;
+				}
 			ProfileWizard *pw = new ProfileWizard();
 			pw->Show();
 			break;
@@ -147,7 +196,201 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 
 		case CONFIG_OK:
 			{
+			DEBUG_TRACE( "BeGadu::MessageReceived( CONFIG_OK )\n" );
+			iReadyToRun = true;
+			AddDeskbarIcon();
+			Profile *profile = new Profile();
+			int ret = profile->Load( iLastProfile );
+			if( ret != 0 )
+				{
+				delete profile;
+				BMessenger( be_app ).SendMessage( new BMessage( PROFILE_SELECT ) );
+				break;
+				}
+			if( strcmp( profile->GetProfilePassword(), "" ) != 0 )
+				{
+				BResources res;
+				BRoster roster;
+				entry_ref ref;
+				BFile resfile;
+				roster.FindApp( APP_MIME, &ref );
+				resfile.SetTo( &ref, B_READ_ONLY );
+				res.SetTo( &resfile );
+				BScreen *screen = new BScreen( B_MAIN_SCREEN_ID );
+				display_mode mode;
+				screen->GetMode( &mode );
+				int32 width = 250;
+				int32 height = 110; // 70
+				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+				int32 new_width = x_wind + width;	// x 2
+				int32 new_height = y_wind + height;		// x 2
+				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
+//				iProfileSelector = new ProfileSelector( iLastProfile, BRect( x_wind, y_wind, new_width, new_height ), &res );
+//				if( iProfileSelector->LockLooper() )
+//					{
+//					iProfileSelector->Show();
+//					iProfileSelector->UnlockLooper();
+//					}
+				}
+			else
+				{
+				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_SELECTED ) );
+				iWindow = new MainWindow( iLastProfile );
+				if( !iHideAtStart )
+					{
+					if( iWindow->LockLooper() )
+						{
+						iWindow->Show();
+						iWindow->UnlockLooper();
+						}
+					}
+				else
+					{
+					if( iWindow->LockLooper() )
+						{
+						iWindow->Show();
+						iWindow->Hide();
+						iWindow->UnlockLooper();
+						}
+					}
+				}
+			break;
+			}
+		
+		case PROFILE_CREATED:
+			{
+			DEBUG_TRACE( "BeGadu::MessageReceived( PROFILE_CREATED )\n" );
+			iReadyToRun = true;
+			AddDeskbarIcon();
+			aMessage->FindString( "ProfileName", iLastProfile );
+			fprintf( stderr, _T("Setting last profile to %s\n"), iLastProfile->String() );
+			iFirstRun = false;
+			BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_SELECTED ) );
 			iWindow = new MainWindow( iLastProfile );
+			if( iWindow->LockLooper() )
+				{
+				if( iWindow->IsHidden() )
+					{
+					iWindow->Show();
+					}
+				else
+					{
+					iWindow->Activate();
+					}
+				iWindow->UnlockLooper();
+				}
+			break;
+			}
+		
+		case PROFILE_SELECT:
+			{
+			DEBUG_TRACE( "BeGadu::MessageReceived( PROFILE_SELECT )\n" );
+//			if( iProfileSelector )
+//				{
+//				iProfileSelector->Activate();
+//				}
+//			else
+				{
+				BResources res;
+				BRoster roster;
+				entry_ref ref;
+				BFile resfile;
+				roster.FindApp( APP_MIME, &ref );
+				resfile.SetTo( &ref, B_READ_ONLY );
+				res.SetTo( &resfile );
+				BScreen *screen = new BScreen( B_MAIN_SCREEN_ID );
+				display_mode mode;
+				screen->GetMode( &mode );
+				int32 width = 250;
+				int32 height = 110; // 70
+				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+				int32 new_width = x_wind + width;	// x 2
+				int32 new_height = y_wind + height;		// x 2
+				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
+//				iProfileSelector = new ProfileSelector( iLastProfile, BRect( x_wind, y_wind, new_width, new_height ), &res );
+//				if( iProfileSelector->LockLooper() )
+//					{
+//					iProfileSelector->Show();
+//					iProfileSelector->UnlockLooper();
+//					}
+				}
+			break;
+			}
+		
+		case PROFILE_SWITCH:
+			{
+			DEBUG_TRACE( "BeGadu::MessageReceived( PROFILE_SWITCH )\n" );
+			if( iWindow )
+				{
+				BMessenger( iWindow ).SendMessage( new BMessage( CLOSE_MAIN_WINDOW ) );
+				if( iWindow->Lock() )
+					{
+					iWindow->Quit();
+					}
+				iWindow = NULL;
+				}
+			Profile* profile = new Profile();
+			BString* name = new BString( "" );
+			aMessage->FindString( "iProfileName", name );
+			int ret = profile->Load( name );
+			if( ret != 0 )
+				{
+				delete profile;
+				BMessenger( this ).SendMessage( new BMessage( PROFILE_SELECT ) );
+				break;
+				}				
+			if( strcmp( profile->GetProfilePassword(), "" ) == 0 )
+				{
+				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_SELECTED ) );
+				iWindow = new MainWindow( iLastProfile );
+				if( iWindow->LockLooper() )
+					{
+					iWindow->Show();
+					iWindow->UnlockLooper();
+					}
+				}
+			else
+				{
+				BResources res;
+				BRoster roster;
+				entry_ref ref;
+				BFile resfile;
+				roster.FindApp( APP_MIME, &ref );
+				resfile.SetTo( &ref, B_READ_ONLY );
+				res.SetTo( &resfile );
+				BScreen *screen = new BScreen( B_MAIN_SCREEN_ID );
+				display_mode mode;
+				screen->GetMode( &mode );
+				int32 width = 250;
+				int32 height = 110; // 70
+				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+				int32 new_width = x_wind + width;	// x 2
+				int32 new_height = y_wind + height;		// x 2
+				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
+//				iProfileSelector = new ProfileSelector( name, BRect( x_wind, y_wind, new_width, new_height ), &res );
+//				if( iProfileSelector->LockLooper() )
+//					{
+//					iProfileSelector->Show();
+//					iProfileSelector->UnlockLooper();
+//					}
+				}
+			break;
+			}
+		
+		case PROFILE_SELECTED:
+			{
+			DEBUG_TRACE( "BeGadu::MessageReceived( PROFILE_SELECTED )\n" );
+//			if( iProfileSelector )
+//				{
+//				iProfileSelector = NULL;
+//				}
+			BString *profile = new BString( "" );
+			aMessage->FindString( "iProfileName", profile );
+			BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_SELECTED ) );
+			iWindow = new MainWindow( profile );
 			if( !iHideAtStart )
 				{
 				if( iWindow->LockLooper() )
@@ -168,30 +411,24 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 			break;
 			}
 		
-		case PROFILE_CREATED:
+		case PROFILE_NOT_SELECTED:
 			{
-			aMessage->FindString( "ProfileName", iLastProfile );
-			fprintf( stderr, "Setting last profile to %s\n", iLastProfile->String() );
-			iFirstRun = false;
-			iWindow = new MainWindow( iLastProfile );
-			if( iWindow->LockLooper() )
-				{
-				if( iWindow->IsHidden() )
-					{
-					iWindow->Show();
-					}
-				else
-					{
-					iWindow->Activate();
-					}
-				iWindow->UnlockLooper();
-				}
+			DEBUG_TRACE( "BeGadu::MessageReceived( PROFILE_NOT_SELECTED )\n" );
+//			if( iProfileSelector )
+//				{
+//				iProfileSelector = NULL;
+//				}
+			BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
 			break;
 			}
 
 		case BEGG_QUIT:
 			{
-			BMessenger( iWindow ).SendMessage( aMessage );
+			DEBUG_TRACE( "BeGadu::MessageReceived( BEGG_QUIT )\n" );
+			if( iWindow )
+				BMessenger( iWindow ).SendMessage( aMessage );
+			else
+				BMessenger( be_app ).SendMessage( B_QUIT_REQUESTED );
 			break;
 			}
 
@@ -205,16 +442,32 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 
 void BeGadu::ReadyToRun()
 	{
-	fprintf( stderr, "BeGadu::ReadyToRun()\n" );
-	AddDeskbarIcon();
+	DEBUG_TRACE( "BeGadu::ReadyToRun()\n" );
+	if( iReadyToRun )
+		AddDeskbarIcon();
 	}
 
 bool BeGadu::QuitRequested()
 	{
 	DelDeskbarIcon();
-	if( iWindow->Lock() )
+//	if( iProfileSelector )
+//		{
+//		if( iProfileSelector->Lock() )
+//			{
+//			iProfileSelector->Quit();
+//			}
+//		}
+	if( iWindow )
 		{
-		iWindow->Quit();
+		if( iLastProfile )
+			iLastProfile->SetTo( iWindow->GetProfile()->GetProfileName() );
+		else
+			iLastProfile = new BString( iWindow->GetProfile()->GetProfileName() );
+		fprintf( stderr, _T("Last profile %s\n"), iLastProfile->String() );
+		if( iWindow->Lock() )
+			{
+			iWindow->Quit();
+			}
 		}
 		
 	/* saving configuration */
@@ -226,8 +479,7 @@ bool BeGadu::QuitRequested()
 	BPath path;
 	find_directory( B_USER_SETTINGS_DIRECTORY, &path );
 	path.Append( "BeGadu/Config" );
-	fprintf( stderr, "Last profile: %s\n", iLastProfile->String() );
-	fprintf( stderr, "Saving configuration to %s\n", path.Path() );
+	fprintf( stderr, _T("Saving configuration to %s\n"), path.Path() );
 	BFile file( path.Path(), B_WRITE_ONLY | B_CREATE_FILE | B_ERASE_FILE );
 	if( file.InitCheck() == B_OK )
 		{
@@ -242,7 +494,7 @@ bool BeGadu::QuitRequested()
 
 void BeGadu::AddDeskbarIcon()
 	{
-	fprintf( stderr, "BeGadu::AddDeskbarIcon()\n" );
+	DEBUG_TRACE( "BeGadu::AddDeskbarIcon()\n" );
 	BDeskbar deskbar;
 	if( !deskbar.HasItem( "BGDeskbar" ) )
 		{
@@ -251,13 +503,13 @@ void BeGadu::AddDeskbarIcon()
 		status_t status = roster.FindApp( APP_MIME, &ref );
 		if( status != B_OK )
 			{
-			fprintf( stderr, "Can't find BeGadu running %s\n", strerror( status ) );
+			fprintf( stderr, _T("Can't find BeGadu running: %s\n"), strerror( status ) );
 			return;
 			}
 		status = deskbar.AddItem( &ref );
 		if( status != B_OK )
 			{
-			fprintf( stderr, "Can't put BeGadu into Deskbar: %s\n", strerror( status ) );
+			fprintf( stderr, _T("Can't put BeGadu into Deskbar: %s\n"), strerror( status ) );
 			return;
 			}
 		}
@@ -265,7 +517,7 @@ void BeGadu::AddDeskbarIcon()
 
 void BeGadu::DelDeskbarIcon()
 	{
-	fprintf( stderr, "BeGadu::DelDeskbarIcon()\n" );
+	DEBUG_TRACE( "BeGadu::DelDeskbarIcon()\n" );
 	BDeskbar deskbar;
 	if( deskbar.HasItem( "BGDeskbar" ) )
 		{

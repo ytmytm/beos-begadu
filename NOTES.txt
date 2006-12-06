@@ -2,8 +2,10 @@ NAJPIERW
 - backport co się da z wersji CVS
 	nie ma: preferences (zależne od innych)
 	nie ma: profileselector (?)
-	nie ma: wszystkich zmian w Main.cpp, tylko niezbędne do skompilowania
-	nie ma: zmian w BeGadu.cpp
+	nie ma: wszystkich zmian w Main.cpp, tylko niezbędne do skompilowania 
+	nie ma: Description.{ch} (potrzebne z nowego Main)
+- nie działa menu w bgdeskbar
+- nie działa buddy edit
 - segfault po załadowaniu listy
 - kolory okien do bani
 - na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!]) (chyba, że już jest jako ikonka)
