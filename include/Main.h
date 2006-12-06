@@ -15,13 +15,13 @@
 
 #include <Window.h>
 #include <Resources.h>
-#include <Messenger.h>
 
 /* Forward references */
 class Network;
 class Preferences;
 class List;
 class BStringView;
+class BMenuBar;
 class BMenuItem;
 class BMenu;
 class BBitmap;
@@ -33,11 +33,13 @@ class BMenuField;
 class GaduListItem;
 class GaduMenuItem;
 class BScrollView;
+class Preferences;
 
 class MainWindow : public BWindow
 	{
 	public:
 		MainWindow( BString* aProfile );
+		~MainWindow();
 		virtual bool QuitRequested();
 		virtual void MessageReceived( BMessage* aMessage );
 		void SetStatus( char* aStatus );
@@ -64,7 +66,10 @@ class MainWindow : public BWindow
 		BListView			*	iListView;
 		GaduListItem		*	iListItem;
 		List				*	iListItems;
-		BMenu				*	iSubMenu;
+		BMenuBar			*	iMenuBar;
+		BMenu				*	iMenu;
+		BMenu				*	iProfilesMenu;
+		BMenu				*	iUserlistMenu;
 		BMenuItem			*	iProfileItem;
 
 		BMenuItem			*	iListMenu;
@@ -94,6 +99,7 @@ class MainWindow : public BWindow
 		BBitmap				*	iIconInvisibleDescr;
 		BBitmap				*	iIconNotAvailDescr;
 		BMessenger				iDeskbarMessenger;
+		Preferences			*	iPreferencesWindow;
 	};
 
 #endif /* __BEGADU_MAINWINDOW_H__ */
