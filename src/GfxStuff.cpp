@@ -194,6 +194,7 @@ BBitmap *BitmapView::GetBitmap(const char *name)
 	
 	BMessage archive;
 	error = archive.Unflatten(&stream);
+//printf("bitmap: [%s], ok=%i\n", name, error==B_OK);
 	if (error != B_OK)
 		return NULL;
 	bitmap = new BBitmap(&archive);

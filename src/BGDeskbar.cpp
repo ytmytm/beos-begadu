@@ -64,6 +64,7 @@ BGDeskbar::BGDeskbar() : BView( BRect( 0, 0, 15, 15),
 	iMenuProfileSelected = NULL;
 	iMenuProfileNotSelected = NULL;
 	iProfileSelected = false;
+	Initialize();
 	}
 
 BGDeskbar::BGDeskbar( BMessage *aMessage ) : BView( aMessage )
@@ -421,6 +422,7 @@ BBitmap *BGDeskbar::GetBitmap( const char* aName )
 	
 	BMessage archive;
 	error = archive.Unflatten( &stream );
+
 	if( error != B_OK )
 		return NULL;
 	bitmap = new BBitmap( &archive );
