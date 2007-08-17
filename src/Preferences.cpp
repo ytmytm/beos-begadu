@@ -4,8 +4,13 @@
 	Homepage: http://begadu.sf.net
 */
 
+#include <Alert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <OS.h>
+#include <Application.h>
+#include <Roster.h>
+#include <Path.h>
 #include <View.h>
 #include <String.h>
 #include <TextControl.h>

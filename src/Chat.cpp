@@ -68,6 +68,7 @@ ChatWindow::ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho )
 		}
 
 	title.Append( pe->String() );
+	title << " (" << iWho << ")";
 	SetTitle( title.String());
 	
 	/* making a default background */
@@ -187,7 +188,7 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 				BString str;
 				BString str2;
 				char *string;
-				int id = iNetwork->GetIdent();
+//				int id = iNetwork->GetIdent();
 
 				BFont *font = new BFont( be_plain_font );
 				font->SetSize( 16.0 );

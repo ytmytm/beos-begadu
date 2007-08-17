@@ -49,7 +49,4 @@ class NetworkHandler
 		volatile int	iThreadID;
 	};
 
-static int Expired( time_t timer );
-static void Rearm( int seconds );
-
 #endif /* __BEGADU_NETWORKHANDLER_H__ */

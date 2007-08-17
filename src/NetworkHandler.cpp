@@ -29,6 +29,9 @@
 static time_t 	curTime = 0;
 static time_t 	pingTimer = 0;
 
+static int Expired( time_t timer );
+static void Rearm( time_t* timer, int seconds );
+
 int32 HandlerThread( void *_handler )
 	{
 	fprintf( stderr, "HandlerThread()\n" );
@@ -378,7 +381,6 @@ void NetworkHandler::HandleEventStatus60( struct gg_event *event )
 	fprintf( stderr, "NetworkHandler::HandleEventStatus60()\n" );
 	Userlist* userlist = iNetwork->iWindow->GetProfile()->GetUserlist();
 	List* list = userlist->GetList();
- 	char *descr;
  	Person* o = NULL;
  	if( !( o = userlist->Find( iNetwork->iEvent->event.status60.uin ) ) )
  		{
@@ -417,7 +419,7 @@ static void Rearm( time_t* timer, int seconds )
 
 void NetworkHandler::HandlePingTimeoutCallback( time_t &pingTimer )
 	{
-	fprintf( stderr, "NetworkHandler::HandlePingTimeoutCallback( %d )\n", pingTimer );
+	fprintf( stderr, "NetworkHandler::HandlePingTimeoutCallback( %ld )\n", pingTimer );
 	gg_ping( iNetwork->Session() );
 	Rearm( &pingTimer, 60 );
 	}

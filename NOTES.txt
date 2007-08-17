@@ -1,22 +1,24 @@
 NAJPIERW
 - backport co się da z wersji CVS
-	nie ma: preferences (zależne od innych)
+	nie ma wprowadzonego z patcha: preferences (zależne od innych - nieistniejące preferences list)
 	nie ma: profileselector (?)
-	porównać nowe Main.cpp ze starym - akcje menu nie działają, lista nie jest wypełniana
-- nie działa menu w bgdeskbar, również prawyklik na liście (edit)
-- nie działa buddy edit
 - segfault po załadowaniu listy (dalej aktualne z nowym main)
+	???
+- po uruchomieniu deskbar nie ma aktualnego statusu
 - kolory okien do bani
-- na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!])  i opisem/statusem
-- w nazwie okna UIN rozmówcy
+- na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!])  i treścią opisu/statusu
 - konwersja wszystkiego do/z cp1250
 - reformat stylu pisania kodu
 - sprawdzenie włączanych nagłówków i grafu zależności
 - używanie okna debug
+	??? (log gg na okno, jak w bemobile?)
+- nie działa eksport kontaktów
+- nie działa zapis kontaktów (po edycji)
+- nie działa śledzenie statusu kontaktów
 
 POTEM
 - powiadamianie o dostarczeniu wiadomości (np. przez kolorowanie wysłanych)
 - zapisywanie rozmówców z listy w formacie People
 - historia rozmów
 - doprowadzić wielorakie profile do porządku (tylko przez menu, jak w nowym main.cpp)
-- włączyć źródła libgadu do projektu (domyślnie bez ssl)
+- włączyć źródła libgadu do projektu (domyślnie bez ssl), kompilacja jak dla FreeBSD (socket to nie fd)

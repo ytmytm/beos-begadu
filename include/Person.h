@@ -147,7 +147,7 @@ class Userlist
 		Person		*	FindMobile( const char* aMobile );	 /* Szuka osoby po telefonie */
 		char		*	Dump();							 /* Zrzuca */
 		void			Clear();						 /* Czyści */
-		int			*	Set( const char* aContacts ); 		 /* Ustawia */
+		void			Set( const char* aContacts ); 		 /* Ustawia */
 		const char 	*	FormatUser( uin_t aUIN );			 /* Formatuje */
 		char 		*	ReadLine( FILE* aFile );				 /* Wczytuje/zwraca linijke tekstu z pliku */
 		List		*	GetList() const;

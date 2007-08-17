@@ -545,7 +545,7 @@ int Userlist::Read( BString* aName )
 	if( !( plik = fopen( path.Path(), "r" ) ) )
 		return -1;
 	Person *person = NULL;
-	while( buf = ReadLine( plik ) )
+	while( (buf = ReadLine( plik )) )
 		{
 		person = new Person();
 		char **entry, *uin;
@@ -774,18 +774,18 @@ void Userlist::Clear()
 
 /* Ustawia listę */
 /* Kod w większości ze źródeł ekg/userlist.[c,h] */
-int* Userlist::Set( const char* aContacts )
+void Userlist::Set( const char* aContacts )
 	{
 	DEBUG_TRACE( "Userlist::Set()\n" );
 	char *buf, *cont, *contsave;
-	char **entry, *uin;
+	char **entry;
 	Clear();
 	
 	cont = contsave = strdup( aContacts );
 	while( ( buf = gg_get_line( &cont ) ) )
 		{
 		Person *o = new Person();
-		int i, count;
+		int count;
 
 		if( buf[ 0 ] == '#' || ( buf[ 0 ] == '/' && buf[ 1 ] == '/' ) )
 			continue;
@@ -823,6 +823,7 @@ int* Userlist::Set( const char* aContacts )
 /* Kod w większości ze źródeł ekg/userlist.[c,h] */
 const char* Userlist::FormatUser( uin_t aUIN )
 	{
+		return NULL;
 	}
 
 /* Wczytuje/zwraca linijkę tekstu z pliku */
@@ -865,10 +866,10 @@ void Userlist::SetValid( bool aValid )
 
 void Userlist::Import(struct gg_session* aSession, List* aList )
 	{
-	char *blad;
 	SetValid( false );
 	if( gg_userlist_request( aSession, GG_USERLIST_GET, NULL ) == -1 )
 		{
+		char blad[256];
 		sprintf( blad, "Błąd pobierania listy kontaktów: %s", strerror( errno ) );
 		BAlert *alert = new BAlert( "Lista", blad, "OK" );
 		alert->Go();

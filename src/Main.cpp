@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "About.h"
 #include "BuddyEdit.h"
 #include "GaduListView.h"
 #include "GaduListItem.h"
@@ -106,7 +107,7 @@ MainWindow::MainWindow( BString* aProfile )
 	/* searching for user profiles */
 	BPath path;
 	BEntry entry;
-	status_t error;
+//	status_t error;	XXX
 	BMenuItem *item = NULL;
 	char name[ B_FILE_NAME_LENGTH ];
 	BString *nameString;
@@ -205,7 +206,7 @@ MainWindow::MainWindow( BString* aProfile )
 	r.left = r.left + 5;
 	r.right = r.right -5;
 
-	BMenuItem *selectstatus;
+//	BMenuItem *selectstatus;	XXX
 	iStatusMenu = new BPopUpMenu( "change_status" );
 	iAvail			= new GaduMenuItem( iIconAvail, _T("Availble"), new BMessage( SET_AVAIL ) );
 	iBRB			= new GaduMenuItem( iIconBRB, _T("Be right back"), new BMessage( SET_BRB ) );
@@ -388,9 +389,9 @@ void MainWindow::MessageReceived( BMessage* aMessage )
 		case BEGG_ABOUT:
 			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_ABOUT )\n" );
-//			AboutWindow *about;
-//			about = new AboutWindow();
-//			about->Show();
+			AboutWindow *about;
+			about = new AboutWindow();
+			about->Show();
 			break;
 			}
 		

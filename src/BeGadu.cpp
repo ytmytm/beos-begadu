@@ -219,12 +219,12 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 				BScreen *screen = new BScreen( B_MAIN_SCREEN_ID );
 				display_mode mode;
 				screen->GetMode( &mode );
-				int32 width = 250;
-				int32 height = 110; // 70
-				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
-				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
-				int32 new_width = x_wind + width;	// x 2
-				int32 new_height = y_wind + height;		// x 2
+//				int32 width = 250;
+//				int32 height = 110; // 70
+//				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+//				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+//				int32 new_width = x_wind + width;	// x 2
+//				int32 new_height = y_wind + height;		// x 2
 				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
 //				iProfileSelector = new ProfileSelector( iLastProfile, BRect( x_wind, y_wind, new_width, new_height ), &res );
 //				if( iProfileSelector->LockLooper() )
@@ -302,12 +302,12 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 				BScreen *screen = new BScreen( B_MAIN_SCREEN_ID );
 				display_mode mode;
 				screen->GetMode( &mode );
-				int32 width = 250;
-				int32 height = 110; // 70
-				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
-				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
-				int32 new_width = x_wind + width;	// x 2
-				int32 new_height = y_wind + height;		// x 2
+//				int32 width = 250;
+//				int32 height = 110; // 70
+//				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+//				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+//				int32 new_width = x_wind + width;	// x 2
+//				int32 new_height = y_wind + height;		// x 2
 				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
 //				iProfileSelector = new ProfileSelector( iLastProfile, BRect( x_wind, y_wind, new_width, new_height ), &res );
 //				if( iProfileSelector->LockLooper() )
@@ -363,12 +363,12 @@ void BeGadu::MessageReceived( BMessage *aMessage )
 				BScreen *screen = new BScreen( B_MAIN_SCREEN_ID );
 				display_mode mode;
 				screen->GetMode( &mode );
-				int32 width = 250;
-				int32 height = 110; // 70
-				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
-				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
-				int32 new_width = x_wind + width;	// x 2
-				int32 new_height = y_wind + height;		// x 2
+//				int32 width = 250;
+//				int32 height = 110; // 70
+//				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+//				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+//				int32 new_width = x_wind + width;	// x 2
+//				int32 new_height = y_wind + height;		// x 2
 				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_NOT_SELECTED ) );
 //				iProfileSelector = new ProfileSelector( name, BRect( x_wind, y_wind, new_width, new_height ), &res );
 //				if( iProfileSelector->LockLooper() )

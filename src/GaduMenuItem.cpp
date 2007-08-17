@@ -38,7 +38,7 @@ GaduMenuItem::~GaduMenuItem()
 
 void GaduMenuItem::DrawContent()
 {
-	rgb_color color;
+//	rgb_color color;
 	BRect frame = Frame();
 	frame.left += 2;
 	frame.top += 2;
