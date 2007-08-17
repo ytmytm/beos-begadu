@@ -14,6 +14,8 @@
 #include <Message.h>
 #include <String.h>
 #include <OutlineListView.h>
+#include <UTF8.h>
+
 #include "Msg.h"
 #include "Network.h"
 #include "Main.h"
@@ -355,9 +357,18 @@ void Network::Logout()
 void Network::SendMsg( uin_t aWho, const char* aMessage )
 	{
 	printf( "Network::SendMsg()\n" );
+	// konwersja z utf8 na - iso8859-2
+	char *dstBuf = new char[strlen(aMessage)+1];
+	int32 state;
+	int32 inLen = strlen(aMessage);
+	int32 outLen = inLen;
+	convert_from_utf8(B_ISO2_CONVERSION,aMessage,&inLen,dstBuf,&outLen,&state);
+	dstBuf[outLen]=0;
+	//
 	if( iSession )
 		{
-		if( gg_send_message( iSession, GG_CLASS_CHAT, aWho, ( unsigned char* ) aMessage ) == -1 )
+//		if( gg_send_message( iSession, GG_CLASS_CHAT, aWho, ( unsigned char* ) aMessage ) == -1 )
+		if( gg_send_message( iSession, GG_CLASS_CHAT, aWho, ( unsigned char* ) dstBuf ) == -1 )
 			{	
 			gg_free_session( iSession );
 			perror( "Connection lost." );
@@ -365,6 +376,7 @@ void Network::SendMsg( uin_t aWho, const char* aMessage )
 //		else
 //			fprintf(stderr,"Wysłałem wiadomość o treści %s do %d\n", komu, wiadomosc);
 		}
+	delete dstBuf;
 	}
 
 void Network::GotMsg( uin_t aWho, const char* aMessage )
@@ -388,11 +400,27 @@ void Network::GotMsg( uin_t aWho, const char* aMessage )
 		iWinList->AddItem( win );
 		win->Show();
 		}
+	// konwersja na utf8
+	char *dstBuf = new char[strlen(aMessage)*2];
+	int32 state;
+	int32 inLen = strlen(aMessage);
+	int32 outLen = inLen*2;
+	convert_to_utf8(B_ISO2_CONVERSION,aMessage,&inLen,dstBuf,&outLen,&state);
+	dstBuf[outLen]=0;
+	// prawie dobrze...
+	BString tmp(dstBuf);
+	tmp.ReplaceAll("š","ą");
+	tmp.ReplaceAll("Ľ","Ą");
+	tmp.ReplaceAll("","ś");
+	tmp.ReplaceAll("","Ś");
+	tmp.ReplaceAll("","ź");
+	tmp.ReplaceAll("","Ź");
 	/* i pokazujemy je :P */
 	BMessage* wiadomosc = new BMessage( SHOW_MESSAGE );
-	wiadomosc->AddString( "msg", aMessage );
+	wiadomosc->AddString( "msg", tmp.String() );
 	BMessenger( win ).SendMessage( wiadomosc );
 	delete wiadomosc;
+	delete dstBuf;
 	}
 
 void Network::AddHandler( int fd, int cond, void* data )

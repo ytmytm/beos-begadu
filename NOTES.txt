@@ -1,13 +1,13 @@
-NAJPIERW
+BACKPORT:
 - backport co się da z wersji CVS
 	nie ma wprowadzonego z patcha: preferences (zależne od innych - nieistniejące preferences list)
 	nie ma: profileselector (?)
+
+NAJPIERW
 - segfault po załadowaniu listy (dalej aktualne z nowym main)
 	???
-- po uruchomieniu deskbar nie ma aktualnego statusu
 - kolory okien do bani
 - na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!])  i treścią opisu/statusu
-- konwersja wszystkiego do/z cp1250
 - reformat stylu pisania kodu
 - sprawdzenie włączanych nagłówków i grafu zależności
 - używanie okna debug
