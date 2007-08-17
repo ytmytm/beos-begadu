@@ -57,10 +57,14 @@ int32 HandlerThread( void *_handler )
 	else
 		{
 		gg_change_status( network->Session(), network->iStatus );
-//		if( network->iWindow )
-//			{
-//			BMessenger( network->iWindow ).SendMessage( UPDATE_STATUS );
-//			}
+		if( network->iWindow )
+			{
+			BMessenger( network->iWindow ).SendMessage( UPDATE_STATUS );
+			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
+			message->AddInt16( "iStatus", network->iStatus );
+			BMessenger( network->iWindow ).SendMessage( message );
+			delete message;
+			}
 		time( &pingTimer );
 		while( !handler->iDie )
 			{
@@ -136,10 +140,9 @@ void NetworkHandler::HandleEvent( struct gg_event *event )
 			// fprintf(stderr, "GG_EVENT_NONE || GG_EVENT_PONG\n");
 			break;
 			}
-			
-//		case GG_STATE_CONNECTED:
 		case GG_EVENT_CONN_SUCCESS:
 			{
+			fprintf(stderr,"GG_EVENT_CONN_SUCCESS\n");
 			HandleEventConnected( event );
 			break;
 			}
