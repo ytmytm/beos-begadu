@@ -50,6 +50,7 @@ BuddyEdit::BuddyEdit( MainWindow* aWindow, BRect aRect, Person* aPerson )
 
 	BString title( BUDDY_EDIT_NAME );
 	title.Append( aPerson->GetDisplay() );
+	title << " (" << aPerson->GetUIN() << ")";
 	SetTitle( title.String() );
 
 	iWindow = aWindow;
