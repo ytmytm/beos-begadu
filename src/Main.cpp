@@ -5,27 +5,27 @@
 */
 
 #include <Alert.h>
-#include <Application.h>
+//#include <Application.h>
 #include <Beep.h>
 #include <Bitmap.h>
-#include <DataIO.h>
-#include <FindDirectory.h>
-#include <ListView.h>
+//#include <DataIO.h>
+//#include <FindDirectory.h>
+//#include <ListView.h>
 #include <MenuBar.h>
 #include <MenuField.h>
-#include <MenuItem.h>
-#include <Path.h>
-#include <Point.h>
+//#include <MenuItem.h>
+//#include <Path.h>
+//#include <Point.h>
 #include <PopUpMenu.h>
-#include <Resources.h>
+//#include <Resources.h>
 #include <Roster.h>
 #include <Screen.h>
 #include <ScrollView.h>
 #include <String.h>
-#include <StringView.h>
+//#include <StringView.h>
 #include <StorageKit.h>
-#include <stdlib.h>
-#include <string.h>
+//#include <stdlib.h>
+//#include <string.h>
 
 #include "About.h"
 #include "BuddyEdit.h"

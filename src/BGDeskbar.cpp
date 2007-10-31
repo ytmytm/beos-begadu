@@ -10,21 +10,21 @@
  * ============================================================================
  */
 
-#include <Alert.h>
+//#include <Alert.h>
 #include <Bitmap.h>
 #include <Deskbar.h>
-#include <FindDirectory.h>
-#include <InterfaceDefs.h>
+//#include <FindDirectory.h>
+//#include <InterfaceDefs.h>
 #include <Menu.h>
 #include <MenuItem.h>
-#include <Message.h>
-#include <Path.h>
+//#include <Message.h>
+//#include <Path.h>
 #include <PopUpMenu.h>
-#include <Resources.h>
+//#include <Resources.h>
 #include <Roster.h>
 #include <Screen.h>
-#include <String.h>
-#include <stdio.h>
+//#include <String.h>
+//#include <stdio.h>
 
 #include "BGDeskbar.h"
 #include "Debug.h"

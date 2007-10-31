@@ -10,18 +10,18 @@
  * ============================================================================
  */
 
-#include <File.h>
-#include <stdlib.h>
+//#include <File.h>
+//#include <stdlib.h>
 #include <Bitmap.h>
 #include <BitmapStream.h>
 #include <Message.h>
 #include <TranslatorRoster.h>
 #include <TranslationUtils.h>
-#include <View.h>
+//#include <View.h>
 #include <Window.h>
 #include <Resources.h>
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include "GfxStuff.h"
 
 

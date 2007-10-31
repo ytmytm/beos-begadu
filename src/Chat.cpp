@@ -4,18 +4,18 @@
 	Homepage: http://gadu.beos.pl
 */
 
-#include <OS.h>
-#include <Application.h>
-#include <Path.h>
+//#include <OS.h>
+//#include <Application.h>
+//#include <Path.h>
 #include <TextControl.h>
 #include <ScrollView.h>
-#include <TextView.h>
+//#include <TextView.h>
 #include <Screen.h>
 #include <String.h>
-#include <Roster.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+//#include <Roster.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
 
 #include "Msg.h"
 #include "Chat.h"
@@ -23,8 +23,6 @@
 #include "Main.h"
 #include "Person.h"
 #include "globals.h"
-
-#include <libgadu.h>
 
 //#ifdef ZETA
 //#include <locale/Locale.h>

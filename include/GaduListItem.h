@@ -15,7 +15,7 @@
 #define __BEGADU_GADULISTITEM_H__
 
 #include <ListItem.h>
-#include <Resources.h>
+//#include <Resources.h>
 
 /* Forward references */
 class BBitmap;
@@ -23,6 +23,7 @@ class BMessage;
 class BRect;
 class BFont;
 class BString;
+class BResources;
 
 class GaduListItem : public BListItem
 	{

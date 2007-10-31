@@ -1,14 +1,15 @@
-#include <Application.h>
-#include <Button.h>
-#include <Path.h>
-#include <Screen.h>
-#include <String.h>
-#include <Roster.h>
-#include <TextControl.h>
-#include <View.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+//#include <Application.h>
+#include <Button.h>
+//#include <Path.h>
+//#include <Screen.h>
+#include <String.h>
+//#include <Roster.h>
+#include <TextControl.h>
+//#include <View.h>
+
+//#include <stdio.h>
+//#include <stdlib.h>
 
 #include "Msg.h"
 #include "BuddyEdit.h"

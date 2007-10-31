@@ -1,14 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <Message.h>
-#include <ListView.h>
-#include <Rect.h>
-#include <View.h>
+
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <Message.h>
+//#include <ListView.h>
+//#include <Rect.h>
+//#include <View.h>
 #include <PopUpMenu.h>
 #include <MenuItem.h>
-#include <Screen.h>
-#include <InterfaceDefs.h>
-#include <View.h>
+//#include <Screen.h>
+//#include <InterfaceDefs.h>
+//#include <View.h>
 #include "GaduListView.h"
 #include "Main.h"
 #include "Msg.h"
@@ -37,8 +38,7 @@ void GaduListView::MouseDown( BPoint aWhere )
 	 */
 	unsigned long buttons;
 	BPopUpMenu *menu = new BPopUpMenu( "menu", true, true );
-	BMenuItem *item = new BMenuItem( "Edytuj", new BMessage( BUDDY_EDIT ) );
-	menu->AddItem( item );
+	menu->AddItem( new BMenuItem( "Edytuj", new BMessage( BUDDY_EDIT ) ) );
 	GetMouse( &aWhere, &buttons, false );
 	if( buttons & B_SECONDARY_MOUSE_BUTTON )
 		{

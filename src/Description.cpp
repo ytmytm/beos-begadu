@@ -1,36 +1,34 @@
-#include <Application.h>
+
+//#include <Application.h>
 #include <Bitmap.h>
 #include <Box.h>
 #include <Button.h>
-#include <OS.h>
-#include <Path.h>
+//#include <OS.h>
+//#include <Path.h>
 #include <RadioButton.h>
-#include <Roster.h>
-#include <Screen.h>
+//#include <Roster.h>
+//#include <Screen.h>
 #include <String.h>
-#include <TabView.h>
-#include <TextControl.h>
-#include <View.h>
+//#include <TabView.h>
+#include <TextView.h>
+//#include <View.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+#include <libgadu.h>
 
 #include "Msg.h"
 #include "Description.h"
 #include "Main.h"
 #include "Network.h"
 #include "GfxStuff.h"
+#include "globals.h"
 
-extern "C"
-{
-#include "libgadu.h"
-}
-
-#ifdef ZETA
-#include <locale/Locale.h>
-#else
-#define _T(str) (str)
-#endif
+//#ifdef ZETA
+//#include <locale/Locale.h>
+//#else
+//#define _T(str) (str)
+//#endif
 
 #define DESCRIPTION_NAME "Change description"
 

@@ -14,9 +14,12 @@
 #define __BEGADU_GFX_STUFF_H__
 
 #include <View.h>
-#include <Bitmap.h>
-#include <Resources.h>
-#include <Message.h>
+//#include <Bitmap.h>
+//#include <Resources.h>
+//#include <Message.h>
+
+class BBitmap;
+class BResources;
 
 BBitmap *LoadBMP( char* );
 BBitmap *LoadGFX( const char* );

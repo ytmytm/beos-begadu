@@ -14,7 +14,7 @@
 #define __BEGADU_DESCRIPTION_H__
 
 #include <Window.h>
-#include <Resources.h>
+//#include <Resources.h>
 
 class BTextView;
 class BRadioButton;
@@ -23,6 +23,7 @@ class MainWindow;
 class BBitmap;
 class BBox;
 class BView;
+class BResources;
 
 class IconsView : public BView
 	{

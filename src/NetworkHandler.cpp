@@ -4,18 +4,20 @@
 	Homepage: http://gadu.beos.pl
 */
 
-#include <OS.h>
-#include <Application.h>
-#include <stdio.h>
+//#include <OS.h>
+//#include <Application.h>
+//#include <stdio.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <errno.h>
+//#include <sys/socket.h>
+//#include <errno.h>
 #include <Message.h>
 #include <Alert.h>
-#include <OutlineListView.h>
-#include <String.h>
+#include <ListView.h>
+//#include <OutlineListView.h>
+//#include <String.h>
 #include <Roster.h>
-#include <Path.h>
+//#include <Path.h>
+#include <libgadu.h>
 
 #include "Main.h"
 #include "Msg.h"
@@ -23,8 +25,6 @@
 #include "Network.h"
 #include "Person.h"
 #include "GaduListItem.h"
-
-#include <libgadu.h>
 
 static time_t 	curTime = 0;
 static time_t 	pingTimer = 0;
@@ -63,6 +63,8 @@ int32 HandlerThread( void *_handler )
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
 			message->AddInt16( "iStatus", network->iStatus );
 			BMessenger( network->iWindow ).SendMessage( message );
+			// XXX this is here to notify that sync login is complete!
+			handler->HandleEventConnected(NULL);
 			delete message;
 			}
 		time( &pingTimer );
@@ -132,6 +134,7 @@ void NetworkHandler::Stop()
 
 void NetworkHandler::HandleEvent( struct gg_event *event )
 	{
+	fprintf(stderr, "got event %i\n",event->type);
 	switch( event->type)
 		{
 		case GG_EVENT_NONE:
@@ -214,6 +217,7 @@ void NetworkHandler::HandleEventConnected( struct gg_event *event )
 		{
 		fprintf( stderr, "Ok.\n");
 		iNetwork->iWindow->GetProfile()->GetUserlist()->Send( iNetwork->Session() );
+		fprintf( stderr, "NetworkHandler: Sent userlist to get notifies from server\n" );
 		}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_STATUS );
 	BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
@@ -253,12 +257,14 @@ void NetworkHandler::HandleEventUserlist( struct gg_event *event )
 		{
 		if( iNetwork->iEvent->event.userlist.reply )
 			{
-			Person* o;
-			List *list = iNetwork->iWindow->GetProfile()->GetUserlist()->GetList();
 			Userlist *userlist = iNetwork->iWindow->GetProfile()->GetUserlist();
-			if( list->CountItems() <= 0 )
+			List *list = userlist->GetList();
+			int n;
+			n = list->CountItems();
+			if( n >= 0 )
 				{
-				for( int i = 0; list->CountItems(); i++ )
+				Person *o = NULL;
+				for( int i = 0; i < n; i++ )
 					{
 					o = ( Person* ) list->ItemAt( i );
 					if( iNetwork->Session() )
@@ -266,28 +272,27 @@ void NetworkHandler::HandleEventUserlist( struct gg_event *event )
 					}
 				}
 			GaduListItem *g = NULL;
-			for( int i = 0; i < iNetwork->iWindow->ListItems()->CountItems(); i++ )
-				{
-				g = ( GaduListItem* ) iNetwork->iWindow->ListItems()->ItemAt( i );
-				if( iNetwork->iWindow->Lock() )
-					{
-					if( iNetwork->iWindow->ListView()->LockLooper() )
-						{
+			n = iNetwork->iWindow->ListItems()->CountItems();
+			if( iNetwork->iWindow->Lock() ) {
+				if( iNetwork->iWindow->ListView()->LockLooper() ) {
+					for( int i = 0; i < n; i++ ) {
+						g = ( GaduListItem* ) iNetwork->iWindow->ListItems()->ItemAt( i );
 						iNetwork->iWindow->ListView()->RemoveItem( g );
-						iNetwork->iWindow->ListView()->UnlockLooper();
-						}
-					iNetwork->iWindow->Unlock();
+					// XXX segfault! g points to wrong data(?)
+					//	delete g;
 					}
-				delete g;
+					iNetwork->iWindow->ListView()->UnlockLooper();
 				}
-			iNetwork->iWindow->ListItems()->MakeEmpty();
+				iNetwork->iWindow->ListItems()->MakeEmpty();
+				iNetwork->iWindow->Unlock();
+			}
 			userlist->Set( iNetwork->iEvent->event.userlist.reply );
 			fprintf( stderr, "sending userlist...\n" );
 			userlist->Send( iNetwork->Session() );
 			fprintf( stderr, "sent\n" );
 			BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 			BAlert* alert = new BAlert( "Lista",
-										"Lista kontaktow zostala zaladowana z servera",
+										"Lista kontaktow zostala zaladowana z serwera",
 										"OK" );
 			alert->Go();
 			}
@@ -320,11 +325,10 @@ void NetworkHandler::HandleEventNotify( struct gg_event *event )
  			}
  		o->SetStatus( n->status );
 		}
-	if( iNetwork->iWindow->ListView()->LockLooper() )
-		{
-		iNetwork->iWindow->ListView()->MakeEmpty();
-		iNetwork->iWindow->ListView()->UnlockLooper();
-		}
+//	if( iNetwork->iWindow->ListView()->LockLooper() ) {
+//		iNetwork->iWindow->ListView()->MakeEmpty();		// XXX memleak?
+//		iNetwork->iWindow->ListView()->UnlockLooper();
+//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 	}
 
@@ -355,56 +359,41 @@ void NetworkHandler::HandleEventNotify60( struct gg_event *event )
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 	}
 
-void NetworkHandler::HandleEventStatus( struct gg_event *event )
-	{
+void NetworkHandler::HandleEventStatus( struct gg_event *event ) {
 	fprintf( stderr, "NetworkHandler::HandleEventStatus()\n");
 	Userlist* userlist = iNetwork->iWindow->GetProfile()->GetUserlist();
-	List* list = userlist->GetList();
  	Person *o = NULL;
- 	if( !( o = userlist->Find( iNetwork->iEvent->event.status.uin ) ) )
+ 	if( !( o = userlist->Find( iNetwork->iEvent->event.status.uin ) ) ) {
+		fprintf( stderr, "no such person %i\n",iNetwork->iEvent->event.status60.uin);
  		return;
- 	for( int i = 0; i < list->CountItems(); i++ )
-	 	{
- 		o = ( Person* ) list->ItemAt( i );
- 		if( o->GetUIN() == iNetwork->iEvent->event.status.uin )
-			return;
- 		}
+ 	}
  	o->SetStatus( iNetwork->iEvent->event.status.status );
  	o->SetDescription( iNetwork->iEvent->event.status.descr );
-	if( iNetwork->iWindow->ListView()->LockLooper())
-		{
-		iNetwork->iWindow->ListView()->MakeEmpty();
-		iNetwork->iWindow->ListView()->UnlockLooper();
-		}
+//	if( iNetwork->iWindow->ListView()->LockLooper()) {
+//		iNetwork->iWindow->ListView()->MakeEmpty();	// XXX memleak?
+//		iNetwork->iWindow->ListView()->UnlockLooper();
+//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
-	}
+}
 
-void NetworkHandler::HandleEventStatus60( struct gg_event *event )
-	{
+void NetworkHandler::HandleEventStatus60( struct gg_event *event ) {
 	fprintf( stderr, "NetworkHandler::HandleEventStatus60()\n" );
 	Userlist* userlist = iNetwork->iWindow->GetProfile()->GetUserlist();
-	List* list = userlist->GetList();
- 	Person* o = NULL;
- 	if( !( o = userlist->Find( iNetwork->iEvent->event.status60.uin ) ) )
- 		{
+	Person* o = NULL;
+  	if( !( o = userlist->Find( iNetwork->iEvent->event.status60.uin ) ) ) {
+		fprintf( stderr, "no such person %i\n",iNetwork->iEvent->event.status60.uin);
  		return;
- 		}
- 	for( int i = 0; i < list->CountItems(); i++ )
-	 	{
- 		o = ( Person* ) list->ItemAt( i );
- 		if( o->GetUIN() == iNetwork->iEvent->event.status60.uin )
- 			return;
- 		}
+ 	}
  	o->SetStatus( iNetwork->iEvent->event.status60.status );
  	o->SetDescription( iNetwork->iEvent->event.status60.descr );
-
-	if( iNetwork->iWindow->ListView()->LockLooper() )
-		{
-		iNetwork->iWindow->ListView()->MakeEmpty();
-		iNetwork->iWindow->ListView()->UnlockLooper();
-		}
+//	if( iNetwork->iWindow->ListView()->LockLooper() ) {
+//		// XXX memleak? - a usunięcie obiektów?
+//		// XXX i w ogóle po co usuwanie tutaj?
+//		iNetwork->iWindow->ListView()->MakeEmpty();
+//		iNetwork->iWindow->ListView()->UnlockLooper();
+//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
-	}
+}
 
 static int Expired( time_t timer )
 	{

@@ -4,21 +4,21 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- segfault po załadowaniu listy (dalej aktualne z nowym main)
-	???
-- kolory okien do bani
 - na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!])  i treścią opisu/statusu
-- reformat stylu pisania kodu
-- sprawdzenie włączanych nagłówków i grafu zależności
-- używanie okna debug
+- kolory okien do bani
+- używanie okna debug do czegoś
 	??? (log gg na okno, jak w bemobile?)
-- nie działa eksport kontaktów
-- nie działa zapis kontaktów (po edycji)
-- nie działa śledzenie statusu kontaktów
+- nie działa eksport kontaktów (co miałby robić zapisać listę lokalnie? to jest przy wyjściu)
+- nie działa zapis danych kontaktów (po edycji)
+- "dodaj nowy kontakt" w menu kontekstowym
+- NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
 
 POTEM
 - powiadamianie o dostarczeniu wiadomości (np. przez kolorowanie wysłanych)
+	(handleevent type 5 == GG_EVENT_ACK)
 - zapisywanie rozmówców z listy w formacie People
-- historia rozmów
+- zapisywanie historii rozmów (format ekg)
 - doprowadzić wielorakie profile do porządku (tylko przez menu, jak w nowym main.cpp)
 - update i merge do wersji 1.7.x (>=1) libgadu
+- reformat stylu pisania kodu (sukcesywnie)
+- graf zależności i włączane nagłówki (sukcesywnie)

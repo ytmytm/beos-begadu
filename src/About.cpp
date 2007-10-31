@@ -10,13 +10,13 @@
  * ============================================================================
  */
 
-#include <InterfaceKit.h>
+//#include <InterfaceKit.h>
 #include <Screen.h>
 #include <String.h>
-#include <View.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+//#include <View.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
 #include "About.h"
 #include "Msg.h"
 #include "globals.h"

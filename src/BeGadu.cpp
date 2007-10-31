@@ -5,20 +5,20 @@
 */
 
 #include <Deskbar.h>
-#include <Path.h>
+//#include <Path.h>
 #include <Roster.h>
 #include <StorageKit.h>
-#include <File.h>
+//#include <File.h>
 #include <Screen.h>
 #include <String.h>
-#include <Alert.h>
+//#include <Alert.h>
 
 #include "Msg.h"
 #include "BeGadu.h"
 #include "Network.h"
 #include "Main.h"
 #include "Person.h"
-#include "Debug.h"
+//#include "Debug.h"
 #include "Preferences.h"
 #include "ProfileWizard.h"
 //#include "ProfileSelector.h"

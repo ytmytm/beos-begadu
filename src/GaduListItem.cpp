@@ -1,21 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
+
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <Message.h>
-#include <ListItem.h>
+//#include <ListItem.h>
 #include <Bitmap.h> 
-#include <Rect.h>
-#include <Font.h>
+//#include <Rect.h>
+//#include <Font.h>
 #include <String.h>
-#include <View.h>
-#include <Roster.h>
+//#include <View.h>
+//#include <Roster.h>
 #include <Resources.h>
-#include <File.h>
-#include <DataIO.h>
+//#include <File.h>
+//#include <DataIO.h>
+
+#include <libgadu.h>
+
 #include "GaduListItem.h"
 #include "GfxStuff.h"
-extern "C" {
-#include "libgadu.h"
-}
 
 GaduListItem::GaduListItem( const char *aPerson, int aStatus, const char *aDescription, BResources *aRes ) : BListItem()
 	{

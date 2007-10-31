@@ -2,7 +2,7 @@
 #define __BEGADU_GADULISTVIEW_H__
 
 #include <ListView.h>
-#include <Resources.h>
+//#include <Resources.h>
 
 class MainWindow;
 

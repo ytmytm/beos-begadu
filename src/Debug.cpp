@@ -4,7 +4,8 @@
 	Homepage: http://gadu.beos.pl
 */
 
-#include <Application.h>
+//#include <Application.h>
+#include <Message.h>
 #include "Debug.h"
 
 #define DEBUGWINDOW_RECT BRect(150,50,500,350)

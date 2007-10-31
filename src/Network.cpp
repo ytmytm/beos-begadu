@@ -4,16 +4,18 @@
 	Homepage: http://gadu.beos.pl
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
-#include <File.h>
-#include <Path.h>
-#include <FindDirectory.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <sys/time.h>
+//#include <File.h>
+//#include <Path.h>
+//#include <FindDirectory.h>
 #include <Message.h>
+//#include <Messenger.h>
 #include <String.h>
-#include <OutlineListView.h>
+#include <ListView.h>
+//#include <OutlineListView.h>
 #include <UTF8.h>
 
 #include "Msg.h"
@@ -22,10 +24,6 @@
 #include "Chat.h"
 #include "Person.h"
 #include "NetworkHandler.h"
-extern "C"
-{
-#include "libgadu.h"
-}
 
 Network::Network( Profile* aProfile, List* aList ) : BLooper( "Network Loop" )
 	{

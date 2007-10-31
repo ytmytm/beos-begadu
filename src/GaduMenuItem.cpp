@@ -10,15 +10,15 @@
  * ============================================================================
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <Message.h>
-#include <MenuItem.h>
-#include <Bitmap.h> 
-#include <Rect.h>
-#include <Font.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <Message.h>
+//#include <MenuItem.h>
+//#include <Bitmap.h> 
+//#include <Rect.h>
+//#include <Font.h>
 #include <String.h>
-#include <View.h>
+//#include <View.h>
 #include "GaduMenuItem.h"
 #include "GfxStuff.h"
 
