@@ -12,6 +12,8 @@ NAJPIERW
 - nie działa zapis danych kontaktów (po edycji)
 - "dodaj nowy kontakt" w menu kontekstowym
 - NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
+- poprawić literówki
+- po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 
 POTEM
 - usunięcie locale z Zety
