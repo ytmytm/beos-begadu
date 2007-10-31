@@ -14,6 +14,8 @@ NAJPIERW
 - NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
 
 POTEM
+- usunięcie locale z Zety
+- zastąpienie locales gettextem lub czymś własnym
 - powiadamianie o dostarczeniu wiadomości (np. przez kolorowanie wysłanych)
 	(handleevent type 5 == GG_EVENT_ACK)
 - zapisywanie rozmówców z listy w formacie People
