@@ -21,4 +21,4 @@ POTEM
 - zapisywanie rozmówców z listy w formacie People
 - historia rozmów
 - doprowadzić wielorakie profile do porządku (tylko przez menu, jak w nowym main.cpp)
-- włączyć źródła libgadu do projektu (domyślnie bez ssl), kompilacja jak dla FreeBSD (socket to nie fd)
+- update i merge do wersji 1.7.x (>=1) libgadu

@@ -23,7 +23,7 @@
 #define __GG_LIBGADU_HAVE_LONG_LONG
 
 /* Defined if libgadu was compiled and linked with TLS support. */
-#define __GG_LIBGADU_HAVE_OPENSSL
+#undef __GG_LIBGADU_HAVE_OPENSSL
 
 /* Include file containing uintXX_t declarations. */
 #include <inttypes.h>
