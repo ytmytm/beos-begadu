@@ -628,6 +628,7 @@ int Userlist::Write( BString* aName )
 void Userlist::ClearStatus( Person* aPerson )
 	{
 	Person *o = NULL;
+	struct in_addr addr;
 
 	for( int i = 0; i < iList->CountItems(); i++ )
 		{
@@ -635,8 +636,10 @@ void Userlist::ClearStatus( Person* aPerson )
 		if( !aPerson->GetUIN() || aPerson->GetUIN() == o->GetUIN() )
 			{
 			o->SetStatus( GG_STATUS_NOT_AVAIL );
-			memset( &o->GetIP(), 0, sizeof( struct in_addr ) );
-			memset( &o->GetLastIP(), 0, sizeof( struct in_addr ) );
+			addr = o->GetIP();
+			memset( &addr, 0, sizeof( struct in_addr ) );
+			addr = o->GetLastIP();
+			memset( &addr, 0, sizeof( struct in_addr ) );
 			o->SetPort( 0 );
 			o->SetLastPort( 0 );
 			o->SetDescription( "" );
