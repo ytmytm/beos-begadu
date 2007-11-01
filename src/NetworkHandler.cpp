@@ -41,33 +41,44 @@ int32 HandlerThread( void *_handler )
 	fd_set	rd, wr;
 	struct timeval tv;
 	if( handler->iDie )
-		{
 		return -1;
-		}
-		
-	if( !( network->iSession = gg_login( &network->iLoginParam ) ) )
-		{
-		if( network->iSession )
-			{
+
+	BMessage *message = new BMessage(SET_CONN_DESCRIPTION);
+	message->AddString("desc",BString(_T("Connecting" B_UTF8_ELLIPSIS)));
+	BMessenger( network->iWindow ).SendMessage( message );
+	delete message;
+
+	if( !( network->iSession = gg_login( &network->iLoginParam ) ) ) {
+		if( network->iSession ) {
 			fprintf( stderr, "Error creating session: %d", network->iSession->error );
-			}
-	//	BMessenger( network ).SendMessage( DEL_HANDLER );
-		network->Logout();
+		} else {
+			fprintf( stderr, "No session created\n");
+		}
+		BMessage *message = new BMessage(SET_CONN_DESCRIPTION);
+		message->AddString("desc",BString(_T("Login failed")));
+		BMessenger( network->iWindow ).SendMessage( message );
+		delete message;
+//		BMessenger( network ).SendMessage( DEL_HANDLER );
+		BMessenger( network ).SendMessage( DO_LOGOUT );
+//		network->Logout();
 		return 0;
 		}
 	else
 		{
 		gg_change_status( network->Session(), network->iStatus );
-		if( network->iWindow )
-			{
+		if( network->iWindow ) {
 			BMessenger( network->iWindow ).SendMessage( UPDATE_STATUS );
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
 			message->AddInt16( "iStatus", network->iStatus );
 			BMessenger( network->iWindow ).SendMessage( message );
+			delete message;
 			// XXX this is here to notify that sync login is complete!
 			handler->HandleEventConnected(NULL);
+			message = new BMessage(SET_CONN_DESCRIPTION);
+			message->AddString("desc",BString(_T("Connected")));
+			BMessenger( network->iWindow ).SendMessage( message );
 			delete message;
-			}
+		}
 		time( &pingTimer );
 		while( !handler->iDie )
 			{
@@ -119,8 +130,6 @@ NetworkHandler::NetworkHandler( Network* aNetwork, int id, int fd, int cond, voi
 
 void NetworkHandler::Run()
 	{
-	BMessenger( iNetwork->iWindow ).SendMessage( SET_CONN_DESCRIPTION );
-
 	fprintf( stderr, "NetworkHandler::Run()\n" );
 	iDie = false;
 	iThreadID = spawn_thread( HandlerThread, "handler thread", B_NORMAL_PRIORITY, this );
@@ -138,7 +147,6 @@ void NetworkHandler::Stop()
 void NetworkHandler::HandleEvent( struct gg_event *event )
 	{
 	fprintf(stderr, "got event %i\n",event->type);
-	BMessenger( iNetwork->iWindow ).SendMessage( SET_CONN_DESCRIPTION );
 	switch( event->type)
 		{
 		case GG_EVENT_NONE:
@@ -224,7 +232,6 @@ void NetworkHandler::HandleEventConnected( struct gg_event *event ) {
 		}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_STATUS );
 	BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-	message = new BMessage( BGDESKBAR_CHSTATE );
 	message->AddInt16( "iStatus", iNetwork->iStatus );
 	BMessenger( iNetwork->iWindow ).SendMessage( message );
 	delete message;

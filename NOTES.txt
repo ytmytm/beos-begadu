@@ -4,17 +4,20 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-? czy linia ze statusem jest poprawna na login failed? a na no-connection?
+- przed pierwszym połączeniem deskbar ma zły status (docelowy, a nie aktualny!)
 - konwersja opisów z/do UTF8!
+	- description -> przy dodawaniu na listę
+	- own description -> przy zapisywaniu statusu na GG
 - używanie okna debug do czegoś
 	??? (log gg na okno, jak w bemobile?)
-- "dodaj nowy kontakt" w menu kontekstowym
+- "dodaj/usuń kontakt" w menu kontekstowym
 - NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
-- poprawić literówki
+	- do czego są 3 różne listy w Main?
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
+- wszystkie miejsca z EmptyList - memleak?
 
 POTEM
-- import z serwera nie wciąga dodatkowych danych (nick, email, phone) [na pewno? może ich nie ma?]
+- import z serwera nie wciąga emaila
 - zaimplementować eksport na serwer
 - usunięcie locale z Zety
 - zastąpienie locales gettextem lub czymś własnym

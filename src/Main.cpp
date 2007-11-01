@@ -512,40 +512,31 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 		case UPDATE_STATUS:
 			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( UPDATE_STATUS )\n" );
-			switch( iNetwork->GetStatus() ) {
+			int status = iNetwork->GetStatus();
+			switch( status ) {
 				case GG_STATUS_NOT_AVAIL:
-					{
 					iNotAvail->SetMarked( true );
 			 		break;
-					}
-
 				case GG_STATUS_INVISIBLE:
-					{
 					iInvisible->SetMarked( true );
 					break;
-					}
-
 				case GG_STATUS_BUSY:
-					{
 					iBRB->SetMarked( true );
 					break;
-					}
-
 				case GG_STATUS_AVAIL:
-					{
 					iAvail->SetMarked( true );
 					break;
-					}
-
 				case GG_STATUS_AVAIL_DESCR:
 				case GG_STATUS_BUSY_DESCR:
 				case GG_STATUS_INVISIBLE_DESCR:
 				case GG_STATUS_NOT_AVAIL_DESCR:
-					{
 					iDescr->SetMarked( true );
 					break;			
-					}
 			}
+			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
+			message->AddInt16( "iStatus", status );
+			BMessenger( this ).SendMessage( message );
+			delete message;
 			break;
 			}
 
@@ -628,31 +619,14 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 
 		case SET_CONN_DESCRIPTION:
 			{
+			BString str;
 			DEBUG_TRACE( "MainWindow::MessageReceived( SET_CONN_DESCRIPTION )\n" );
-			int state;
-			if (iNetwork->Session())
-				state = iNetwork->Session()->state;
-			else
-				state = iNetwork->iStatus;
-			printf("state = [%i]\n",state);
-			switch (state) {
-					case GG_STATE_CONNECTED:
-						iConnStatus->SetText(_T("Connected"));
-						break;
-					case GG_STATE_RESOLVING:
-						iConnStatus->SetText(_T("Offline"));
-						break;
-					case GG_STATE_CONNECTING:
-						iConnStatus->SetText(_T("Connecting" B_UTF8_ELLIPSIS));
-						break;
-//					case GG_STATE_ERROR:
-//						iConnStatus->SetText(_T("Error"));
-//						break;
-					default:
-						iConnStatus->SetText(_T("Connecting" B_UTF8_ELLIPSIS));
-						printf("other state\n");
-						break;
-				}
+			if (aMessage->FindString("desc",&str) == B_OK) {
+				printf("desc=[%s]\n",str.String());
+				iConnStatus->SetText(str.String());
+			} else {
+				printf("NO MESSAGE!\n");
+			}
 			break;
 			}
 
