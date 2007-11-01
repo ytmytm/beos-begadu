@@ -1,26 +1,13 @@
 
-//#include <Application.h>
 #include <Button.h>
-//#include <Path.h>
-//#include <Screen.h>
 #include <String.h>
-//#include <Roster.h>
 #include <TextControl.h>
-//#include <View.h>
-
-//#include <stdio.h>
-//#include <stdlib.h>
 
 #include "Msg.h"
 #include "BuddyEdit.h"
 #include "Main.h"
 #include "Person.h"
-
-#ifdef ZETA
-#include <locale/Locale.h>
-#else
-#define _T(str) (str)
-#endif
+#include "globals.h"
 
 #define BUDDY_EDIT_NAME "Edycja "
 
@@ -31,25 +18,9 @@ BuddyEdit::BuddyEdit( MainWindow* aWindow, BRect aRect, Person* aPerson )
 			   B_NORMAL_WINDOW_FEEL )
 	{
 
-#ifdef ZETA
-	app_info appinfo;
-	be_app->GetAppInfo( &appinfo );
-	BPath localization;
-	BEntry entryloc( &appinfo.ref, true );
-	entryloc.GetPath( &localization );
-	localization.GetParent( &localization );
-	localization.Append( "Language/Dictionaries/BeGadu" );
-	BString localization_string;
-	if( localization.InitCheck() != B_OK )
-		localization_string.SetTo( "Language/Dictionaries/BeGadu" );
-	else
-		localization_string.SetTo( localization.Path() );
-	be_locale.LoadLanguageFile( localization_string.String() );
-#endif
-	
 	iPerson = aPerson;
 
-	BString title( BUDDY_EDIT_NAME );
+	BString title( _T(BUDDY_EDIT_NAME) );
 	title.Append( aPerson->GetDisplay() );
 	title << " (" << aPerson->GetUIN() << ")";
 	SetTitle( title.String() );
@@ -76,7 +47,7 @@ BuddyEdit::BuddyEdit( MainWindow* aWindow, BRect aRect, Person* aPerson )
 
 	r.top = r.top + 25;
 	r.bottom = r.top + 25;
-	
+
 	iSurnameControl = new BTextControl( r,
 									 "iSurnameControl",
 									 _T( "Surname:" ),
@@ -138,37 +109,31 @@ BuddyEdit::BuddyEdit( MainWindow* aWindow, BRect aRect, Person* aPerson )
 	iEmailControl->SetAlignment( B_ALIGN_RIGHT, B_ALIGN_LEFT );
 	iEmailControl->SetFont( font );
 	AddChild( iEmailControl );
-	
-	if( iNameControl->LockLooper() )
-		{
+
+	if( iNameControl->LockLooper() ) {
 		iNameControl->SetText( iPerson->GetName() );
 		iNameControl->UnlockLooper();
-		}
-	if( iSurnameControl->LockLooper() )
-		{
+	}
+	if( iSurnameControl->LockLooper() ) {
 		iSurnameControl->SetText( iPerson->GetSurname() );
 		iSurnameControl->UnlockLooper();
-		}
-	if( iNickControl->LockLooper() )
-		{
+	}
+	if( iNickControl->LockLooper() ) {
 		iNickControl->SetText( iPerson->GetNick() );
 		iNickControl->UnlockLooper();
-		}
-	if( iDisplayControl->LockLooper() )
-		{
+	}
+	if( iDisplayControl->LockLooper() ) {
 		iDisplayControl->SetText( iPerson->GetDisplay() );
 		iDisplayControl->UnlockLooper();
-		}
-	if( iMobileControl->LockLooper() )
-		{
+	}
+	if( iMobileControl->LockLooper() ) {
 		iMobileControl->SetText( iPerson->GetMobile() );
 		iMobileControl->UnlockLooper();
-		}
-	if( iEmailControl->LockLooper() )
-		{
+	}
+	if( iEmailControl->LockLooper() ) {
 		iEmailControl->SetText( iPerson->GetEmail() );
 		iEmailControl->UnlockLooper();
-		}
+	}
 	r = Bounds();
 	r.left = r.right - 140;
 	r.right = r.right - 75;
@@ -178,23 +143,20 @@ BuddyEdit::BuddyEdit( MainWindow* aWindow, BRect aRect, Person* aPerson )
     button = new BButton( r, "ok button", _T( "OK" ), new BMessage( BUDDY_EDIT_OK ) );
     button->MakeDefault( true );
     AddChild( button );
-    
+
     r = Bounds();
 	r.left = r.right - 65;
 	r.right = r.right -5;
 	r.top = r.bottom - 30;
 	r.bottom = -5;
-    
+
     button = new BButton( r, "cancel button", _T( "Cancel" ), new BMessage( BUDDY_EDIT_CANCEL ) );
     AddChild( button );
-	}
+}
 
-void BuddyEdit::MessageReceived( BMessage* aMessage )
-	{
-	switch( aMessage->what )
-		{
+void BuddyEdit::MessageReceived( BMessage* aMessage ) {
+	switch( aMessage->what ) {
 		case BUDDY_EDIT_OK:
-			{
 			iPerson->SetName( iNameControl->Text() );
 			iPerson->SetSurname( iSurnameControl->Text() );
 			iPerson->SetNick( iNickControl->Text() );
@@ -204,20 +166,14 @@ void BuddyEdit::MessageReceived( BMessage* aMessage )
 			BMessenger( iWindow ).SendMessage( UPDATE_LIST );
 			BMessenger( this ).SendMessage( B_QUIT_REQUESTED );
 			break;
-			}
-		
 		case BUDDY_EDIT_CANCEL:
-			{
 			BMessenger( this ).SendMessage( B_QUIT_REQUESTED );
 			break;
-			}
-			
 		default:
 			BWindow::MessageReceived( aMessage );
-		}
 	}
+}
 
-void BuddyEdit::Show()
-	{
+void BuddyEdit::Show() {
     BWindow::Show();
-	}
+}

@@ -1,21 +1,9 @@
-/*
- * ============================================================================
- *  Nazwa    : BeGadu z BeGadu.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Glowny modul
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_H__
 #define __BEGADU_H__
 
 #include <Application.h>
 
-/* Forward classes */
 class DebugWindow;
 class MainWindow;
 class ProfileSelector;
