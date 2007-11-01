@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- *  Nazwa    : Chat z Chat.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Klasa okienka z czatem
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_CHATWINDOW_H__
 #define __BEGADU_CHATWINDOW_H__
@@ -16,7 +5,6 @@
 #include <Window.h>
 #include <libgadu.h>
 
-/* Forward references */
 class Network;
 class MainWindow;
 class Person;

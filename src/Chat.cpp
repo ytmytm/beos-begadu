@@ -1,21 +1,8 @@
-/*
-	Chat.cpp
-	Code: aljen <aljen@gumisie.org>
-	Homepage: http://gadu.beos.pl
-*/
 
-//#include <OS.h>
-//#include <Application.h>
-//#include <Path.h>
 #include <TextControl.h>
 #include <ScrollView.h>
-//#include <TextView.h>
 #include <Screen.h>
 #include <String.h>
-//#include <Roster.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
 
 #include "Msg.h"
 #include "Chat.h"
@@ -23,12 +10,6 @@
 #include "Main.h"
 #include "Person.h"
 #include "globals.h"
-
-//#ifdef ZETA
-//#include <locale/Locale.h>
-//#else
-//#define _T(str) (str)
-//#endif
 
 #define CHATWIN_RECT BRect(100,100,500,400)
 #define CHATWIN_NAME ""
@@ -42,7 +23,7 @@ ChatWindow::ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho )
 	iWindow	= aWindow;
 	iWho = aWho;
 	SetSizeLimits( 300, 2000, 200, 2000 );
-	
+
 	/*
 		we're fixing a title and checking that we have that number in our people list
 		if true, set to iDisplay
@@ -50,32 +31,29 @@ ChatWindow::ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho )
 	Person *person;
 	BString title = Title();
 	BString *pe = NULL;
-	for( int i = 0; i < iWindow->GetProfile()->GetUserlist()->GetList()->CountItems(); i++ )
-		{
+	for( int i = 0; i < iWindow->GetProfile()->GetUserlist()->GetList()->CountItems(); i++ ) {
 		person = ( Person* ) iWindow->GetProfile()->GetUserlist()->GetList()->ItemAt( i );
-		if( aWho == person->GetUIN() )
-			{
+		if( aWho == person->GetUIN() ) {
 			pe = new BString( person->GetDisplay() );
 			break;
-			}
 		}
-	if( !pe )
-		{
+	}
+	if( !pe ) {
 		pe = new BString();
 		pe->SetTo( _T("[Stranger]") );
-		}
+	}
 
 	title.Append( pe->String() );
 	title << " (" << iWho << ")";
 	SetTitle( title.String());
-	
+
 	/* making a default background */
 	BRect r = Bounds();
 	BView *someView;
 	someView = new BView( r, "some view", B_FOLLOW_ALL, B_WILL_DRAW );
 	someView->SetViewColor( 60, 60, 60 );
 	AddChild( someView );
-	
+
 	/* 'chat' at base of BTextView */
 	r = someView->Bounds();
 	r.InsetBy( 10, 10 );
@@ -103,12 +81,10 @@ ChatWindow::ChatWindow( Network *aNetwork, MainWindow *aWindow, uin_t aWho )
 	iSayControl->SetDivider( width / 2 );
 	iSayControl->SetFont( font );
 	someView->AddChild( iSayControl );
-	}
+}
 
-void ChatWindow::MessageReceived( BMessage* aMessage )
-	{
-	switch( aMessage->what )
-		{
+void ChatWindow::MessageReceived( BMessage* aMessage ) {
+	switch( aMessage->what ) {
 		case SHOW_MESSAGE:
 			{
 			const char *msg;
@@ -119,21 +95,18 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 			BString *str2 = NULL;
 			char *string = NULL;
 			Person *person = NULL;
-			for( int i = 0; i < iWindow->GetProfile()->GetUserlist()->GetList()->CountItems(); i++ )
-				{
+			for( int i = 0; i < iWindow->GetProfile()->GetUserlist()->GetList()->CountItems(); i++ ) {
 				person = ( Person* ) iWindow->GetProfile()->GetUserlist()->GetList()->ItemAt( i );
-				if( iWho == person->GetUIN() )
-					{
+				if( iWho == person->GetUIN() ) {
 					str = new BString();
 					str->SetTo( person->GetDisplay() );
 					break;
-					}
 				}
-			if( !str )
-				{
+			}
+			if( !str ) {
 				str = new BString();
 				*str << ( int32 ) iWho;
-				}
+			}
 			BFont *font = new BFont( be_plain_font );
 			font->SetSize( 16.0 );
 			font->SetEncoding( B_ISO_8859_2 );
@@ -157,29 +130,24 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 			iChat->SetFontAndColor( iChat->TextLength(), iChat->TextLength() + str2->Length(), font, B_FONT_ALL, &white );
 			iChat->Insert( iChat->TextLength(), str2->String(), str2->Length() );
 			BScrollBar * scrollBar = iScrollView->ScrollBar( B_VERTICAL );
-			if( scrollBar->LockLooper() )
-				{
+			if( scrollBar->LockLooper() ) {
 				float max,min;
 				scrollBar->GetRange( &min, &max );
 				scrollBar->SetValue( max );
 				scrollBar->UnlockLooper();
-				}
+			}
 			delete str;
 			delete str2;
 			break;			
 			}
-			
 		case BEGG_SEND:
 			{
-			if( iSayControl->LockLooper())
-				{
-				if( !(*iSayControl->Text() ) )
-					{
+			if( iSayControl->LockLooper()) {
+				if( !(*iSayControl->Text() ) ) {
 					/* nothing to send */
 					iSayControl->UnlockLooper();
 					break;
-					}
-				
+				}
 				/* first we add message into chat window */
 				time_t _now = time( NULL );
 				struct tm * now = localtime( &_now );
@@ -213,14 +181,12 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 
 				/* scroll down */
 				BScrollBar * scrollBar = iScrollView->ScrollBar( B_VERTICAL );
-				if( scrollBar->LockLooper() )
-					{
+				if( scrollBar->LockLooper() ) {
 					float max,min;
 					scrollBar->GetRange( &min, &max );
 					scrollBar->SetValue( max );
 					scrollBar->UnlockLooper();
-					}
-				
+				}
 				/* sending... */
 				BMessage *newmessage;
 				newmessage = new BMessage( SEND_MESSAGE );
@@ -231,43 +197,38 @@ void ChatWindow::MessageReceived( BMessage* aMessage )
 				/* clearing edit box */
 				iSayControl->SetText( NULL );
 				iSayControl->UnlockLooper();
-				}
-			break;
 			}
-			
+			break;
+			}			
 		default:
 			BWindow::MessageReceived( aMessage );
 			break;
-		}
 	}
+}
 
-bool ChatWindow::QuitRequested()
-	{
+bool ChatWindow::QuitRequested() {
 	BMessage *mesg = new BMessage( CLOSE_MESSAGE );
 	mesg->AddPointer( "win", this );
 	BMessenger( iNetwork ).SendMessage( mesg );
 	delete mesg;
 	return false;
-	}
+}
 
-void ChatWindow::FrameResized( float width, float height )
-	{
+void ChatWindow::FrameResized( float width, float height ) {
 	BWindow::FrameResized( width, height );
 	BRect	r = iChat->Bounds();
 	r.InsetBy( 10, 10 );
 	iChat->SetTextRect( r );
 	BScrollBar *scrollBar = iScrollView->ScrollBar( B_VERTICAL );
-	if( scrollBar->LockLooper() )
-		{
+	if( scrollBar->LockLooper() ) {
 		float min, max;
 		scrollBar->GetRange( &min, &max );
 		scrollBar->SetValue( max );
 		scrollBar->UnlockLooper();
-		}
 	}
+}
 
-void ChatWindow::Show()
-	{
+void ChatWindow::Show() {
 	/* focusing window */
 	BPoint point;
 	point.x = iWindow->Frame().left + 
@@ -283,13 +244,10 @@ void ChatWindow::Show()
 	MoveTo( point );
 	iSayControl->MakeFocus();
 	BWindow::Show();
-	}
+}
 
-void ChatWindow::WindowActivated( bool aActivated )
-	{
+void ChatWindow::WindowActivated( bool aActivated ) {
 	if( aActivated )
-		{
 		iSayControl->MakeFocus( true );
-		}
 	BWindow::WindowActivated( aActivated );
-	}
+}
