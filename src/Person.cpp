@@ -12,11 +12,14 @@
 #include <FindDirectory.h>
 #include <Alert.h>
 #include <StorageKit.h>
+#include <libgadu.h>
+
 #include "Person.h"
+#include "globals.h"
+
 extern "C" {
 #include "xmalloc.h"
 #include "dynstuff.h"
-#include "libgadu.h"
 #include "strlcpy.h"
 }
 
@@ -891,6 +894,8 @@ void Userlist::Import(struct gg_session* aSession, List* aList )
 
 void Userlist::Export( struct gg_session* aSession, List* aList )
 	{
+		BAlert *alert = new BAlert( _T("Export"), _T("Not implemented yet"), _T("OK") );
+		alert->Go();
 	}
 
 List* Userlist::GetList() const
