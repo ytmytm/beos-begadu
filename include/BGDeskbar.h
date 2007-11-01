@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- *  Nazwa    : BGDeskbar from BGDeskbar.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		BGDeskbar replicant
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_DESKBAR_H__
 #define __BEGADU_DESKBAR_H__
@@ -16,7 +5,6 @@
 #include <View.h>
 #include <Resources.h>
 
-/* Forward references */
 class BBitmap;
 class BPopUpMenu;
 class BMessage;

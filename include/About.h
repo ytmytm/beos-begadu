@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- *  Nazwa    : AboutWindow z About.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Klasa okienka About
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_ABOUT_WINDOW_H__
 #define __BEGADU_ABOUT_WINDOW_H__

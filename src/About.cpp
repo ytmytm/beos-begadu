@@ -1,22 +1,7 @@
-/*
- * ============================================================================
- *  Name     : AboutWindow from About.h
- *  Part of  : BeGadu
- *  Authors  : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Implementation notes:
- *		About window class
- *  Version  : 1.2
- * ============================================================================
- */
 
-//#include <InterfaceKit.h>
 #include <Screen.h>
 #include <String.h>
-//#include <View.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
+
 #include "About.h"
 #include "Msg.h"
 #include "globals.h"
@@ -27,13 +12,11 @@
 AboutView::AboutView( BRect aRect ) : BView( aRect,
 											 "AboutView",
 											 B_FOLLOW_ALL,
-											 B_WILL_DRAW )
-	{
+											 B_WILL_DRAW ) {
 	SetViewColor( 60, 60, 60 );
-	}
+}
 
-void AboutView::Draw( BRect aRect )
-	{
+void AboutView::Draw( BRect aRect ) {
 	BFont font( be_plain_font );
 	font.SetSize( 18.0 );
 	SetFont( &font );
@@ -42,24 +25,22 @@ void AboutView::Draw( BRect aRect )
 	MovePenTo(  ( ( ABOUTWINDOW_RECT.right - ABOUTWINDOW_RECT.left) /2 ) - font.StringWidth( title.String() ) /2 , 20 );
 	SetHighColor( 255, 255, 255 );
 	DrawString( APP_NAME " " VERSION );
-	}
+}
 
 AboutWindow::AboutWindow() : BWindow( ABOUTWINDOW_RECT,
 									  "About",
 									  B_TITLED_WINDOW,
 									  B_NOT_RESIZABLE |
 									  B_NOT_ZOOMABLE |
-									  B_NOT_MOVABLE )
-	{
+									  B_NOT_MOVABLE ) {
 	/* setting background */
 	BRect r = Bounds();
 	AboutView *aboutView;
 	aboutView = new AboutView( r );
 	AddChild( aboutView );
-	}
+}
 
-void AboutWindow::Show()
-	{
+void AboutWindow::Show() {
 	BScreen *screen = new BScreen( this );
 	display_mode mode;
 	screen->GetMode( &mode );
@@ -72,9 +53,8 @@ void AboutWindow::Show()
 	int32 y_wind = mode.timing.v_display/2 - ( height/2 );
 	MoveTo( x_wind, y_wind );
 	BWindow::Show();
-	}
+}
 
-bool AboutWindow::QuitRequested()
-	{
+bool AboutWindow::QuitRequested() {
 	return true;
-	}
+}

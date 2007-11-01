@@ -1,33 +1,13 @@
-/*
- * ============================================================================
- *  Name     : BGDeskbar from BGDeskbar.h
- *  Part of  : BeGadu
- *  Authors  : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Implementation notes:
- *		BGDeskbar replicant
- *  Version  : 1.2
- * ============================================================================
- */
 
-//#include <Alert.h>
 #include <Bitmap.h>
 #include <Deskbar.h>
-//#include <FindDirectory.h>
-//#include <InterfaceDefs.h>
 #include <Menu.h>
 #include <MenuItem.h>
-//#include <Message.h>
-//#include <Path.h>
 #include <PopUpMenu.h>
-//#include <Resources.h>
 #include <Roster.h>
 #include <Screen.h>
-//#include <String.h>
-//#include <stdio.h>
 
 #include "BGDeskbar.h"
-#include "Debug.h"
 #include "GaduMenuItem.h"
 #include "GfxStuff.h"
 #include "Main.h"
@@ -37,17 +17,15 @@
 
 extern "C" _EXPORT BView* instantiate_deskbar_item();
 
-BView *instantiate_deskbar_item( void )
-	{
+BView *instantiate_deskbar_item( void ) {
 	fprintf( stderr, "instantiate_deskbar_item()\n" );
 	return new BGDeskbar();
-	}
+}
 
 BGDeskbar::BGDeskbar() : BView( BRect( 0, 0, 15, 15),
 								"BGDeskbar",
 								B_FOLLOW_LEFT | B_FOLLOW_TOP,
-								B_WILL_DRAW | B_PULSE_NEEDED )
-	{
+								B_WILL_DRAW | B_PULSE_NEEDED ) {
 	fprintf( stderr, "BGDeskbar()\n" );
 	iIcon = NULL;
 	iIconAvail = NULL;
@@ -65,10 +43,9 @@ BGDeskbar::BGDeskbar() : BView( BRect( 0, 0, 15, 15),
 	iMenuProfileNotSelected = NULL;
 	iProfileSelected = false;
 	Initialize();
-	}
+}
 
-BGDeskbar::BGDeskbar( BMessage *aMessage ) : BView( aMessage )
-	{
+BGDeskbar::BGDeskbar( BMessage *aMessage ) : BView( aMessage ) {
 	fprintf( stderr, "BGDeskbar( aMessage )\n" );
 	iIcon = NULL;
 	iIconAvail = NULL;
@@ -86,90 +63,73 @@ BGDeskbar::BGDeskbar( BMessage *aMessage ) : BView( aMessage )
 	iMenuProfileNotSelected = NULL;
 	iProfileSelected = false;
 	Initialize();
-	}
+}
 
-BGDeskbar::~BGDeskbar()
-	{
+BGDeskbar::~BGDeskbar() {
 	fprintf( stderr, "BGDeskbar::~BGdeskbar()\n" );
-	if( iIconAvail )
-		{
+	if( iIconAvail ) {
 		delete iIconAvail;
 		iIconAvail = NULL;
-		}
-	if( iIconAvailDescr )
-		{
+	}
+	if( iIconAvailDescr ) {
 		delete iIconAvailDescr;
 		iIconAvailDescr = NULL;
-		}
-	if( iIconBusy )
-		{
+	}
+	if( iIconBusy ) {
 		delete iIconBusy;
 		iIconBusy = NULL;
-		}
-	if( iIconBusyDescr )
-		{
+	}
+	if( iIconBusyDescr ) {
 		delete iIconBusyDescr;
 		iIconBusyDescr = NULL;
-		}
-	if( iIconInvisible )
-		{
+	}
+	if( iIconInvisible ) {
 		delete iIconInvisible;
 		iIconInvisible = NULL;
-		}
-	if( iIconInvisibleDescr )
-		{
+	}
+	if( iIconInvisibleDescr ) {
 		delete iIconInvisibleDescr;
 		iIconInvisibleDescr = NULL;
-		}
-	if( iIconNotAvail )
-		{
+	}
+	if( iIconNotAvail ) {
 		delete iIconNotAvail;
 		iIconNotAvail = NULL;
-		}
-	if( iIconNotAvailDescr )
-		{
+	}
+	if( iIconNotAvailDescr ) {
 		delete iIconNotAvailDescr;
 		iIconNotAvailDescr = NULL;
-		}
-	if( iIconQuit )
-		{
+	}
+	if( iIconQuit ) {
 		delete iIconQuit;
 		iIconQuit = NULL;
-		}
-	if( iIconNewMessage )
-		{
+	}
+	if( iIconNewMessage ) {
 		delete iIconNewMessage;
 		iIconNewMessage = NULL;
-		}
-	if( iIconSelect )
-		{
+	}
+	if( iIconSelect ) {
 		delete iIconSelect;
 		iIconSelect = NULL;
-		}
-	if( iIcon )
-		{
+	}
+	if( iIcon ) {
 		iIcon = NULL;
-		}
-	if( iMenuProfileSelected )
-		{
+	}
+	if( iMenuProfileSelected ) {
 		delete iMenuProfileSelected;
 		iMenuProfileSelected = NULL;
-		}
-	if( iMenuProfileNotSelected )
-		{
+	}
+	if( iMenuProfileNotSelected ) {
 		delete iMenuProfileNotSelected;
 		iMenuProfileNotSelected = NULL;
-		}
 	}
+}
 
-void BGDeskbar::Initialize()
-	{
+void BGDeskbar::Initialize() {
 	fprintf( stderr, "BGDeskbar::Initialize()\n" );
 	BRoster roster;
 	entry_ref ref;
 	BFile resfile;
-	if( roster.IsRunning( APP_MIME ) )
-		{
+	if( roster.IsRunning( APP_MIME ) ) {
 		fprintf( stderr, "BGDeskbar: Jest BeGadu :D\n" );
 		roster.FindApp( APP_MIME, &ref );
 		resfile.SetTo( &ref, B_READ_ONLY );	
@@ -186,12 +146,10 @@ void BGDeskbar::Initialize()
 		iIconQuit = GetBitmap( "quit" );
 		iIconSelect = GetBitmap( "config_catalog" );
 		iIcon = iIconNotAvail;
-		}
-	else
-		{
+	} else {
 		fprintf(stderr, "BGDeskbar: Nie ma BeGadu :(\n" );
 		be_roster->Launch( APP_MIME );
-		}
+	}
 
 	iMenuProfileSelected = new BPopUpMenu( "BGDeskbarMenuSelected", true, true );
 	GaduMenuItem *availItem = new GaduMenuItem( iIconAvail, _T( "Available" ), new BMessage( SET_AVAIL ) );
@@ -209,7 +167,7 @@ void BGDeskbar::Initialize()
 	iMenuProfileSelected->AddItem( aboutItem );
 	GaduMenuItem *quitItem = new GaduMenuItem( iIconQuit, _T( "Quit" ), new BMessage( BEGG_QUIT ) );
 	iMenuProfileSelected->AddItem( quitItem );
-	
+
 	iMenuProfileNotSelected = new BPopUpMenu( "BGDeskbarMenuNotSelected", true, true );
 	GaduMenuItem *selectItem = new GaduMenuItem( iIconSelect, _T( "Change profile" ), new BMessage( PROFILE_SELECT ) );
 	iMenuProfileNotSelected->AddItem( selectItem );
@@ -218,177 +176,118 @@ void BGDeskbar::Initialize()
 	iMenuProfileNotSelected->AddItem( aboutItem2 );
 	GaduMenuItem *quitItem2 = new GaduMenuItem( iIconQuit, _T( "Quit" ), new BMessage( BEGG_QUIT ) );
 	iMenuProfileNotSelected->AddItem( quitItem2 );
-	}
+}
 
-
-BArchivable* BGDeskbar::Instantiate( BMessage *aData )
-	{
+BArchivable* BGDeskbar::Instantiate( BMessage *aData ) {
 	if( !validate_instantiation( aData, "BGDeskbar" ) )
-		{
 		return NULL;
-		}
 	return ( new BGDeskbar( aData ) );
-	}
+}
 
-status_t BGDeskbar::Archive( BMessage *aData, bool aDeep = true) const
-	{
+status_t BGDeskbar::Archive( BMessage *aData, bool aDeep = true) const {
 	BView::Archive( aData, aDeep );
 	aData->AddString( "add_on", APP_MIME );
 	return B_NO_ERROR;
-	}
+}
 
-void BGDeskbar::MessageReceived( BMessage *aMessage )
-	{
-	switch( aMessage->what )
-		{
+void BGDeskbar::MessageReceived( BMessage *aMessage ) {
+	switch( aMessage->what ) {
 		case PROFILE_NOT_SELECTED:
-			{
 			iProfileSelected = false;
 			fprintf( stderr, "deskbar:not selected\n" );
 			break;
-			}
 		case PROFILE_SELECTED:
-			{
 			iProfileSelected = true;
 			fprintf( stderr, "deskbar:selected\n" );
 			break;
-			}
 		case BGDESKBAR_CHSTATE:
-			{
 			fprintf( stderr, "BGDeskbar::MessageReceived( BGDESKBAR_CHSTATE );\n" );
 			int16 status;
-			if( aMessage->FindInt16( "iStatus", &status ) != B_OK )
-				{
+			if( aMessage->FindInt16( "iStatus", &status ) != B_OK ) {
 				fprintf( stderr, "\tcan't find 'iStatus' in message...\n" );
 				break;
-				}
-			else
-				{
-				switch( status )
-					{
+			} else {
+				switch( status ) {
 					case GG_STATUS_AVAIL:
-						{
 						iIcon = iIconAvail;
 						break;
-						}
-
 					case GG_STATUS_BUSY:
-						{
 						iIcon = iIconBusy;
 						break;
-						}
-
 					case GG_STATUS_INVISIBLE:
-						{
 						iIcon = iIconInvisible;
 						break;
-						}
-
 					case GG_STATUS_NOT_AVAIL:
-						{
 						iIcon = iIconNotAvail;
 						break;
-						}
-
 					case GG_STATUS_AVAIL_DESCR:
-						{
 						iIcon = iIconAvailDescr;
 						break;
-						}
-
 					case GG_STATUS_BUSY_DESCR:
-						{
 						iIcon = iIconBusyDescr;
 						break;
-						}
-
 					case GG_STATUS_INVISIBLE_DESCR:
-						{
 						iIcon = iIconInvisibleDescr;
 						break;
-						}
-
 					case GG_STATUS_NOT_AVAIL_DESCR:
-						{
 						iIcon = iIconNotAvailDescr;
 						break;
-						}
 					}
 				}
 			break;
-			}
 		/* handling messages */
 		default:
 			BView::MessageReceived( aMessage );
 		}
-	}
+}
 
-
-void BGDeskbar::Draw( BRect aRect )
-	{
+void BGDeskbar::Draw( BRect aRect ) {
 	SetHighColor( Parent()->ViewColor() );
 	FillRect( Bounds() );
 	SetDrawingMode( B_OP_OVER );
 
-	if( iIcon )
-		{
+	if( iIcon ) {
 		SetDrawingMode( B_OP_ALPHA );
 		SetLowColor( 0, 0, 0, 0 );
 		SetViewColor( B_TRANSPARENT_32_BIT );
 		DrawBitmap( iIcon, BPoint( 0, 0 ) );
-		}
-	else
-		{
+	} else {
 		SetHighColor( 110, 110, 110 );
 		FillRect( Bounds() );
-		}
 	}
+}
 
-void BGDeskbar::Pulse()
-	{
+void BGDeskbar::Pulse() {
 	/* temporary... */
 	Invalidate();
-	}
+}
 
-void BGDeskbar::MouseDown( BPoint aWhere )
-	{
+void BGDeskbar::MouseDown( BPoint aWhere ) {
 	fprintf( stderr, "BGDeskbar: MouseDown( aWhere )\n" );
 	unsigned long buttons;
-	if( LockLooper() )
-		{
+	if( LockLooper() ) {
 		GetMouse( &aWhere, &buttons, false );
 		UnlockLooper();
-		}
-	if( buttons & B_PRIMARY_MOUSE_BUTTON )
-		{
+	}
+	if( buttons & B_PRIMARY_MOUSE_BUTTON ) {
 		fprintf( stderr, "BGDeskbar: MouseDown( B_PRIMARY_MOUSE_BUTTON )\n" );
 		BMessenger( APP_MIME ).SendMessage( new BMessage( SHOW_MAIN_WINDOW ) );
-		}
-	else if( buttons & B_SECONDARY_MOUSE_BUTTON )
-		{
-		fprintf( stderr, "BGDeskbar: MouseDown( B_SECONDARY_MOUSE_BUTTON )\n" );
+	} else if( buttons & B_SECONDARY_MOUSE_BUTTON ) {
+			fprintf( stderr, "BGDeskbar: MouseDown( B_SECONDARY_MOUSE_BUTTON )\n" );
 //		if( selectedItem )
-		if( iProfileSelected )
-			{
-			GaduMenuItem *selectedItem = (GaduMenuItem*) iMenuProfileSelected->Go( ConvertToScreen( aWhere ), false, true );
-			if( selectedItem )
-				{
-				BMessenger( APP_MIME ).SendMessage( selectedItem->Message() );
-				}
-			}
-		else
-			{
-			GaduMenuItem *selectedItem = (GaduMenuItem*) iMenuProfileNotSelected->Go( ConvertToScreen( aWhere ), false, true );
-			if( selectedItem )
-				{
-				BMessenger( APP_MIME ).SendMessage( selectedItem->Message() );
-				}
+			if( iProfileSelected ) {
+				GaduMenuItem *selectedItem = (GaduMenuItem*) iMenuProfileSelected->Go( ConvertToScreen( aWhere ), false, true );
+				if( selectedItem )
+					BMessenger( APP_MIME ).SendMessage( selectedItem->Message() );
+			} else {
+				GaduMenuItem *selectedItem = (GaduMenuItem*) iMenuProfileNotSelected->Go( ConvertToScreen( aWhere ), false, true );
+				if( selectedItem )
+					BMessenger( APP_MIME ).SendMessage( selectedItem->Message() );
 			}
 		}
-	}
+}
 
-void BGDeskbar::AttachedToWindow()
-	{
+void BGDeskbar::AttachedToWindow() {
 	fprintf( stderr, "BGDeskbar::AttachedToWindow()\n" );
 	snooze( 500*100 );
 	BMessage* message = new BMessage( ADD_MESSENGER );
@@ -397,21 +296,19 @@ void BGDeskbar::AttachedToWindow()
 	delete message;
 	/* temporary empty */
 	BView::AttachedToWindow();
-	}
+}
 
-void BGDeskbar::DetachedFromWindow()
-	{
+void BGDeskbar::DetachedFromWindow() {
 	fprintf( stderr, "BGDeskbar::DetachedFromWindow()\n" );
 	/* temporary empty */
 	BView::DetachedFromWindow();
-	}
+}
 
-void BGDeskbar::Remove()
-	{
-	}
+void BGDeskbar::Remove() {
 
-BBitmap *BGDeskbar::GetBitmap( const char* aName )
-	{
+}
+
+BBitmap *BGDeskbar::GetBitmap( const char* aName ) {
 	BBitmap 	*bitmap = NULL;
 	size_t 		len = 0;
 	status_t 	error;	
@@ -419,7 +316,7 @@ BBitmap *BGDeskbar::GetBitmap( const char* aName )
 	const void *data = iResources.LoadResource( 'BBMP', aName, &len );
 
 	BMemoryIO stream( data, len );
-	
+
 	BMessage archive;
 	error = archive.Unflatten( &stream );
 
@@ -429,11 +326,10 @@ BBitmap *BGDeskbar::GetBitmap( const char* aName )
 	if( !bitmap )
 		return NULL;
 
-	if( bitmap->InitCheck() != B_OK )
-		{
+	if( bitmap->InitCheck() != B_OK ) {
 		delete bitmap;
 		return NULL;
-		}
-	
-	return bitmap;
 	}
+
+	return bitmap;
+}
