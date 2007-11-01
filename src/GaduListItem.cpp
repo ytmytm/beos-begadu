@@ -1,17 +1,8 @@
 
-//#include <stdio.h>
-//#include <stdlib.h>
 #include <Message.h>
-//#include <ListItem.h>
 #include <Bitmap.h> 
-//#include <Rect.h>
-//#include <Font.h>
 #include <String.h>
-//#include <View.h>
-//#include <Roster.h>
 #include <Resources.h>
-//#include <File.h>
-//#include <DataIO.h>
 
 #include <libgadu.h>
 
@@ -25,9 +16,9 @@ GaduListItem::GaduListItem( const char *aPerson, int aStatus, const char *aDescr
 	iIcon = NULL;
 	SetIcon( iStatus );
 	iName = new BString( aPerson );
-	iDescription = new BString( aDescription );
 	iNameFont = new BFont( be_plain_font );
 	iNameFont->SetSize( 15.0 );
+	iDescription = fromISO2(aDescription);
 	iDescriptionFont = new BFont( be_plain_font );
 	iDescriptionFont->SetSize( 10.0 );
 	float woi = iNameFont->StringWidth( iName->String() );

@@ -65,11 +65,11 @@ int32 HandlerThread( void *_handler )
 		}
 	else
 		{
-		gg_change_status( network->Session(), network->iStatus );
+		gg_change_status( network->Session(), network->GetStatus() );
 		if( network->iWindow ) {
 			BMessenger( network->iWindow ).SendMessage( UPDATE_STATUS );
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-			message->AddInt16( "iStatus", network->iStatus );
+			message->AddInt16( "iStatus", network->GetStatus() );
 			BMessenger( network->iWindow ).SendMessage( message );
 			delete message;
 			// XXX this is here to notify that sync login is complete!
@@ -232,7 +232,7 @@ void NetworkHandler::HandleEventConnected( struct gg_event *event ) {
 		}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_STATUS );
 	BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-	message->AddInt16( "iStatus", iNetwork->iStatus );
+	message->AddInt16( "iStatus", iNetwork->GetStatus() );
 	BMessenger( iNetwork->iWindow ).SendMessage( message );
 	delete message;
 }

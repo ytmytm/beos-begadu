@@ -30,14 +30,6 @@ class Network : public BLooper
 		virtual void Quit();
 		virtual void MessageReceived( BMessage* aMessage );
 		void GotWindow( MainWindow* aWindow );
-		inline int GetIdent()
-			{
-			return iIdent;
-			}
-		inline int GetStatus()
-			{
-			return iStatus;
-			}
 		/* funkcje wywoływane z interfejsu */
 		void Login();
 		void Login( int aStatus );
@@ -50,16 +42,19 @@ class Network : public BLooper
 		struct gg_session* Session() const;
 		void SetStatus( int aStatus );
 		void SetDescription( BString *aDescription );
+		inline int GetIdent() {	return iIdent; }
+		inline int GetStatus() { return iStatus; }
 
+		MainWindow			*	iWindow;
+		BString				*	iDescription;
 
 		struct gg_session 	*	iSession;
 		struct gg_login_params	iLoginParam;
 		struct gg_event		*	iEvent;
-		MainWindow			*	iWindow;
-		int						iStatus;
-		BString				*	iDescription;
 
 	private:
+		int						iStatus;
+
 		/* klasy globalne */
 		Profile		* iProfile;
 		List		* iList;

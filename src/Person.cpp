@@ -457,6 +457,8 @@ int Profile::Load( BString* aProfile )
 		iRememberPassword = true;
 	if( cfgmesg->FindInt32( "iAutoStatus", ( int32* ) &iAutoStatus ) != B_OK )
 		iAutoStatus = GG_STATUS_AVAIL;
+	if( cfgmesg->FindString( "iAutoDescription", iDescription) != B_OK )
+		iDescription->SetTo( "()" );
 	if( cfgmesg->FindString( "iName", iName) != B_OK )
 		iName->SetTo( "" );
 	if( cfgmesg->FindString( "iProfilePassword", iProfilePassword ) != B_OK )
@@ -488,6 +490,7 @@ void Profile::Save()
 	cfgmesg->AddString( "iPassword", *iPassword );
 	cfgmesg->AddBool( "iRememberPassword", iRememberPassword );
 	cfgmesg->AddInt32( "iAutoStatus", iAutoStatus );
+	cfgmesg->AddString( "iAutoDescription", *iDescription );
 	cfgmesg->AddString( "iName", *iName );
 	cfgmesg->AddString( "iProfilePassword", *iProfilePassword );
 	cfgmesg->AddString( "iSurname", *iSurname );

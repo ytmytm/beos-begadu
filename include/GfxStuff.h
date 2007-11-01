@@ -14,15 +14,16 @@
 #define __BEGADU_GFX_STUFF_H__
 
 #include <View.h>
-//#include <Bitmap.h>
-//#include <Resources.h>
-//#include <Message.h>
 
 class BBitmap;
 class BResources;
 
 BBitmap *LoadBMP( char* );
 BBitmap *LoadGFX( const char* );
+
+class BString;
+BString *fromISO2(const char *input);
+BString *toISO2(const char *input);
 
 class IconControl : public BView
 {

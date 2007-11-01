@@ -200,11 +200,13 @@ MainWindow::MainWindow( BString* aProfile )
 
 	fprintf( stderr, "Profile %s loaded.\n", iProfile->GetProfileName() );
 
+printf("profile status:[%i],desc=[%s]\n",iProfile->GetAutoStatus(),iProfile->GetDescription());
+
 	if( iProfile->GetAutoStatus() != GG_STATUS_NOT_AVAIL ) {
 		if( iNetwork->Session() )
 			gg_change_status( iNetwork->Session(), iProfile->GetAutoStatus() );
 		else
-			iNetwork->Login( iProfile->GetAutoStatus() );
+			iNetwork->Login();
 	}
 }
 
@@ -422,7 +424,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 				iNetwork->Login( GG_STATUS_AVAIL );
 			}
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-			message->AddInt16( "iStatus", iNetwork->iStatus );
+			message->AddInt16( "iStatus", iNetwork->GetStatus() );
 			BMessenger( this ).SendMessage( message );
 			delete message;
 			break;
@@ -440,7 +442,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 				iNetwork->Login( GG_STATUS_BUSY );
 			}
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-			message->AddInt16( "iStatus", iNetwork->iStatus );
+			message->AddInt16( "iStatus", iNetwork->GetStatus() );
 			BMessenger( this ).SendMessage( message );
 			delete message;
 			break;
@@ -458,7 +460,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 				iNetwork->Login( GG_STATUS_INVISIBLE );
 			}
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-			message->AddInt16( "iStatus", iNetwork->iStatus );
+			message->AddInt16( "iStatus", iNetwork->GetStatus() );
 			BMessenger( this ).SendMessage( message );
 			delete message;
 			break;
@@ -472,7 +474,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 				iNetwork->Logout();
 			}
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-			message->AddInt16( "iStatus", iNetwork->iStatus );
+			message->AddInt16( "iStatus", iNetwork->GetStatus() );
 			BMessenger( this ).SendMessage( message );
 			delete message;
 			break;
@@ -531,12 +533,8 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 				case GG_STATUS_INVISIBLE_DESCR:
 				case GG_STATUS_NOT_AVAIL_DESCR:
 					iDescr->SetMarked( true );
-					break;			
+					break;
 			}
-			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
-			message->AddInt16( "iStatus", status );
-			BMessenger( this ).SendMessage( message );
-			delete message;
 			break;
 			}
 
@@ -622,10 +620,9 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			BString str;
 			DEBUG_TRACE( "MainWindow::MessageReceived( SET_CONN_DESCRIPTION )\n" );
 			if (aMessage->FindString("desc",&str) == B_OK) {
-				printf("desc=[%s]\n",str.String());
 				iConnStatus->SetText(str.String());
 			} else {
-				printf("NO MESSAGE!\n");
+//				printf("NO MESSAGE!\n");
 			}
 			break;
 			}
@@ -657,6 +654,13 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 		case BEGG_QUIT:
 			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_QUIT )\n" );
+			// save last status & description
+			if (iNetwork->Session()) {
+				iProfile->SetAutoStatus(iNetwork->GetStatus());
+				iProfile->SetDescription(iNetwork->iDescription->String());
+				printf("profile descr set to: [%s]\n",iNetwork->iDescription->String());
+			}
+			//
 			iProfile->SetRect( Frame() );
 			iProfile->Save();
 			/* cleaning up ;D */
@@ -712,7 +716,7 @@ void MainWindow::SetProfile( BString* aProfile )
 		if( iNetwork->iSession )
 			gg_change_status( iNetwork->iSession, iProfile->GetAutoStatus() );
 		else
-			iNetwork->Login( iProfile->GetAutoStatus() );
+			iNetwork->Login();
 		}
 	}
 

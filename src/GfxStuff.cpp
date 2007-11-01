@@ -10,20 +10,16 @@
  * ============================================================================
  */
 
-//#include <File.h>
-//#include <stdlib.h>
 #include <Bitmap.h>
 #include <BitmapStream.h>
 #include <Message.h>
 #include <TranslatorRoster.h>
 #include <TranslationUtils.h>
-//#include <View.h>
 #include <Window.h>
 #include <Resources.h>
 #include <stdio.h>
-//#include <stdlib.h>
-#include "GfxStuff.h"
 
+#include "GfxStuff.h"
 
 IconControl::IconControl(BRect frame, const char *name, BBitmap *MOut, BBitmap *MOver, BMessage *message) : BView(frame, name, B_FOLLOW_ALL, B_WILL_DRAW | B_NAVIGABLE | B_ASYNCHRONOUS_CONTROLS)
 {
@@ -208,4 +204,41 @@ BBitmap *BitmapView::GetBitmap(const char *name)
 	}
 	
 	return bitmap;
+}
+
+////////////////////
+
+#include <String.h>
+#include <UTF8.h>
+
+BString *fromISO2(const char *input) {
+	// konwersja na utf8
+	char *dstBuf = new char[strlen(input)*2];
+	int32 state;
+	int32 inLen = strlen(input);
+	int32 outLen = inLen*2;
+	convert_to_utf8(B_ISO2_CONVERSION,input,&inLen,dstBuf,&outLen,&state);
+	dstBuf[outLen]=0;
+	// prawie dobrze...
+	BString *result = new BString(dstBuf);
+	result->ReplaceAll("š","ą");
+	result->ReplaceAll("Ľ","Ą");
+	result->ReplaceAll("","ś");
+	result->ReplaceAll("","Ś");
+	result->ReplaceAll("","ź");
+	result->ReplaceAll("","Ź");
+	delete dstBuf;
+	return result;
+}
+
+BString *toISO2(const char *input) {
+	char *dstBuf = new char[strlen(input)+1];
+	int32 state;
+	int32 inLen = strlen(input);
+	int32 outLen = inLen;
+	convert_from_utf8(B_ISO2_CONVERSION,input,&inLen,dstBuf,&outLen,&state);
+	dstBuf[outLen]=0;
+	BString *result = new BString(dstBuf);
+	delete dstBuf;
+	return result;
 }
