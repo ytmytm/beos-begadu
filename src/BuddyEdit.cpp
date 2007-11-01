@@ -161,7 +161,7 @@ BuddyEdit::BuddyEdit( MainWindow* aWindow, BRect aRect, Person* aPerson )
 		}
 	if( iMobileControl->LockLooper() )
 		{
-		iMobileControl->SetText( iPerson->GetEmail() );
+		iMobileControl->SetText( iPerson->GetMobile() );
 		iMobileControl->UnlockLooper();
 		}
 	if( iEmailControl->LockLooper() )
