@@ -90,6 +90,7 @@ class MainWindow : public BWindow
 		GaduMenuItem		*	iInvisible;
 		GaduMenuItem		*	iNotAvail;
 		GaduMenuItem		*	iDescr;
+		BStringView			*	iConnStatus;
 		BBitmap				*	iIconAvail;
 		BBitmap				*	iIconBRB;
 		BBitmap				*	iIconInvisible;

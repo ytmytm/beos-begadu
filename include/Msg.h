@@ -68,6 +68,7 @@
 #define CHANGE_DESCRIPTION		'0039'
 #define DESCRIPTION_OK			'0040'
 #define DESCRIPTION_CANCEL		'0041'
+#define SET_CONN_DESCRIPTION	'0200'
 
 /* preferences */
 #define PROFILE_PASS_CHECK_BOX	'0042'

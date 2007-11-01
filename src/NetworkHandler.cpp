@@ -14,7 +14,7 @@
 #include <Alert.h>
 #include <ListView.h>
 //#include <OutlineListView.h>
-//#include <String.h>
+#include <String.h>
 #include <Roster.h>
 //#include <Path.h>
 #include <libgadu.h>
@@ -25,6 +25,7 @@
 #include "Network.h"
 #include "Person.h"
 #include "GaduListItem.h"
+#include "globals.h"
 
 static time_t 	curTime = 0;
 static time_t 	pingTimer = 0;
@@ -118,6 +119,8 @@ NetworkHandler::NetworkHandler( Network* aNetwork, int id, int fd, int cond, voi
 
 void NetworkHandler::Run()
 	{
+	BMessenger( iNetwork->iWindow ).SendMessage( SET_CONN_DESCRIPTION );
+
 	fprintf( stderr, "NetworkHandler::Run()\n" );
 	iDie = false;
 	iThreadID = spawn_thread( HandlerThread, "handler thread", B_NORMAL_PRIORITY, this );
@@ -135,6 +138,7 @@ void NetworkHandler::Stop()
 void NetworkHandler::HandleEvent( struct gg_event *event )
 	{
 	fprintf(stderr, "got event %i\n",event->type);
+	BMessenger( iNetwork->iWindow ).SendMessage( SET_CONN_DESCRIPTION );
 	switch( event->type)
 		{
 		case GG_EVENT_NONE:
@@ -202,8 +206,7 @@ void NetworkHandler::HandleEvent( struct gg_event *event )
 	gg_event_free( event );
 	}
 
-void NetworkHandler::HandleEventConnected( struct gg_event *event )
-	{
+void NetworkHandler::HandleEventConnected( struct gg_event *event ) {
 	fprintf( stderr, "NetworkHandler::HandleEventConnected()\n" );
 	fprintf( stderr, "NetworkHandler=> Checking userlist... " );
 	if( iNetwork->iWindow->GetProfile()->GetUserlist()->IsValid() == false ||
@@ -221,17 +224,17 @@ void NetworkHandler::HandleEventConnected( struct gg_event *event )
 		}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_STATUS );
 	BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
+	message = new BMessage( BGDESKBAR_CHSTATE );
 	message->AddInt16( "iStatus", iNetwork->iStatus );
 	BMessenger( iNetwork->iWindow ).SendMessage( message );
 	delete message;
-	}
+}
 
 void NetworkHandler::HandleEventConnFailed( struct gg_event *event )
 	{
 	fprintf( stderr, "NetworkHandler::HandleEventConnFailed()\n" );
 	iNetwork->Logout();
 	BMessenger( iNetwork->iWindow ).SendMessage( SET_NOT_AVAIL );
-
 	}
 
 void NetworkHandler::HandleEventDisconnected( struct gg_event *event )
@@ -246,7 +249,7 @@ void NetworkHandler::HandleEventMsg( struct gg_event *event )
 	BMessage *wiadomosc = new BMessage( GOT_MESSAGE );
 	wiadomosc->AddInt32( "who", iNetwork->iEvent->event.msg.sender );
 	wiadomosc->AddString( "msg", ( char* ) iNetwork->iEvent->event.msg.message );
-	fprintf( stderr, "Od: %d\nWiadomosc: %s\n", iNetwork->iEvent->event.msg.sender, (char*)iNetwork->iEvent->event.msg.message );
+//	fprintf( stderr, "Od: %d\nWiadomosc: %s\n", iNetwork->iEvent->event.msg.sender, (char*)iNetwork->iEvent->event.msg.message );
 	BMessenger( iNetwork ).SendMessage( wiadomosc );
 	}
 

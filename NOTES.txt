@@ -4,25 +4,26 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- na dole linia tekstu/ikona ze stanem połączenia ([zalogowany!])  i treścią opisu/statusu
-- kolory okien do bani
+? czy linia ze statusem jest poprawna na login failed? a na no-connection?
+- konwersja opisów z/do UTF8!
 - używanie okna debug do czegoś
 	??? (log gg na okno, jak w bemobile?)
-- nie działa eksport kontaktów (co miałby robić zapisać listę lokalnie? to jest przy wyjściu)
-- nie działa zapis danych kontaktów (po edycji)
 - "dodaj nowy kontakt" w menu kontekstowym
 - NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
 - poprawić literówki
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 
 POTEM
+- import z serwera nie wciąga dodatkowych danych (nick, email, phone) [na pewno? może ich nie ma?]
+- zaimplementować eksport na serwer
 - usunięcie locale z Zety
 - zastąpienie locales gettextem lub czymś własnym
+- poprawienie kolorów okna czatu na standardowe/konfigurowane
 - powiadamianie o dostarczeniu wiadomości (np. przez kolorowanie wysłanych)
 	(handleevent type 5 == GG_EVENT_ACK)
 - zapisywanie rozmówców z listy w formacie People
-- zapisywanie historii rozmów (format ekg)
+- zapisywanie historii rozmów (format loga ekg)
 - doprowadzić wielorakie profile do porządku (tylko przez menu, jak w nowym main.cpp)
 - update i merge do wersji 1.7.x (>=1) libgadu
 - reformat stylu pisania kodu (sukcesywnie)
-- graf zależności i włączane nagłówki (sukcesywnie)
+- poprawić graf zależności i włączane nagłówki (sukcesywnie)

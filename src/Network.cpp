@@ -125,7 +125,6 @@ void Network::MessageReceived( BMessage* aMessage )
 			break;
 			}
 			
-//		case ADD_PERSON:
 		case ADD_BUDDY:
 			{
 			fprintf( stderr, "Network::MessageReceived( ADD_PERSON )\n" );
@@ -133,7 +132,6 @@ void Network::MessageReceived( BMessage* aMessage )
 			break;
 			}
 			
-//		case DEL_PERSON:
 		case DEL_BUDDY:
 			{
 			fprintf( stderr, "Network::MessageReceived( DEL_PERSON )\n" );
@@ -249,6 +247,8 @@ void Network::Login()
 	printf( "Network::Login()\n" );
 	/* ustawiamy status na "Łączenie" */
 	iStatus = BEGG_CONNECTING;
+	if ( iWindow )
+		BMessenger( iWindow ).SendMessage( SET_CONN_DESCRIPTION );
 //	if( iWindow )
 //		BMessenger( iWindow ).SendMessage( UPDATE_STATUS );
 	/* ustawiamy pola potrzebne do połączenia z gg */
@@ -270,6 +270,8 @@ void Network::Login( int status )
 	printf( "Network::Login(status)\n" );
 	/* ustawiamy status na "Łączenie" */
 	iStatus = status;
+	if ( iWindow )
+		BMessenger( iWindow ).SendMessage( SET_CONN_DESCRIPTION );
 //	if( iWindow )
 //		BMessenger( iWindow ).SendMessage( UPDATE_STATUS );
 	/* ustawiamy pola potrzebne do połączenia z gg */
@@ -291,6 +293,8 @@ void Network::Login( int aStatus, BString *aDescription )
 	printf( "Network::Login(status, description)\n" );
 	/* ustawiamy status na "Łączenie" */
 	iStatus = aStatus;
+	if ( iWindow )
+		BMessenger( iWindow ).SendMessage( SET_CONN_DESCRIPTION );
 	iDescription = aDescription;
 //	if( iWindow )
 //		BMessenger( iWindow ).SendMessage( UPDATE_STATUS );
@@ -346,6 +350,8 @@ void Network::Logout()
 			BMessenger( iWindow ).SendMessage( UPDATE_LIST );
 			}
 		/* uaktualniamy status */
+		if ( iWindow )
+			BMessenger( iWindow ).SendMessage( SET_CONN_DESCRIPTION );
 		if( iWindow )
 			BMessenger( iWindow ).SendMessage( UPDATE_STATUS );
 		}
