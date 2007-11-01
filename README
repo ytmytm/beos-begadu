@@ -1,0 +1,47 @@
+BeGadu ?.?
+2007.??.??
+
+To klient GG oparty na tym, co udało się odnaleźć z projektu BeGadu: http://begadu.sourceforge.net
+
+Obecna wersja jest skompilowana dla BeOS R5 z netserver.
+Użyta libgadu pochodzi z listopada 2006r i została skonfigurowana jak dla systemów *BSD.
+
+
+
+LICENCJA
+Zarówno libgadu, jak i źródła z których korzystałem są na licencji GPLv2, więc i ta wersja musi być
+rozwijana na tych warunkach.
+
+
+
+START
+Po prostu uruchom program, podaj dane profilu. BeGadu połączy się z serwerem i ściągnie listę kontaktów z konta.
+
+
+
+NIE DZIAŁA / NIE MA
+- przełączanie profili (brak kilku plików źródłowych z wersji, która to potrafiła) - po prostu tego nie rób
+- dodawanie/usuwanie kontaktów
+- zapis listy kontaktów na serwer
+- nie ma logowania rozmów
+
+
+
+KOMPILACJA
+W katalogu lib/ wykonaj make.
+Resztę projektu zbuduj za pomocą BeIDE.
+
+
+
+LIBGADU & NETSERVER
+Prawdopodobnie bez większych zmian można zbudować program z BONE lub stosem TCP/IP z Haiku.
+
+Zmiany w libgadu polegały na zamianie:
+open -> opensocket
+read -> recv
+write -> send
+close -> closesocket
+
+libgadu nie korzysta z SSL (ale można to wkompilować), nie używa pthreads.
+
+Program działa tylko w trybie synchronicznego połączenia, to prawdopodobnie wina netservera.
