@@ -1,20 +1,8 @@
-/*
- * ============================================================================
- *  Nazwa    : Description from Description.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Klasa okna z opcjami
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_DESCRIPTION_H__
 #define __BEGADU_DESCRIPTION_H__
 
 #include <Window.h>
-//#include <Resources.h>
 
 class BTextView;
 class BRadioButton;
