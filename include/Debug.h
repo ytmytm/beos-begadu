@@ -1,21 +1,10 @@
-/*
- * ============================================================================
- *  Nazwa    : Debug z Debug.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Modul do debugowania
- *  Version  : 1.2
- * ============================================================================
- */
-
 
 #ifndef __BEGADU_DEBUG_H__
 #define __BEGADU_DEBUG_H__
 
 #include <Window.h>
-#include <TextView.h>
+
+class TextView;
 
 class DebugWindow : public BWindow
 	{

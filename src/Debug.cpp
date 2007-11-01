@@ -1,21 +1,13 @@
-/*
-	Debug.cpp
-	Code: aljen <aljen@gumisie.org>
-	Homepage: http://gadu.beos.pl
-*/
 
-//#include <Application.h>
 #include <Message.h>
+#include <TextView.h>
+
 #include "Debug.h"
 
 #define DEBUGWINDOW_RECT BRect(150,50,500,350)
 #define DEBUGWINDOW_NAME "Debug output"
-void DebugWindow::AddLog(char *entry)
-{
-	dview->Insert(entry);
-}
-DebugWindow::DebugWindow() : BWindow(DEBUGWINDOW_RECT,DEBUGWINDOW_NAME, B_FLOATING_WINDOW, B_NOT_CLOSABLE | B_NOT_ZOOMABLE)
-{
+
+DebugWindow::DebugWindow() : BWindow(DEBUGWINDOW_RECT,DEBUGWINDOW_NAME, B_FLOATING_WINDOW, B_NOT_CLOSABLE | B_NOT_ZOOMABLE) {
 	rgb_color kolor = {0,255,0,0};
 	BRect drect(Bounds());
 	dview = new BTextView(drect,"debug",Bounds(),B_FOLLOW_ALL_SIDES,B_FULL_UPDATE_ON_RESIZE | B_WILL_DRAW | B_NAVIGABLE);
@@ -27,14 +19,15 @@ DebugWindow::DebugWindow() : BWindow(DEBUGWINDOW_RECT,DEBUGWINDOW_NAME, B_FLOATI
 	dview->Insert("Debug window created, starting logging :)");
 	AddChild(dview);
 }
-void DebugWindow::MessageReceived(BMessage *message)
-{
-	switch(message->what)
-	{
+
+void DebugWindow::MessageReceived(BMessage *message) {
+	switch(message->what) {
 		default:
-		{
 			BWindow::MessageReceived(message);
 			break;
-		}
 	}
+}
+
+void DebugWindow::AddLog(char *entry) {
+	dview->Insert(entry);
 }
