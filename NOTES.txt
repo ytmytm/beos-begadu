@@ -4,10 +4,6 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- przed pierwszym połączeniem deskbar ma zły status (docelowy, a nie aktualny!)
-- konwersja opisów z/do UTF8!
-	- description -> przy dodawaniu na listę
-	- own description -> przy zapisywaniu statusu na GG
 - używanie okna debug do czegoś
 	??? (log gg na okno, jak w bemobile?)
 - "dodaj/usuń kontakt" w menu kontekstowym
@@ -15,12 +11,12 @@ NAJPIERW
 	- do czego są 3 różne listy w Main?
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 - wszystkie miejsca z EmptyList - memleak?
+- początkowy status z description - nie ustawia description
 
 POTEM
-- import z serwera nie wciąga emaila
+- import z serwera nie wciąga informacji o emailu
 - zaimplementować eksport na serwer
-- usunięcie locale z Zety
-- zastąpienie locales gettextem lub czymś własnym
+- usunięcie locale Zety
 - poprawienie kolorów okna czatu na standardowe/konfigurowane
 - powiadamianie o dostarczeniu wiadomości (np. przez kolorowanie wysłanych)
 	(handleevent type 5 == GG_EVENT_ACK)
@@ -30,3 +26,4 @@ POTEM
 - update i merge do wersji 1.7.x (>=1) libgadu
 - reformat stylu pisania kodu (sukcesywnie)
 - poprawić graf zależności i włączane nagłówki (sukcesywnie)
+- zastąpienie locales gettextem lub czymś własnym
