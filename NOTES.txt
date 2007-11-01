@@ -4,19 +4,22 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- używanie okna debug do czegoś
-	??? (log gg na okno, jak w bemobile?)
-- "dodaj/usuń kontakt" w menu kontekstowym
 - NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
 	- do czego są 3 różne listy w Main?
+- "dodaj/usuń kontakt" w menu kontekstowym
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
-- wszystkie miejsca z EmptyList - memleak?
+- wszystkie miejsca z list->EmptyList - memleak?
 - początkowy status z description - nie ustawia description
+- wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
 
 POTEM
 - import z serwera nie wciąga informacji o emailu
-- zaimplementować eksport na serwer
-- usunięcie locale Zety
+- zaimplementować eksport kontaktów na serwer
+- doprowadzić do porządku preferencje, dać możliwość edycji, zobaczyć co z iProfile jest używane tak 
+	naprawdę
+- usunięcie do końca locale Zety
+- używanie okna debug do czegoś
+	??? (log gg na okno, jak w bemobile?)
 - poprawienie kolorów okna czatu na standardowe/konfigurowane
 - powiadamianie o dostarczeniu wiadomości (np. przez kolorowanie wysłanych)
 	(handleevent type 5 == GG_EVENT_ACK)
