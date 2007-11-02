@@ -1,32 +1,23 @@
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <Message.h>
-//#include <ListView.h>
-//#include <Rect.h>
-//#include <View.h>
 #include <PopUpMenu.h>
 #include <MenuItem.h>
-//#include <Screen.h>
-//#include <InterfaceDefs.h>
-//#include <View.h>
+
 #include "GaduListView.h"
 #include "Main.h"
 #include "Msg.h"
+#include "globals.h"
 
 GaduListView::GaduListView( const MainWindow* aMainWindow, BRect aFrame, const char* aName )
 	: BListView( aFrame, aName, B_SINGLE_SELECTION_LIST, B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE | B_NAVIGABLE )
 	{
 	iMainWindow = aMainWindow;
-	}
+}
 
-GaduListView::~GaduListView()
-	{
+GaduListView::~GaduListView() {
 	iMainWindow = NULL;
-	}
+}
 
-void GaduListView::MouseDown( BPoint aWhere )
-	{
+void GaduListView::MouseDown( BPoint aWhere ) {
 	/**
 	 * calling default mouse down event
 	 */
@@ -38,12 +29,11 @@ void GaduListView::MouseDown( BPoint aWhere )
 	 */
 	unsigned long buttons;
 	BPopUpMenu *menu = new BPopUpMenu( "menu", true, true );
-	menu->AddItem( new BMenuItem( "Edytuj", new BMessage( BUDDY_EDIT ) ) );
+	menu->AddItem( new BMenuItem( _T("Edit"), new BMessage( BUDDY_EDIT ) ) );
 	GetMouse( &aWhere, &buttons, false );
-	if( buttons & B_SECONDARY_MOUSE_BUTTON )
-		{
+	if( buttons & B_SECONDARY_MOUSE_BUTTON ) {
 			BMenuItem *selItem = (BMenuItem*) menu->Go( ConvertToScreen( aWhere ), false, true );
 			if( selItem )
-			BMessenger( iMainWindow ).SendMessage( selItem->Message() );
-		}
+				BMessenger( iMainWindow ).SendMessage( selItem->Message() );
 	}
+}
