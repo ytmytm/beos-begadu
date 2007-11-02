@@ -6,9 +6,9 @@ BACKPORT:
 NAJPIERW
 - NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
 	- do czego są 3 różne listy w Main?
+- wszystkie miejsca z list->EmptyList - memleak?
 - "dodaj/usuń kontakt" w menu kontekstowym
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
-- wszystkie miejsca z list->EmptyList - memleak?
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
 - zastąpienie wszystkich stałych tekstowych przez _T(x)
 - usunięcie do końca locale Zety
@@ -16,7 +16,7 @@ NAJPIERW
 
 POTEM
 - import z serwera nie wciąga informacji o emailu
-- zaimplementować eksport kontaktów na serwer
+- zaimplementować eksport kontaktów na serwer / do pliku
 - chyba(?) nie da się otworzyć okna preferencji dwa razy pod rząd
 - doprowadzić do porządku preferencje, dać możliwość edycji, zobaczyć co z iProfile jest używane tak 
 	naprawdę
@@ -27,8 +27,8 @@ POTEM
 	(handleevent type 5 == GG_EVENT_ACK)
 - zapisywanie rozmówców z listy w formacie People
 - zapisywanie historii rozmów (format loga ekg)
-- doprowadzić wielorakie profile do porządku (tylko przez menu, jak w nowym main.cpp)
-- update i merge do wersji 1.7.x (>=1) libgadu
+- doprowadzić wielorakie profile do porządku (zmiany w BeGadu.cpp)
+- update i merge libgadu do wersji 1.7.x (>=1)
 - reformat stylu pisania kodu (sukcesywnie)
 - poprawić graf zależności i włączane nagłówki (sukcesywnie)
 - zastąpienie locales gettextem lub czymś własnym
