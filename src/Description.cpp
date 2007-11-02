@@ -3,8 +3,9 @@
 #include <Box.h>
 #include <Button.h>
 #include <RadioButton.h>
-#include <String.h>
 #include <TextView.h>
+#include <Screen.h>
+#include <String.h>
 
 #include <libgadu.h>
 
@@ -87,10 +88,21 @@ BBitmap* IconsView::GetBitmap( const char* aName ) {
 
 Description::Description( MainWindow* aWindow, BRect aRect, BResources* aRes )
 	: BWindow( aRect,
-			   DESCRIPTION_NAME,
+			   "",
 			   B_FLOATING_WINDOW,
-			   B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_MOVABLE | B_ASYNCHRONOUS_CONTROLS )
+			   B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_ASYNCHRONOUS_CONTROLS )
 	{
+	BScreen *screen = new BScreen( this );
+	display_mode mode;
+	screen->GetMode( &mode );
+	delete screen;
+
+	int32 width = 250;
+	int32 height = 140;
+	int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+	int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+	MoveTo(x_wind,y_wind);
+	ResizeTo(width,height);
 
 	SetTitle( _T( DESCRIPTION_NAME ) );
 	iWindow = aWindow;

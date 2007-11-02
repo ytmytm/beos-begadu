@@ -7,7 +7,6 @@
 #include "globals.h"
 
 #define ABOUTWINDOW_RECT BRect(100,100,500,400)
-#define ABOUTWINDOW_NAME "About BeGadu"
 
 AboutView::AboutView( BRect aRect ) : BView( aRect,
 											 "AboutView",
