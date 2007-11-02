@@ -1,25 +1,9 @@
-/*
- * ============================================================================
- *  Nazwa    : Msg z Msg.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Rozne stale i definicje
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_MSG_H__
 #define __BEGADU_MSG_H__
 
-/* compat */
-#define	ADD_PERSON				'GGAP'
-#define DEL_PERSON				'GGDP'
-
 /* messages from libgadu */
 #define GOT_MESSAGE				'0000'
-#define GOT_PEOPLE				'0001'
 #define ADD_HANDLER				'0002'
 #define DEL_HANDLER				'0003'
 
@@ -53,7 +37,6 @@
 #define BEGG_QUIT				'0026'
 
 /* misc */
-#define BEGG_CONNECTING			'0027'
 #define PREFERENCES_OK			'0028'
 #define PREFERENCES_CANCEL		'0029'
 #define PREFERENCES_SWITCH		'0030'
@@ -75,7 +58,7 @@
 #define PROFILE_DELETE_ACCOUNT	'0043'
 #define PROFILE_CHANGE_PASSWORD	'0044'
 
-/* profies */
+/* profiles */
 #define PROFILE_SELECTED		'0090'
 #define PROFILE_NOT_SELECTED	'0091'
 #define PROFILE_SELECT			'0092'
@@ -88,10 +71,8 @@
 #define BUDDY_EDIT				'0100'
 #define BUDDY_EDIT_OK			'0101'
 #define BUDDY_EDIT_CANCEL		'0102'
-#define BUDDY_CATALOG			'0103'
-#define BUDDY_SEND				'0104'
 
-#define ONLINE_SOUND			"BeGadu state changed"
-#define MESSAGE_SOUND			"BeGadu new message"
+//#define ONLINE_SOUND			"BeGadu state changed"
+//#define MESSAGE_SOUND			"BeGadu new message"
 
 #endif /* __BEGADU_MSG_H__ */

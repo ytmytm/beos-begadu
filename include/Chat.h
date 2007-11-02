@@ -21,7 +21,9 @@ class ChatWindow : public BWindow
 		void FrameResized( float, float );
 		void Show();
 		void WindowActivated( bool aActivated );
-		
+		uin_t const Who() { return iWho; }
+
+	private:
 		Network			*	iNetwork;
 		MainWindow		*	iWindow;
 		uin_t				iWho;

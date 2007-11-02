@@ -4,16 +4,16 @@
 
 #include <Window.h>
 
-class TextView;
+class BTextView;
 
 class DebugWindow : public BWindow
 	{
-	private:
-		BTextView	*dview;
 	public:
 		DebugWindow();
 		void AddLog(char *entry);
 		virtual void MessageReceived(BMessage *message);
+	private:
+		BTextView	*dview;
 	};
 
 #endif /* __BEGADU_DEBUG_H__ */

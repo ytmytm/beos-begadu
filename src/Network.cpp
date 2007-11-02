@@ -88,13 +88,13 @@ void Network::MessageReceived( BMessage* aMessage ) {
 			}
 		case ADD_BUDDY:
 			{
-			DEBUG_TRACE( "Network::MessageReceived( ADD_PERSON )\n" );
+			DEBUG_TRACE( "Network::MessageReceived( ADD_BUDDY )\n" );
 			// do zaimplementowania
 			break;
 			}
 		case DEL_BUDDY:
 			{
-			DEBUG_TRACE( "Network::MessageReceived( DEL_PERSON )\n" );
+			DEBUG_TRACE( "Network::MessageReceived( DEL_BUDDY )\n" );
 			// do zaimplementowania
 			break;
 			}
@@ -162,11 +162,11 @@ ChatWindow* Network::GetMesgWinForUser( uin_t aWho ) {
 
 	for( int i = 0; i < iWinList->CountItems(); i++ ) {
 		win = ( ChatWindow* ) iWinList->ItemAt( i );
-		if( win->iWho == aWho )
+		if( win->Who() == aWho )
 			break;
 	}
 
-	if( win && (win->iWho == aWho ) )
+	if( win && (win->Who() == aWho ) )
 		return win;
 
 	return NULL;
@@ -293,11 +293,11 @@ void Network::GotMsg( uin_t aWho, const char* aMessage ) {
 	ChatWindow* win = NULL;
 	for( int i = 0; i < iWinList->CountItems(); i++ ) {
 		win = ( ChatWindow* ) iWinList->ItemAt( i );
-		if( win->iWho == aWho )
+		if( win->Who() == aWho )
 			break;
 	}
 
-	if( win && ( win->iWho == aWho ) ) {
+	if( win && ( win->Who() == aWho ) ) {
 		win->Activate();
 	} else {
 		win = new ChatWindow( this, iWindow, aWho );

@@ -3,10 +3,8 @@
 
 #include <Window.h>
 
-class BButton;
 class MainWindow;
 class BTextControl;
-class BView;
 class Person;
 
 class BuddyEdit : public BWindow
