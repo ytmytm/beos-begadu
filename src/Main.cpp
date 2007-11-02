@@ -33,7 +33,7 @@ MainWindow::MainWindow( BString* aProfile )
  	: BWindow( MAINWINDOW_RECT, MAINWINDOW_NAME, B_TITLED_WINDOW, 
  			   B_NOT_ZOOMABLE | B_ASYNCHRONOUS_CONTROLS )
 	{
-	DEBUG_TRACE( "MainWindow::MainWindow()\n"  );
+	fprintf(stderr, "MainWindow::MainWindow([%s])\n", aProfile->String() );
 
 	iPreferencesWindow = NULL;
 	iProfile = new Profile();

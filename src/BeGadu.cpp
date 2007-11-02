@@ -238,14 +238,17 @@ void BeGadu::MessageReceived( BMessage *aMessage ) {
 				BMessenger( this ).SendMessage( new BMessage( PROFILE_SELECT ) );
 				break;
 			}
+			// XXX loaded profile password empty?
 			if( strcmp( profile->GetProfilePassword(), "" ) == 0 ) {
 				BMessenger( iMessenger ).SendMessage( new BMessage( PROFILE_SELECTED ) );
 				iWindow = new MainWindow( iLastProfile );
+//				iWindow = new MainWindow( name );
 				if( iWindow->LockLooper() ) {
 					iWindow->Show();
 					iWindow->UnlockLooper();
 				}
 			} else {
+			// XXX what's that for?
 				BResources res;
 				BRoster roster;
 				entry_ref ref;
