@@ -16,15 +16,16 @@ class GaduListItem : public BListItem
 	public:
 		GaduListItem( const char* aPerson, int aStatus, const char* aDescription, BResources* aRes );
 		~GaduListItem();
-		void SetIcon( int status );
 		virtual void DrawItem( BView* aOwner, BRect aFrame, bool aComplete = false );
 		virtual void Update( BView* aOwner, const BFont* aFont );
-		BBitmap	*GetBitmap( const char* aName );
 		BString		*	iName;
 		BString		*	iDescription;
+		int 			iStatus;
+	private:
+		void SetIcon( int status );
+		BBitmap	*GetBitmap( const char* aName );
 		BFont		*	iNameFont;
 		BFont		*	iDescriptionFont;
-		int 			iStatus;
 		BBitmap		*	iIcon;
 		BResources	*	iResources;
 	};
