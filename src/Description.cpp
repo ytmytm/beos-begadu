@@ -3,9 +3,8 @@
 #include <Box.h>
 #include <Button.h>
 #include <RadioButton.h>
-#include <TextView.h>
-#include <Screen.h>
 #include <String.h>
+#include <TextView.h>
 
 #include <libgadu.h>
 
@@ -85,6 +84,8 @@ BBitmap* IconsView::GetBitmap( const char* aName ) {
 
 	return bitmap;
 }
+
+#include <Screen.h>
 
 Description::Description( MainWindow* aWindow, BRect aRect, BResources* aRes )
 	: BWindow( aRect,

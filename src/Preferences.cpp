@@ -31,10 +31,26 @@
 #include "Network.h"
 #include "Person.h"
 
-#define PREFERENCES_NAME "Ustawienia"
+#include "globals.h"
 
-Preferences::Preferences( Profile* aProfile, MainWindow* aWindow, BRect aRect, BResources* aRes ) : BWindow( aRect, PREFERENCES_NAME, B_FLOATING_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_NOT_MOVABLE | B_ASYNCHRONOUS_CONTROLS )
+#define PREFERENCES_NAME "Preferences"
+
+Preferences::Preferences( Profile* aProfile, MainWindow* aWindow, BRect aRect, BResources* aRes ) : BWindow( aRect, PREFERENCES_NAME, B_FLOATING_WINDOW, B_NOT_RESIZABLE | B_NOT_ZOOMABLE | B_ASYNCHRONOUS_CONTROLS )
 	{
+
+	BScreen *screen = new BScreen( this );
+	display_mode mode;
+	screen->GetMode( &mode );
+	int32 width = 500;
+	int32 height = 420;
+	int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
+	int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
+	delete screen;
+
+	MoveTo(x_wind,y_wind);
+	ResizeTo(width,height);
+	SetTitle(_T(PREFERENCES_NAME));
+
 	iProfile = aProfile;
 	iWindow = aWindow;
 	iResources = aRes;

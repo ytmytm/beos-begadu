@@ -6,7 +6,6 @@
 #include <MenuField.h>
 #include <PopUpMenu.h>
 #include <Roster.h>
-#include <Screen.h>
 #include <StringView.h>
 #include <ScrollView.h>
 #include <String.h>
@@ -266,33 +265,16 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 		case CHANGE_DESCRIPTION:
 			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( CHANGE_DESCRIPTION )\n" );
-			BScreen *screen = new BScreen( this );
-			display_mode mode;
-			screen->GetMode( &mode );
-			int32 width = 250;
-			int32 height = 140;
-			int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
-			int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
-			int32 new_width = x_wind + width;	// x 2
-			int32 new_height = y_wind + height;		// x 2
-			Description* desc = new Description( this, BRect( x_wind, y_wind, new_width, new_height ), &iResources );
+			Description* desc = new Description( this, BRect( 10, 10, 20, 20 ), &iResources );
 			desc->Show();
 			break;
 			}
 		case BEGG_PREFERENCES:
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_PREFERENCES )\n" );
 			if( iPreferencesWindow == NULL ) {
-				BScreen *screen = new BScreen( this );
-				display_mode mode;
-				screen->GetMode( &mode );
-				int32 width = 500;
-				int32 height = 420;
-				int32 x_wind = mode.timing.h_display / 2 - ( width / 2);
-				int32 y_wind = mode.timing.v_display / 2 - ( height / 2 );
-				int32 new_width = x_wind + width;	// x 2
-				int32 new_height = y_wind + height;		// x 2
-				iPreferencesWindow = new Preferences( iProfile, this, BRect( x_wind, y_wind, new_width, new_height ), &iResources );
+				iPreferencesWindow = new Preferences( iProfile, this, BRect( 10, 10, 20, 20 ), &iResources );
 			}
+			// XXX below - doesn't work for showing
 			if( iPreferencesWindow->LockLooper() ) {
 				if( iPreferencesWindow->IsHidden() )
 					iPreferencesWindow->Show();
