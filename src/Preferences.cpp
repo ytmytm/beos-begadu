@@ -93,13 +93,12 @@ Preferences::Preferences( Profile* aProfile, MainWindow* aWindow, BRect aRect, B
     if( iNumberControl->LockLooper() )
     	{
 		BString a;
-//		a << ( int32 ) iProfile->iNumber;
 		a << (int32) iProfile->GetUIN();
         iNumberControl->SetText( a.String() );
         iPasswordControl->SetText( iProfile->GetPassword() );
 		fprintf( stderr, "numer: %s\nhaslo: %s\n", a.String(), iProfile->GetPassword() );
         iNumberControl->UnlockLooper();
-    	}    
+    	}
 	}
 
 void Preferences::MessageReceived( BMessage* aMessage )

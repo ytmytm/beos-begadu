@@ -35,7 +35,6 @@ MainWindow::MainWindow( BString* aProfile )
 	{
 	fprintf(stderr, "MainWindow::MainWindow([%s])\n", aProfile->String() );
 
-	iPreferencesWindow = NULL;
 	iProfile = new Profile();
 	iProfile->Load( aProfile );
 	SetTitle( aProfile->String() );
@@ -269,24 +268,12 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			break;
 			}
 		case BEGG_PREFERENCES:
+			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_PREFERENCES )\n" );
-			if( iPreferencesWindow == NULL ) {
-				iPreferencesWindow = new Preferences( iProfile, this, BRect( 10, 10, 20, 20 ), &iResources );
-			}
-			// XXX below - doesn't work for showing
-			if( iPreferencesWindow->LockLooper() ) {
-				if( iPreferencesWindow->IsHidden() )
-					iPreferencesWindow->Show();
-				else
-					iPreferencesWindow->Activate();
-				iPreferencesWindow->UnlockLooper();
-			}
+			Preferences *iPreferencesWindow = new Preferences( iProfile, this, BRect( 10, 10, 20, 20 ), &iResources );
+			iPreferencesWindow->Show();
 			break;
-		case PREFERENCES_CLOSE:
-			DEBUG_TRACE( "MainWindow::MessageReceived( PREFERENCES_CLOSE )\n" );
-			if( iPreferencesWindow )
-				delete iPreferencesWindow;
-			break;
+			}
 		case BEGG_ABOUT:
 			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_ABOUT )\n" );
@@ -306,7 +293,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			break;
 		case PREFERENCES_SWITCH:
 			DEBUG_TRACE( "MainWindow::MessageReceived( PREFERENCES_SWITCH )\n" );
-			BMessenger( iPreferencesWindow ).SendMessage( aMessage );
+//	XXX		BMessenger( iPreferencesWindow ).SendMessage( aMessage );
 			break;
 		case BEGG_PERSON_SELECTED:
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_PERSON_SELECTED )\n" );

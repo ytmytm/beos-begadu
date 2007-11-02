@@ -15,7 +15,6 @@ NAJPIERW
 POTEM
 - import z serwera nie wciąga informacji o emailu
 - zaimplementować eksport kontaktów na serwer / do pliku
-- chyba(?) nie da się otworzyć okna preferencji dwa razy pod rząd
 - doprowadzić do porządku preferencje, dać możliwość edycji, zobaczyć co z iProfile jest używane tak 
 	naprawdę
 - używanie okna debug do czegoś

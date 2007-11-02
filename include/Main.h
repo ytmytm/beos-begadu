@@ -18,7 +18,6 @@ class BStringView;
 class GaduListItem;
 class GaduMenuItem;
 class Network;
-class Preferences;
 class Profile;
 
 class MainWindow : public BWindow
@@ -85,7 +84,6 @@ class MainWindow : public BWindow
 		BBitmap				*	iIconInvisibleDescr;
 		BBitmap				*	iIconNotAvailDescr;
 		BMessenger				iDeskbarMessenger;
-		Preferences			*	iPreferencesWindow;
 	};
 
 #endif /* __BEGADU_MAINWINDOW_H__ */
