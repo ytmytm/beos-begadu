@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- *  Name     : GfxStuff from GfxStuff.h
- *  Part of  : BeGadu
- *  Authors  : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Implementation notes:
- *		Misc stuff: loading files, etc
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_GFX_STUFF_H__
 #define __BEGADU_GFX_STUFF_H__
