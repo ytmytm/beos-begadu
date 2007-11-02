@@ -1,23 +1,9 @@
-/*
- * ============================================================================
- *  Nazwa    : GaduListItem z GaduListItem.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Moja implementacja BListItem
- *  Version  : 1.2
- * ============================================================================
- */
-
 
 #ifndef __BEGADU_GADULISTITEM_H__
 #define __BEGADU_GADULISTITEM_H__
 
 #include <ListItem.h>
-//#include <Resources.h>
 
-/* Forward references */
 class BBitmap;
 class BMessage;
 class BRect;
