@@ -3,8 +3,9 @@
 #include <Box.h>
 #include <Button.h>
 #include <RadioButton.h>
-#include <String.h>
 #include <TextView.h>
+#include <Screen.h>
+#include <String.h>
 
 #include <libgadu.h>
 
@@ -84,8 +85,6 @@ BBitmap* IconsView::GetBitmap( const char* aName ) {
 
 	return bitmap;
 }
-
-#include <Screen.h>
 
 Description::Description( MainWindow* aWindow, BRect aRect, BResources* aRes )
 	: BWindow( aRect,
@@ -188,7 +187,7 @@ Description::Description( MainWindow* aWindow, BRect aRect, BResources* aRes )
     AddChild( button );
 
 	/* setting current settings */
-	int status = iWindow->GetNetwork()->GetStatus();
+	int status = iWindow->GetNetwork()->Status();
 	if( status == GG_STATUS_AVAIL || status == GG_STATUS_AVAIL_DESCR )
 		{
 		iStatus = GG_STATUS_AVAIL_DESCR;

@@ -1,29 +1,21 @@
-/*
- * ============================================================================
- *  Nazwa    : SiecHandler z SiecHandler.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Handler sieci
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_NETWORKHANDLER_H__
 #define __BEGADU_NETWORKHANDLER_H__
 
-/* zewnetrzne klasy, includowane w zrodle */
 class Network;
 class MainWindow;
 
 class NetworkHandler
 	{
 	public:
-		NetworkHandler( Network* aNetwork, int fd, int cond, void *data );
+		NetworkHandler( Network* aNetwork, int fd);
 		void Run();
 		void Stop();
-		
+		Network* GetNetwork() const;
+
+		int				iFd;
+
+	private:
 		void HandleEvent( struct gg_event *event );
 		void HandleEventConnected( struct gg_event *event );
 		void HandleEventConnFailed( struct gg_event *event );
@@ -35,17 +27,14 @@ class NetworkHandler
 		void HandleEventStatus( struct gg_event *event );
 		void HandleEventStatus60( struct gg_event *event );
 		void HandlePingTimeoutCallback(  time_t &pingTimer );
-		Network* GetNetwork() const;
 
-		int				iFd;
-		int				iCond;
-		void 		*	iData;
-		volatile bool 	iDie;
-		Network		*	iNetwork;
-	
-	private:
 		friend	int32	HandlerThread( void* );
 		volatile int	iThreadID;
+
+		volatile bool 	iDie;
+
+		Network		*	iNetwork;
+
 	};
 
 #endif /* __BEGADU_NETWORKHANDLER_H__ */

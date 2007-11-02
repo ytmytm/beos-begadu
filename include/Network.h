@@ -17,8 +17,8 @@ class Network : public BLooper
 		Network( Profile* aProfile );
 		virtual void Quit();
 		virtual void MessageReceived( BMessage* aMessage );
-		void GotWindow( MainWindow* aWindow );
 		/* funkcje wywoływane z interfejsu */
+		void GotWindow( MainWindow* aWindow );
 		void Login();
 		void Login( int aStatus );
 		void Login( int aStatus, BString *aDescription );
@@ -27,19 +27,24 @@ class Network : public BLooper
 		void RemovePerson( uin_t aWho );
 		void GotMsg( uin_t aFrom, const char* aMessage );
 		void SendMsg( uin_t aWho, const char* aMessage );
-		struct gg_session* Session() const;
+
+		inline struct gg_session* Session() const { return iSession; }
+		void SetSession( struct gg_session *s );
+
+		inline int Status() { return iStatus; }
 		void SetStatus( int aStatus );
+
 		void SetDescription( BString *aDescription );
-		inline int GetStatus() { return iStatus; }
 
 		MainWindow			*	iWindow;
 		BString				*	iDescription;
 
-		struct gg_session 	*	iSession;
 		struct gg_login_params	iLoginParam;
 		struct gg_event		*	iEvent;
 
 	private:
+		struct gg_session 	*	iSession;
+
 		int						iStatus;
 
 		/* klasy globalne */
@@ -54,7 +59,7 @@ class Network : public BLooper
 		Person		* GetPersonForUser( uin_t aWho );
 
 		/* te funkcje robią to co libgadu chce by było zrobione */
-		void AddHandler( int fd, int cond, void* data );
+		void AddHandler( int fd );
 		void RemoveHandler( int fd );
 	};
 

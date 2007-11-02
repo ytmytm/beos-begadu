@@ -9,7 +9,6 @@ NAJPIERW
 - "dodaj/usuń kontakt" w menu kontekstowym
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 - wszystkie miejsca z list->EmptyList - memleak?
-- początkowy status z description - nie ustawia description
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
 - zastąpienie wszystkich stałych tekstowych przez _T(x)
 - usunięcie do końca locale Zety

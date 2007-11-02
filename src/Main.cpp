@@ -384,7 +384,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			}
 		case UPDATE_STATUS:
 			DEBUG_TRACE( "MainWindow::MessageReceived( UPDATE_STATUS )\n" );
-			switch( iNetwork->GetStatus() ) {
+			switch( iNetwork->Status() ) {
 				case GG_STATUS_NOT_AVAIL:
 					iNotAvail->SetMarked( true );
 			 		break;
@@ -418,18 +418,18 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ ) {
 				p = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
 				if( p->GetUIN() == iProfile->GetUIN() ) {
-					if( iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL )
-						g = new GaduListItem( p->GetDisplay(), iNetwork->GetStatus(), "", &iResources );
+					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL )
+						g = new GaduListItem( p->GetDisplay(), iNetwork->Status(), "", &iResources );
 					else
-						g = new GaduListItem( p->GetDisplay(), iNetwork->GetStatus(), iNetwork->iDescription->String(), &iResources );
+						g = new GaduListItem( p->GetDisplay(), iNetwork->Status(), iNetwork->iDescription->String(), &iResources );
 
-					if( iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL || iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL_DESCR ||
-						iNetwork->GetStatus() == GG_STATUS_INVISIBLE || iNetwork->GetStatus() == GG_STATUS_INVISIBLE_DESCR )
+					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL || iNetwork->Status() == GG_STATUS_NOT_AVAIL_DESCR ||
+						iNetwork->Status() == GG_STATUS_INVISIBLE || iNetwork->Status() == GG_STATUS_INVISIBLE_DESCR )
 						listNotAvail->AddItem( g );
 					else
 						listAvail->AddItem( g );
 				} else {
-					if( iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL || iNetwork->GetStatus() == GG_STATUS_NOT_AVAIL_DESCR )
+					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL || iNetwork->Status() == GG_STATUS_NOT_AVAIL_DESCR )
 						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), "", &iResources );
 					else
 						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), p->GetDescription(), &iResources );
@@ -506,7 +506,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_QUIT )\n" );
 			// save last status & description
 			if (iNetwork->Session()) {
-				iProfile->SetAutoStatus(iNetwork->GetStatus());
+				iProfile->SetAutoStatus(iNetwork->Status());
 				iProfile->SetDescription(iNetwork->iDescription->String());
 				printf("profile descr set to: [%s]\n",iNetwork->iDescription->String());
 			}
@@ -537,7 +537,7 @@ void MainWindow::ChangeStatus(int status, BString *description) {
 
 void MainWindow::UpdateBGDeskBar() {
 	BMessage *message = new BMessage( BGDESKBAR_CHSTATE );
-	message->AddInt16( "iStatus", iNetwork->GetStatus() );
+	message->AddInt16( "iStatus", iNetwork->Status() );
 	BMessenger( this ).SendMessage( message );
 	delete message;
 }
@@ -574,8 +574,8 @@ void MainWindow::SetProfile( BString* aProfile ) {
 	}
 
 	if( iProfile->GetAutoStatus() != GG_STATUS_NOT_AVAIL ) {
-		if( iNetwork->iSession )
-			gg_change_status( iNetwork->iSession, iProfile->GetAutoStatus() );
+		if( iNetwork->Session() )
+			gg_change_status( iNetwork->Session(), iProfile->GetAutoStatus() );
 		else
 			iNetwork->Login();
 	}
