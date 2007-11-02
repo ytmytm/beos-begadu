@@ -13,7 +13,6 @@
 #include "NetworkHandler.h"
 #include "Network.h"
 #include "Person.h"
-#include "GaduListItem.h"
 #include "globals.h"
 
 static time_t 	curTime = 0;
