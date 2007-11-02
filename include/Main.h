@@ -40,6 +40,7 @@ class MainWindow : public BWindow
 		BBitmap* GetBitmap( const char* aName );
 		void ChangeStatus(int status, BString *description);
 		void UpdateBGDeskBar(void);
+		void ClearContactList(void);
 
 		/* to gg */
 		Profile				*	iProfile;

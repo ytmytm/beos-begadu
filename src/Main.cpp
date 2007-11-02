@@ -412,6 +412,8 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			List *listAvail = new List( 128 );
 			List *listNotAvail = new List( 128 );
 
+			ClearContactList();
+
 			GaduListItem *g = NULL;
 			Person	 *p = NULL;
 			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ ) {
@@ -439,7 +441,6 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 						listAvail->AddItem( g );
 				}
 			}
-			iListView->MakeEmpty();
 			listAvail->SortItems( SortUsers );
 			iListView->AddList( listAvail );
 			listNotAvail->SortItems( SortUsers );
@@ -534,11 +535,21 @@ void MainWindow::ChangeStatus(int status, BString *description) {
 	}
 }
 
-void MainWindow::UpdateBGDeskBar() {
+void MainWindow::UpdateBGDeskBar(void) {
 	BMessage *message = new BMessage( BGDESKBAR_CHSTATE );
 	message->AddInt16( "iStatus", iNetwork->Status() );
 	BMessenger( this ).SendMessage( message );
 	delete message;
+}
+
+void MainWindow::ClearContactList(void) {
+	if (iListView->CountItems()>0) {
+		GaduListItem *anItem;
+		for (int i=0; (anItem=(GaduListItem*)iListView->ItemAt(i)); i++)
+			delete anItem;
+		if (!iListView->IsEmpty())
+			iListView->MakeEmpty();
+	}
 }
 
 int MainWindow::SortUsers( const void *left, const void *right ) {

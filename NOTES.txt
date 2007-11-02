@@ -4,7 +4,7 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- Main.cpp / Person.cpp - coś do wyszukiwania osoby na userlist, poprawne odświeżanie widgetu (memleak!)
+- Main.cpp / Person.cpp - coś do wyszukiwania osoby na userlist
 - "dodaj/usuń kontakt" w menu kontekstowym
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
