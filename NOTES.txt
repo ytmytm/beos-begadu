@@ -4,7 +4,7 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- Main.cpp / Person.cpp - coś do wyszukiwania osoby na userlist
+- Main.cpp / Person.cpp - coś do ładnego wyszukiwania osoby na userlist
 - "dodaj/usuń kontakt" w menu kontekstowym
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
@@ -13,7 +13,6 @@ NAJPIERW
 - dla stałych tekstów - DEBUG_TRACE zamiast fprintf
 
 POTEM
-- import z serwera nie wciąga informacji o emailu
 - zaimplementować eksport kontaktów na serwer / do pliku
 - doprowadzić do porządku preferencje, dać możliwość edycji, zobaczyć co z iProfile jest używane tak 
 	naprawdę

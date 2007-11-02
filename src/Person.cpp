@@ -812,7 +812,7 @@ void Userlist::Set( const char* aContacts )
 		o->SetDisplay( entry[ 3 ] );
 		o->SetMobile( entry[ 4 ] );
 		o->SetStatus( GG_STATUS_NOT_AVAIL );
-		if( count > 7 )
+		if( array_count(entry) > 7 )
 			o->SetEmail( entry[ 7 ] );
 		Add( o->GetUIN(),
 			 o->GetName(),
