@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- *  Nazwa    : Main z Main.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Glowne okno programu
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_MAINWINDOW_H__
 #define __BEGADU_MAINWINDOW_H__
@@ -16,7 +5,6 @@
 #include <Window.h>
 #include <Resources.h>
 
-/* Forward references */
 class Network;
 class Preferences;
 class List;
@@ -55,6 +43,9 @@ class MainWindow : public BWindow
 		List* ListItems() const;
 
 	private:
+		void ChangeStatus(int status, BString *description);
+		void UpdateBGDeskBar(void);
+
 		/* to gg */
 		Profile				*	iProfile;
 		Network				*	iNetwork;

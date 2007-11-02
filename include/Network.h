@@ -1,14 +1,3 @@
-/*
- * ============================================================================
- *  Nazwa    : Siec z Siec.h
- *  Projekt  : BeGadu
- *  Authorzy : 
- *		Artur Wyszynski <artur.wyszynski@bellstream.pl>
- *  Opis:
- *		Glowny modul do obslugi sieci
- *  Version  : 1.2
- * ============================================================================
- */
 
 #ifndef __BEGADU_NETWORK_H__
 #define __BEGADU_NETWORK_H__
@@ -16,7 +5,6 @@
 #include <Looper.h>
 #include <libgadu.h>
 
-/* zewnetrzne klasy, includowane w zrodle */
 class MainWindow;
 class ChatWindow;
 class List;
@@ -26,7 +14,7 @@ class Profile;
 class Network : public BLooper
 	{
 	public:
-		Network( Profile* aProfile, List* aList );
+		Network( Profile* aProfile );
 		virtual void Quit();
 		virtual void MessageReceived( BMessage* aMessage );
 		void GotWindow( MainWindow* aWindow );
@@ -42,7 +30,6 @@ class Network : public BLooper
 		struct gg_session* Session() const;
 		void SetStatus( int aStatus );
 		void SetDescription( BString *aDescription );
-		inline int GetIdent() {	return iIdent; }
 		inline int GetStatus() { return iStatus; }
 
 		MainWindow			*	iWindow;
@@ -57,20 +44,15 @@ class Network : public BLooper
 
 		/* klasy globalne */
 		Profile		* iProfile;
-		List		* iList;
-		
+
 		/* klasy lokalne */
 		BList 			* iHandlerList;
 		BList			* iWinList;
-		
-		/* informacje o połączeniu */
-		int						iId;
-		int						iIdent;
-		
+
 		/* dodatki */
 		ChatWindow	* GetMesgWinForUser( uin_t aWho );
 		Person		* GetPersonForUser( uin_t aWho );
-		
+
 		/* te funkcje robią to co libgadu chce by było zrobione */
 		void AddHandler( int fd, int cond, void* data );
 		void RemoveHandler( int fd );

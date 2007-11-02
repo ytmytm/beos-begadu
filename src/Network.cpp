@@ -2,7 +2,8 @@
 #include <Message.h>
 #include <String.h>
 #include <ListView.h>
-#include <UTF8.h>
+// for toISO/fromISO
+#include <GfxStuff.h>
 
 #include "Msg.h"
 #include "Network.h"
@@ -12,19 +13,17 @@
 #include "NetworkHandler.h"
 #include "globals.h"
 
-Network::Network( Profile* aProfile, List* aList ) : BLooper( "Network Loop" ) {
+Network::Network( Profile* aProfile ) : BLooper( "Network Loop" ) {
 	fprintf( stderr, "Network::Network()\n" );
 	/* inicjalizacja */
 	iProfile		= aProfile;
-	iList			= aList;
 	iWindow			= NULL;
 	iHandlerList	= new BList( 256 );
 	iWinList		= new BList( 512 );
-	iIdent			= 0;
 	iSession		= NULL;
 	iStatus			= GG_STATUS_NOT_AVAIL;
 	iDescription	= new BString( "" );
-	
+
 	/* czekamy na wiadomości :)) */
 	Run();
 }
@@ -32,26 +31,22 @@ Network::Network( Profile* aProfile, List* aList ) : BLooper( "Network Loop" ) {
 void Network::Quit() {
 	fprintf( stderr, "Network::Quit()\n" );
 	/* Rozłączamy się */
-	if( ( iStatus != GG_STATUS_NOT_AVAIL ) || ( iStatus != GG_STATUS_NOT_AVAIL_DESCR ) )
+	if( ( iStatus != GG_STATUS_NOT_AVAIL ) && ( iStatus != GG_STATUS_NOT_AVAIL_DESCR ) )
 		Logout();
 	ChatWindow* chat;
 	for( int i = 0; i < iWinList->CountItems(); i++ ) {
 		chat = ( ChatWindow* ) iWinList->ItemAt( i );
-		iWinList->RemoveItem( i );
 		if( chat->Lock() )
 			chat->Quit();
 	}
+	iWinList->MakeEmpty();
 	Lock();
 	BLooper::Quit();
 }
 
 void Network::MessageReceived( BMessage* aMessage ) {
 	switch( aMessage->what ) {
-		/*
-			wiadomości otrzymane od libgadu callback
-			cała obsługa jest w SiecLib.cpp, my tylko
-			wywołujemy je stąd :)
-		*/
+		// messages from libgadu
 		case ADD_HANDLER:
 			{
 			fprintf( stderr, "Network::MessageReceived( ADD_HANDLER )\n" );
@@ -81,11 +76,7 @@ void Network::MessageReceived( BMessage* aMessage ) {
 			GotMsg( who, msg );
 			break;
 			}
-		/*
-			wiadomości otrzymane od interfejsu
-			cała obsługa jest w SiecInt.cpp, my tylko
-			wywołujemy je stąd :)
-		*/
+		// messages from interface
 		case DO_LOGIN:
 			{
 			fprintf( stderr, "Network::MessageReceived( DO_LOGIN )\n" );
@@ -154,11 +145,13 @@ void Network::MessageReceived( BMessage* aMessage ) {
 			iWinList->RemoveItem( win );
 			if( win->Lock() )
 				win->Quit();
+			break;
 			}
 		default:
 			BLooper::MessageReceived( aMessage );
+			break;
 		}
-	}
+}
 
 void Network::GotWindow( MainWindow* aWindow ) {
 	fprintf( stderr, "Network::GotWindow( %p )\n", aWindow );
@@ -203,41 +196,28 @@ void Network::Login() {
 	switch (state) {
 		case GG_STATUS_NOT_AVAIL:
 		case GG_STATUS_NOT_AVAIL_DESCR:
-		break;
+			break;
 		case GG_STATUS_AVAIL_DESCR:
 		case GG_STATUS_BUSY_DESCR:
 		case GG_STATUS_INVISIBLE_DESCR:
 			Login(state,new BString(iProfile->GetDescription()));
-		break;
+			break;
 		default:
 			Login(state);
-		break;
+			break;
 	}
 }
 
 void Network::Login( int status ) {
 	printf( "Network::Login(status=%i)\n", status );
-	/* ustawiamy status na "Łączenie" */
-	iStatus = status;
-	/* ustawiamy pola potrzebne do połączenia z gg */
-	memset( &iLoginParam, 0, sizeof( iLoginParam ) );
-	iLoginParam.uin = iProfile->GetUIN();
-	iLoginParam.password = ( char* ) iProfile->GetPassword();
-//	iLoginParam.async = 1;
-	iLoginParam.async = 0;
-	iLoginParam.status = iStatus;
-//	gg_debug_level = ~0;
-	gg_debug_level = 255;
-	BMessenger( this ).SendMessage( ADD_HANDLER );
-	if( iWindow )
-	 	BMessenger( iWindow ).SendMessage( UPDATE_STATUS );
+	Login(status, new BString(""));
 }
 
 void Network::Login( int aStatus, BString *aDescription ) {
 	printf( "Network::Login(status=%i, description=[%s])\n",aStatus,aDescription->String() );
 	/* ustawiamy status na "Łączenie" */
-	iStatus = aStatus;
-	iDescription = aDescription;
+	SetStatus(aStatus);
+	SetDescription(aDescription);
 	/* ustawiamy pola potrzebne do połączenia z gg */
 	memset( &iLoginParam, 0, sizeof( iLoginParam ) );
 	iLoginParam.uin = iProfile->GetUIN();
@@ -255,7 +235,7 @@ void Network::Login( int aStatus, BString *aDescription ) {
 
 void Network::Logout() {
 	printf( "Network::Logout()\n" );
-	/* poprostu sie wylogowujemy */
+	/* po prostu sie wylogowujemy */
 	if( iSession ) {
 		if( iStatus != GG_STATUS_NOT_AVAIL_DESCR )
 			iStatus = GG_STATUS_NOT_AVAIL;
@@ -295,15 +275,11 @@ void Network::Logout() {
 	}
 }
 
-// for toISO/fromISO
-#include <GfxStuff.h>
-
-/* wysyłamy wiadomość */
 void Network::SendMsg( uin_t aWho, const char* aMessage ) {
 	printf( "Network::SendMsg()\n" );
 	if( iSession ) {
 		BString *msg = toISO2(aMessage);
-		if( gg_send_message( iSession, GG_CLASS_CHAT, aWho, ( unsigned char* ) msg->String() ) == -1 ) {	
+		if( gg_send_message( iSession, GG_CLASS_CHAT, aWho, ( unsigned char* ) msg->String() ) == -1 ) {
 			gg_free_session( iSession );
 			perror( "Connection lost." );
 		}
@@ -342,7 +318,7 @@ void Network::GotMsg( uin_t aWho, const char* aMessage ) {
 void Network::AddHandler( int fd, int cond, void* data ) {
 	printf( "Network::AddHandler()\n" );
 	NetworkHandler* handler;
-	handler = new NetworkHandler( this, iId, fd, cond, data );
+	handler = new NetworkHandler( this, fd, cond, data );
 	iHandlerList->AddItem( handler );
 	handler->Run();
 }
@@ -367,6 +343,8 @@ void Network::SetStatus( int aStatus ) {
 }
 
 void Network::SetDescription( BString *aDescription ) {
+	if (iDescription)
+		delete iDescription;
 	iDescription = aDescription;
 }
 

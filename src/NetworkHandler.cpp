@@ -118,11 +118,10 @@ int32 HandlerThread( void *_handler )
 	return 0;
 	}
 
-NetworkHandler::NetworkHandler( Network* aNetwork, int id, int fd, int cond, void *data )
+NetworkHandler::NetworkHandler( Network* aNetwork, int fd, int cond, void *data )
 	{
 	fprintf( stderr, "NetworkHandler::NetworkHandler()\n" );
 	iNetwork = aNetwork;
-	iId		= id;
 	iFd		= fd;
 	iCond	= cond;
 	iData	= data;

@@ -20,7 +20,7 @@ class MainWindow;
 class NetworkHandler
 	{
 	public:
-		NetworkHandler( Network* aNetwork, int id, int fd, int cond, void *data );
+		NetworkHandler( Network* aNetwork, int fd, int cond, void *data );
 		void Run();
 		void Stop();
 		
@@ -36,8 +36,7 @@ class NetworkHandler
 		void HandleEventStatus60( struct gg_event *event );
 		void HandlePingTimeoutCallback(  time_t &pingTimer );
 		Network* GetNetwork() const;
-		
-		int				iId;
+
 		int				iFd;
 		int				iCond;
 		void 		*	iData;

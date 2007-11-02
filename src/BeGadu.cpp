@@ -15,12 +15,6 @@
 
 #include "globals.h"
 
-//#ifdef DEBUG
-#define DEBUG_TRACE(str) fprintf(stderr, str)
-//#else
-//#define DEBUG_TRACE(str)
-//#endif
-
 BeGadu::BeGadu() : BApplication( APP_MIME ) {
 	/* we're checking configuration */
 	iFirstRun = false;

@@ -12,6 +12,8 @@ NAJPIERW
 - początkowy status z description - nie ustawia description
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
 - zastąpienie wszystkich stałych tekstowych przez _T(x)
+- usunięcie do końca locale Zety
+- dla stałych tekstów - DEBUG_TRACE zamiast fprintf
 
 POTEM
 - import z serwera nie wciąga informacji o emailu
@@ -19,7 +21,6 @@ POTEM
 - chyba(?) nie da się otworzyć okna preferencji dwa razy pod rząd
 - doprowadzić do porządku preferencje, dać możliwość edycji, zobaczyć co z iProfile jest używane tak 
 	naprawdę
-- usunięcie do końca locale Zety
 - używanie okna debug do czegoś
 	??? (log gg na okno, jak w bemobile?)
 - poprawienie kolorów okna czatu na standardowe/konfigurowane
