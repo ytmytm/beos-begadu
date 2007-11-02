@@ -49,7 +49,6 @@ MainWindow::MainWindow( BString* aProfile )
 	SetSizeLimits( 250, 600, 300, 600 );
 	iNetwork = new Network( iProfile );
 	iNetwork->GotWindow( this );
-	iListItems = new List( 512 );
 	if( iProfile->GetRect().IsValid() )
 		MoveTo( iProfile->GetRect().left, iProfile->GetRect().top );
 	/* setting menu */
@@ -181,10 +180,8 @@ MainWindow::MainWindow( BString* aProfile )
 	iGaduView->AddChild(iConnStatus = new BStringView(r, "iConnStatus", NULL, B_FOLLOW_RIGHT|B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS ));
 	iConnStatus->SetAlignment(B_ALIGN_RIGHT);
 
-	if( iProfile->GetUserlist()->IsValid() ) {
-		iListItems = iProfile->GetUserlist()->GetList();
+	if( iProfile->GetUserlist()->IsValid() )
 		BMessenger( this ).SendMessage( UPDATE_LIST );
-	}
 
 	fprintf( stderr, "Profile %s loaded.\n", iProfile->GetProfileName() );
 	fprintf( stderr, "profile status:[%i],desc=[%s]\n",iProfile->GetAutoStatus(),iProfile->GetDescription());
@@ -249,6 +246,8 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 		case BUDDY_EDIT:
 			{
 			DEBUG_TRACE( "MainWindow::MessageReceived( BUDDY_EDIT )\n" );
+			if( iListView->CurrentSelection() < 0 )
+				break;
 			Person* person = NULL;
 			GaduListItem *who = ( GaduListItem* ) iListView->ItemAt( iListView->CurrentSelection() );
 			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ ) {
@@ -430,7 +429,7 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 						listAvail->AddItem( g );
 				} else {
 					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL || iNetwork->Status() == GG_STATUS_NOT_AVAIL_DESCR )
-						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), "", &iResources );
+						g = new GaduListItem( p->GetDisplay(), GG_STATUS_NOT_AVAIL, "", &iResources );
 					else
 						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), p->GetDescription(), &iResources );
 
@@ -568,10 +567,8 @@ void MainWindow::SetProfile( BString* aProfile ) {
 	DEBUG_TRACE( "MainWindow::SetProfile()\n" );
 	iProfile->Load( aProfile );
 	SetTitle( iProfile->GetProfileName() );
-	if( iProfile->GetUserlist()->IsValid() ) {
-		iListItems = iProfile->GetUserlist()->GetList();
+	if( iProfile->GetUserlist()->IsValid() )
 		BMessenger( this ).SendMessage( UPDATE_LIST );
-	}
 
 	if( iProfile->GetAutoStatus() != GG_STATUS_NOT_AVAIL ) {
 		if( iNetwork->Session() )
@@ -612,18 +609,6 @@ Profile* MainWindow::GetProfile() const {
 
 Network* MainWindow::GetNetwork() const {
 	return iNetwork;
-}
-
-BListView* MainWindow::ListView() const {
-	return iListView;
-}
-
-GaduListItem* MainWindow::ListItem() const {
-	return iListItem;
-}
-
-List* MainWindow::ListItems() const {
-	return iListItems;
 }
 
 void MainWindow::SetMessenger( BMessenger& aMessenger ) {

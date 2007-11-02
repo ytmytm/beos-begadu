@@ -5,23 +5,21 @@
 #include <Window.h>
 #include <Resources.h>
 
-class Network;
-class Preferences;
-class List;
-class BStringView;
-class BMenuBar;
-class BMenuItem;
-class BMenu;
 class BBitmap;
-class BListItem;
-class BListView;
-class Profile;
-class BPopUpMenu;
+class BMenu;
+class BMenuBar;
 class BMenuField;
+class BMenuItem;
+class BListView;
+class BPopUpMenu;
+class BScrollView;
+class BStringView;
+
 class GaduListItem;
 class GaduMenuItem;
-class BScrollView;
+class Network;
 class Preferences;
+class Profile;
 
 class MainWindow : public BWindow
 	{
@@ -35,14 +33,11 @@ class MainWindow : public BWindow
 		void SetMessenger( BMessenger& aMessenger );
 		static int SortUsers( const void*, const void* );
 		void LoadIcons();
-		BBitmap* GetBitmap( const char* aName );
 		Profile* GetProfile() const;
 		Network* GetNetwork() const;
-		BListView* ListView() const;
-		GaduListItem* ListItem() const;
-		List* ListItems() const;
 
 	private:
+		BBitmap* GetBitmap( const char* aName );
 		void ChangeStatus(int status, BString *description);
 		void UpdateBGDeskBar(void);
 
@@ -55,8 +50,6 @@ class MainWindow : public BWindow
 		BView				*	iGaduView;
 		BScrollView			*	iScrollView;
 		BListView			*	iListView;
-		GaduListItem		*	iListItem;
-		List				*	iListItems;
 		BMenuBar			*	iMenuBar;
 		BMenu				*	iMenu;
 		BMenu				*	iProfilesMenu;

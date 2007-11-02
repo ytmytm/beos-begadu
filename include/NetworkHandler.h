@@ -11,9 +11,9 @@ class NetworkHandler
 		NetworkHandler( Network* aNetwork, int fd);
 		void Run();
 		void Stop();
-		Network* GetNetwork() const;
 
-		int				iFd;
+		inline Network* GetNetwork() const { return iNetwork; }
+		inline int Fd() const { return iFd; }
 
 	private:
 		void HandleEvent( struct gg_event *event );
@@ -33,6 +33,7 @@ class NetworkHandler
 
 		volatile bool 	iDie;
 
+		int				iFd;
 		Network		*	iNetwork;
 
 	};

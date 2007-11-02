@@ -4,9 +4,7 @@ BACKPORT:
 	nie ma: profileselector (?)
 
 NAJPIERW
-- NetworkHandler HandleEventUserlist - co jest z tymi listami, czemu nie działa delete, memleak?
-	- do czego są 3 różne listy w Main?
-- wszystkie miejsca z list->EmptyList - memleak?
+- Main.cpp / Person.cpp - coś do wyszukiwania osoby na userlist, poprawne odświeżanie widgetu (memleak!)
 - "dodaj/usuń kontakt" w menu kontekstowym
 - po "login failed" info dla użytkownika, że nie można się połączyć (inne info niż przy braku sieci/serwera!)
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu

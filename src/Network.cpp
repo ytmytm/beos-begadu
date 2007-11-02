@@ -231,30 +231,18 @@ void Network::Logout() {
 		NetworkHandler *handler;
 		for( int i = iHandlerList->CountItems(); i > 0; i-- ) {
 			handler = ( NetworkHandler* ) iHandlerList->ItemAt( i - 1 );
-			RemoveHandler( handler->iFd );
-		}
-		/* uaktualniamy statusy ludzi z listy */
-		if( iWindow ) {
-			Person* p = NULL;
-			for( int i = 0; i < iWindow->ListItems()->CountItems(); i++ ) {
-				p = ( Person* ) iWindow->ListItems()->ItemAt( i );
-				p->SetStatus( GG_STATUS_NOT_AVAIL );
-			}
-			/* uaktualniamy liste */
-			// XXX memleak?
-			if( iWindow->ListView()->LockLooper() ) {
-				iWindow->ListView()->MakeEmpty();
-		 		iWindow->ListView()->UnlockLooper();
-		 	}
-			BMessenger( iWindow ).SendMessage( UPDATE_LIST );
+			RemoveHandler( handler->Fd() );
 		}
 		/* uaktualniamy status */
 		if ( iWindow ) {
+			// statusy
+			BMessenger( iWindow ).SendMessage( UPDATE_LIST );
+			// opis stanu
 			BMessage *message = new BMessage(SET_CONN_DESCRIPTION);
 			message->AddString("desc",BString(_T("Disconnected")));
 			BMessenger( iWindow ).SendMessage( message );
 			delete message;
-
+			// własny status
 			BMessenger( iWindow ).SendMessage( UPDATE_STATUS );
 		}
 	}
@@ -304,10 +292,10 @@ void Network::RemoveHandler( int fd ) {
 	NetworkHandler* handler = NULL;
 	for( int i = 0; i < iHandlerList->CountItems(); i++ ) {
 		handler = ( NetworkHandler* ) iHandlerList->ItemAt( i );
-		if( handler->iFd == fd )
+		if( handler->Fd() == fd )
 			break;
 	}
-	if( !handler || ( handler->iFd != fd ) )
+	if( !handler || ( handler->Fd() != fd ) )
 		return;
 	handler->Stop();
 	iHandlerList->RemoveItem( handler );

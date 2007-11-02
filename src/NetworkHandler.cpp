@@ -55,8 +55,6 @@ int32 HandlerThread( void *_handler ) {
 		BMessenger( network ).SendMessage( DO_LOGOUT );
 		return 0;
 	} else {
-		// XXX this is where description is lost - add description to status? why call it at all?
-//		gg_change_status( network->Session(), network->Status() );
 		if( network->iWindow ) {
 			BMessenger( network->iWindow ).SendMessage( UPDATE_STATUS );
 			BMessage* message = new BMessage( BGDESKBAR_CHSTATE );
@@ -95,7 +93,7 @@ int32 HandlerThread( void *_handler ) {
 			if( network->Session() && ( FD_ISSET( network->Session()->fd, &rd ) ||
 										FD_ISSET( network->Session()->fd, &wr ) ) ) {
 				if( !( network->iEvent = gg_watch_fd( network->Session() ) ) )
-					// XXX delete session?
+					// XXX delete session? notify GUI?
 					perror( "Connection lost." );
 				else
 					handler->HandleEvent( network->iEvent );
@@ -222,24 +220,9 @@ void NetworkHandler::HandleEventUserlist( struct gg_event *event ) {
 						gg_remove_notify( iNetwork->Session(), o->GetUIN() );
 				}
 			}
-			GaduListItem *g = NULL;
-			n = iNetwork->iWindow->ListItems()->CountItems();
-			if( iNetwork->iWindow->Lock() ) {
-				if( iNetwork->iWindow->ListView()->LockLooper() ) {
-					for( int i = 0; i < n; i++ ) {
-						g = ( GaduListItem* ) iNetwork->iWindow->ListItems()->ItemAt( i );
-						iNetwork->iWindow->ListView()->RemoveItem( g );
-					// XXX segfault! g points to wrong data(?)
-					//	delete g;
-					}
-					iNetwork->iWindow->ListView()->UnlockLooper();
-				}
-				iNetwork->iWindow->ListItems()->MakeEmpty();
-				iNetwork->iWindow->Unlock();
-			}
 			userlist->Set( iNetwork->iEvent->event.userlist.reply );
 			userlist->Send( iNetwork->Session() );
-			DEBUG_TRACE("sent userlist\n" );
+			DEBUG_TRACE("sent userlist to receive event updates\n" );
 			BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 			BAlert* alert = new BAlert( _T("List"),
 										_T("Contact list has been imported from server"),
@@ -270,10 +253,6 @@ void NetworkHandler::HandleEventNotify( struct gg_event *event ) {
  		}
  		o->SetStatus( n->status );
 	}
-//	if( iNetwork->iWindow->ListView()->LockLooper() ) {
-//		iNetwork->iWindow->ListView()->MakeEmpty();		// XXX memleak?
-//		iNetwork->iWindow->ListView()->UnlockLooper();
-//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 }
 
@@ -293,10 +272,6 @@ void NetworkHandler::HandleEventNotify60( struct gg_event *event ) {
  		o->SetStatus( iNetwork->iEvent->event.notify60[ i ].status );
  		o->SetDescription( iNetwork->iEvent->event.notify60[ i ].descr );
 	}
-//	if( iNetwork->iWindow->ListView()->LockLooper() ) {
-//		iNetwork->iWindow->ListView()->MakeEmpty();	// XXX memleak?
-//		iNetwork->iWindow->ListView()->UnlockLooper();
-//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 }
 
@@ -310,10 +285,6 @@ void NetworkHandler::HandleEventStatus( struct gg_event *event ) {
  	}
  	o->SetStatus( iNetwork->iEvent->event.status.status );
  	o->SetDescription( iNetwork->iEvent->event.status.descr );
-//	if( iNetwork->iWindow->ListView()->LockLooper()) {
-//		iNetwork->iWindow->ListView()->MakeEmpty();	// XXX memleak?
-//		iNetwork->iWindow->ListView()->UnlockLooper();
-//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 }
 
@@ -327,10 +298,6 @@ void NetworkHandler::HandleEventStatus60( struct gg_event *event ) {
  	}
  	o->SetStatus( iNetwork->iEvent->event.status60.status );
  	o->SetDescription( iNetwork->iEvent->event.status60.descr );
-//	if( iNetwork->iWindow->ListView()->LockLooper() ) {
-//		iNetwork->iWindow->ListView()->MakeEmpty();	// XXX memleak?
-//		iNetwork->iWindow->ListView()->UnlockLooper();
-//	}
 	BMessenger( iNetwork->iWindow ).SendMessage( UPDATE_LIST );
 }
 
@@ -350,8 +317,4 @@ void NetworkHandler::HandlePingTimeoutCallback( time_t &pingTimer ) {
 	fprintf( stderr, "NetworkHandler::HandlePingTimeoutCallback( %ld )\n", pingTimer );
 	gg_ping( iNetwork->Session() );
 	Rearm( &pingTimer, 60 );
-}
-
-Network* NetworkHandler::GetNetwork() const {
-	return iNetwork;
 }
