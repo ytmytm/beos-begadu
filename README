@@ -1,7 +1,10 @@
-BeGadu ?.?
-2007.??.??
+BeGadu ?.? (??.??.2007)
+Maciej Witkowiak, <ytm@elysium.pl>, <mwitkowiak@gmail.com>
+http://members.elysium.pl/ytm/html/beos.html
+http://ytm.bossstation.dnsalias.org/html/beos.html
 
-To klient GG oparty na tym, co udało się odnaleźć z projektu BeGadu: http://begadu.sourceforge.net
+BeGadu to klient GG oparty na tym, co udało się odnaleźć i odtworzyć z projektu BeGadu dostępnego na
+Sourceforge: http://begadu.sourceforge.net
 
 Obecna wersja jest skompilowana dla BeOS R5 z netserver.
 Użyta libgadu pochodzi z listopada 2006r i została skonfigurowana jak dla systemów *BSD.
@@ -15,12 +18,13 @@ rozwijana na tych warunkach.
 
 
 START
-Po prostu uruchom program, podaj dane profilu. BeGadu połączy się z serwerem i ściągnie listę kontaktów z konta.
+Po prostu uruchom program, podaj dane dla utworzenia profilu. BeGadu połączy się z serwerem i ściągnie listę kontaktów z konta.
 
 
 
 NIE DZIAŁA / NIE MA
-- przełączanie profili (brak kilku plików źródłowych z wersji, która to potrafiła) - po prostu tego nie rób
+- pełne preferencje i przełączanie profili
+	(brak kilku plików źródłowych z wersji, która to potrafiła) - po prostu tego nie rób
 - dodawanie/usuwanie kontaktów
 - zapis listy kontaktów na serwer
 - nie ma logowania rozmów
@@ -33,10 +37,10 @@ Resztę projektu zbuduj za pomocą BeIDE.
 
 
 
-LIBGADU & NETSERVER
+LIBGADU & NETSERVER, ZETA, BONE
 Prawdopodobnie bez większych zmian można zbudować program z BONE lub stosem TCP/IP z Haiku.
 
-Zmiany w libgadu polegały na zamianie:
+Zmiany w libgadu polegały na zamianie kodu w styl BSD:
 open -> opensocket
 read -> recv
 write -> send
@@ -45,3 +49,9 @@ close -> closesocket
 libgadu nie korzysta z SSL (ale można to wkompilować), nie używa pthreads.
 
 Program działa tylko w trybie synchronicznego połączenia, to prawdopodobnie wina netservera.
+
+
+
+LOKALIZACJA
+Usunąłem kod lokalizacji programu w stylu Zety - to ślepa uliczka i złe rozwiązanie. SpLocale również
+jest złym rozwiązaniem. Prawdopodobnie użyję czegoś w rodzaju GNU gettext.

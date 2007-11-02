@@ -11,10 +11,12 @@ NAJPIERW
 - wszystkie miejsca z list->EmptyList - memleak?
 - początkowy status z description - nie ustawia description
 - wyście przez CTRL+Q nie zapisuje konfiguracji i profilu
+- zastąpienie wszystkich stałych tekstowych przez _T(x)
 
 POTEM
 - import z serwera nie wciąga informacji o emailu
 - zaimplementować eksport kontaktów na serwer
+- chyba(?) nie da się otworzyć okna preferencji dwa razy pod rząd
 - doprowadzić do porządku preferencje, dać możliwość edycji, zobaczyć co z iProfile jest używane tak 
 	naprawdę
 - usunięcie do końca locale Zety
