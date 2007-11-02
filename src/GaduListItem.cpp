@@ -8,13 +8,16 @@
 
 #include "GaduListItem.h"
 #include "GfxStuff.h"
+#include "Person.h"
 
-GaduListItem::GaduListItem( const char *aPerson, int aStatus, const char *aDescription, BResources *aRes ) : BListItem() {
+GaduListItem::GaduListItem( Person *aPerson, int aStatus, const char *aDescription, BResources *aRes ) : BListItem() {
 	iResources = aRes;
+	iPerson = aPerson;
+	iUIN = iPerson->GetUIN();
 	iStatus = aStatus;
 	iIcon = NULL;
 	SetIcon( iStatus );
-	iName = new BString( aPerson );
+	iName = new BString( iPerson->GetDisplay() );
 	iNameFont = new BFont( be_plain_font );
 	iNameFont->SetSize( 15.0 );
 	iDescription = fromISO2(aDescription);

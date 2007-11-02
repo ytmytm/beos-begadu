@@ -247,16 +247,10 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			DEBUG_TRACE( "MainWindow::MessageReceived( BUDDY_EDIT )\n" );
 			if( iListView->CurrentSelection() < 0 )
 				break;
-			Person* person = NULL;
 			GaduListItem *who = ( GaduListItem* ) iListView->ItemAt( iListView->CurrentSelection() );
-			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ ) {
-				person = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
-				if( strcmp( person->GetDisplay(), who->iName->String() ) == 0)
-					break;
-			}
-			if( person->GetUIN() == iProfile->GetUIN() )
+			if( who->UIN() == iProfile->GetUIN() )
 				break;
-			BuddyEdit *buddyEdit = new BuddyEdit( this, BRect( 50, 50, 300, 250), person );
+			BuddyEdit *buddyEdit = new BuddyEdit( this, BRect( 50, 50, 300, 250), who->GetPerson() );
 			buddyEdit->Show();
 			break;
 			}
@@ -303,17 +297,11 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 			DEBUG_TRACE( "MainWindow::MessageReceived( BEGG_PERSON_ACTION )\n" );
 			if( iListView->CurrentSelection() < 0 )
 				break;
-			Person* person = NULL;
 			GaduListItem *who = ( GaduListItem* ) iListView->ItemAt( iListView->CurrentSelection() );
-			for( int i = 0; i < iProfile->GetUserlist()->GetList()->CountItems(); i++ ) {
-				person = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
-				if( strcmp( person->GetDisplay(), who->iName->String() ) == 0)
-					break;
-			}
-			if( person->GetUIN() == iProfile->GetUIN() )
+			if( who->UIN() == iProfile->GetUIN() )
 				break;
 			BMessage *message = new BMessage( OPEN_MESSAGE );
-			message->AddInt32( "who", person->GetUIN() );
+			message->AddInt32( "who", who->UIN() );
 			BMessenger( iNetwork ).SendMessage( message );		
 			delete message;
 			break;
@@ -407,9 +395,9 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 				p = ( Person* ) iProfile->GetUserlist()->GetList()->ItemAt( i );
 				if( p->GetUIN() == iProfile->GetUIN() ) {
 					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL )
-						g = new GaduListItem( p->GetDisplay(), iNetwork->Status(), "", &iResources );
+						g = new GaduListItem( p, iNetwork->Status(), "", &iResources );
 					else
-						g = new GaduListItem( p->GetDisplay(), iNetwork->Status(), iNetwork->iDescription->String(), &iResources );
+						g = new GaduListItem( p, iNetwork->Status(), iNetwork->iDescription->String(), &iResources );
 
 					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL || iNetwork->Status() == GG_STATUS_NOT_AVAIL_DESCR ||
 						iNetwork->Status() == GG_STATUS_INVISIBLE || iNetwork->Status() == GG_STATUS_INVISIBLE_DESCR )
@@ -418,9 +406,9 @@ void MainWindow::MessageReceived( BMessage* aMessage ) {
 						listAvail->AddItem( g );
 				} else {
 					if( iNetwork->Status() == GG_STATUS_NOT_AVAIL || iNetwork->Status() == GG_STATUS_NOT_AVAIL_DESCR )
-						g = new GaduListItem( p->GetDisplay(), GG_STATUS_NOT_AVAIL, "", &iResources );
+						g = new GaduListItem( p, GG_STATUS_NOT_AVAIL, "", &iResources );
 					else
-						g = new GaduListItem( p->GetDisplay(), p->GetStatus(), p->GetDescription(), &iResources );
+						g = new GaduListItem( p, p->GetStatus(), p->GetDescription(), &iResources );
 
 					if( p->GetStatus() == GG_STATUS_NOT_AVAIL || p->GetStatus() == GG_STATUS_NOT_AVAIL_DESCR )
 						listNotAvail->AddItem( g );
