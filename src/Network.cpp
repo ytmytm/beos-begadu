@@ -103,25 +103,8 @@ void Network::MessageReceived( BMessage* aMessage ) {
 			DEBUG_TRACE( "Network::MessageReceived( OPEN_MESSAGE )\n" );
 			int	who;
 			aMessage->FindInt32( "who", ( int32* ) &who );
-			ChatWindow *win;
-			// jeśli mamy już otwarte okno z tą osobą, przejdźmy do niego
-			if( ( win = GetMesgWinForUser( who ) ) ) {
-				if( win->LockLooper() ) {
-					win->Activate();
-					win->UnlockLooper();
-				}
-			} else { // a jeśli nie, tworzymy nowe :)
-				win = new ChatWindow( this, iWindow, who );
-				iWinList->AddItem( win );
-				Person* person;
-				if( ( person = GetPersonForUser( who ) ) ) {
-					BMessage *newmessage = new BMessage( UPDATE_STATUS );
-					newmessage->AddInt32( "status", person->GetStatus() );
-					BMessenger( win ).SendMessage( newmessage );
-					delete newmessage;
-				}
-				win->Show();
-			}
+			ChatWindow *win = GetMesgWinForUser(who);
+			win->Activate();
 			break;
 			}
 		case SEND_MESSAGE:
@@ -155,7 +138,7 @@ void Network::GotWindow( MainWindow* aWindow ) {
 	iWindow = aWindow;
 }
 
-/* zwracamy wskaznik do okna jesli rozmowcy jesli z nim juz rozmawiamy */
+/* return pointer to chat window (find one or create it) */
 ChatWindow* Network::GetMesgWinForUser( uin_t aWho ) {
 	fprintf( stderr, "Network::GotMesgWinForUser( %d )\n", aWho );
 	ChatWindow *win = NULL;
@@ -169,7 +152,12 @@ ChatWindow* Network::GetMesgWinForUser( uin_t aWho ) {
 	if( win && (win->Who() == aWho ) )
 		return win;
 
-	return NULL;
+	// no such window - create new and show it
+	win = new ChatWindow( this, iWindow, aWho );
+	iWinList->AddItem( win );
+	win->Show();
+
+	return win;
 }
 
 /* zwracamy wskaznik do osoby jesli z taka rozmawiamy */
@@ -289,21 +277,11 @@ void Network::SendMsg( uin_t aWho, const char* aMessage ) {
 
 void Network::GotMsg( uin_t aWho, const char* aMessage ) {
 	DEBUG_TRACE( "Network::GotMsg()\n" );
-	/* sprawdzamy czy mamy aktualnie otwarte okno dla tej osoby :) */
-	ChatWindow* win = NULL;
-	for( int i = 0; i < iWinList->CountItems(); i++ ) {
-		win = ( ChatWindow* ) iWinList->ItemAt( i );
-		if( win->Who() == aWho )
-			break;
-	}
 
-	if( win && ( win->Who() == aWho ) ) {
-		win->Activate();
-	} else {
-		win = new ChatWindow( this, iWindow, aWho );
-		iWinList->AddItem( win );
-		win->Show();
-	}
+	ChatWindow *win = GetMesgWinForUser(aWho);
+	// if activate...
+	win->Activate();
+
 	BString *txt = fromISO2(aMessage);
 	/* i pokazujemy je :P */
 	BMessage* wiadomosc = new BMessage( SHOW_MESSAGE );
